@@ -1,5 +1,5 @@
 {
-  "name": "creativestyle/magesuite-structured-data",
+  "name": "creativestyle/magesuite-google-structured-data",
   "description": "Google Structured Data",
   "type": "magento2-module",
   "require": {
