@@ -3,4 +3,7 @@
     <event name="controller_front_send_response_before">
         <observer name="magesuite_send_response_before" instance="MageSuite\GoogleStructuredData\Observer\AddAdditionalDataToRenderedPage"/>
     </event>
+    <event name="controller_action_postdispatch_catalog_product_view">
+        <observer name="magesuite_catalog_product_view" instance="MageSuite\GoogleStructuredData\Observer\AddStructuredDataToProduct"/>
+    </event>
 </config>
