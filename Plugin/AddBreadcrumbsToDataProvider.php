@@ -11,14 +11,20 @@ class AddBreadcrumbsToDataProvider
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
+    /**
+     * @var \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs
+     */
+    private $breadcrumbsDataProvider;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider $structuredDataProvider,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbsDataProvider
     )
     {
         $this->structuredDataProvider = $structuredDataProvider;
         $this->logger = $logger;
+        $this->breadcrumbsDataProvider = $breadcrumbsDataProvider;
     }
 
     public function aroundAssign(\Magento\Framework\View\Element\Template $subject, callable $proceed, $key = '', $index = null)
@@ -32,29 +38,7 @@ class AddBreadcrumbsToDataProvider
     public function addBreadcrumbsToProvider($breadcrumbs)
     {
         try {
-            $breadcrumbData = [
-                "@context" => "http://schema.org",
-                '@type' => 'BreadcrumbList',
-            ];
-            $breadcrumbList = [];
-            $i = 1;
-            foreach ($breadcrumbs as $breadcrumb) {
-                if (!$breadcrumb['link']) {
-                    continue;
-                }
-                $name = is_object($breadcrumb['label']) ? $breadcrumb['label']->getText() : $breadcrumb['label'];
-                $breadcrumbList[] = [
-                    '@type' => 'ListItem',
-                    'position' => $i,
-                    'item' => [
-                        '@id' => $breadcrumb['link'],
-                        'name' => $name
-                    ]
-                ];
-                $i++;
-            }
-
-            $breadcrumbData['itemListElement'] = $breadcrumbList;
+            $breadcrumbData = $this->breadcrumbsDataProvider->getBreadcrumbsData($breadcrumbs);
 
             $structuredData = $this->structuredDataProvider;
 

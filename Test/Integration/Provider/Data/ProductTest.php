@@ -41,5 +41,30 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $product = $this->productRepository->get('simple');
         $registry = $this->registry;
         $registry->register('current_product', $product);
+
+        $productData = $this->productDataProvider->getProductStructuredData();
+
+        $this->assertEquals($this->expectedData(), $productData);
+    }
+
+    protected function expectedData()
+    {
+        return [
+            '@context' => "http://schema.org/",
+            '@type' => "Product",
+            'name' => "Simple Product",
+            'image' => [],
+            'description' => "Description with <b>html tag</b>",
+            'sku' => "simple",
+            'url' => "http://localhost/index.php/simple-product.html",
+            'offers' => [
+                '@type' => "Offer",
+                'sku' => "simple",
+                'price' => "10.00",
+                'priceCurrency' => "USD",
+                'availability' => "InStock",
+                'url' => "http://localhost/index.php/simple-product.html",
+            ]
+        ];
     }
 }
