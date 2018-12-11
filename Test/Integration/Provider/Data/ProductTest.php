@@ -7,7 +7,7 @@ use Magento\TestFramework\Helper\Bootstrap;
  * @magentoDbIsolation enabled
  * @magentoAppIsolation enabled
  */
-class StructuredDataProviderTest extends \PHPUnit\Framework\TestCase
+class ProductTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
