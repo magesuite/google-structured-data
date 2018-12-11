@@ -3,6 +3,12 @@ namespace MageSuite\GoogleStructuredData\Provider;
 
 class StructuredDataProvider
 {
+    const PRODUCT = 'product';
+    const CATEGORY = 'category';
+    const CMS = 'cms';
+    const BREADCRUMBS = 'breadcrumbs';
+    const SEARCH = 'search';
+    const ORGANIZATION = 'organization';
 
     private $data = [];
 
@@ -12,27 +18,27 @@ class StructuredDataProvider
     }
 
 
-    public function add($data)
+    public function add($data, $node)
     {
         foreach ($data as $key => $value) {
-            $this->addKey($key, $value);
+            $this->addKey($node, $key, $value);
         }
 
         return $this->data;
     }
 
-    public function addKey($key, $value)
+    public function addKey($node, $key, $value)
     {
-        $this->data[$key] = $value;
+        $this->data[$node][$key] = $value;
 
-        return $this->data[$key];
+        return $this->data[$node][$key];
     }
 
 
-    public function removeKey($key)
+    public function removeKey($node, $key)
     {
-        if (isset($this->data[$key])) {
-            unset($this->data[$key]);
+        if (isset($this->data[$node]) && isset($this->data[$node][$key])) {
+            unset($this->data[$node][$key]);
         }
     }
 
