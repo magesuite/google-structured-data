@@ -38,7 +38,7 @@ class JsonLdCreator
 
         $jsonLd = '';
         foreach ($structuredData as $data) {
-            $jsonLd .= '<script type="application/ld+json">' . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . '</script>';
+            $jsonLd .= sprintf('<script type="application/ld+json">%s</script>', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         }
 
         return $jsonLd;

@@ -3,6 +3,10 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Product
 {
+    const IN_STOCK = 'InStock';
+    const OUT_OF_STOCK = 'OutOfStock';
+    const TYPE_CONFIGURABLE = 'configurable';
+
     protected $product = false;
 
     /**
@@ -56,11 +60,11 @@ class Product
             return [];
         }
 
-        $data = $this->getBaseProductData($product);
+        $data = $this->addBaseProductData($product);
 
         $data = $this->addOfferData($data);
 
-        $data = $this->getReviewsData($data);
+        $data = $this->addReviewsData($data);
 
 
         return $data;
@@ -70,7 +74,7 @@ class Product
      * @param $product \Magento\Catalog\Model\Product
      * @return array
      */
-    public function getBaseProductData($product)
+    public function addBaseProductData($product)
     {
         $structuredData = [
             "@context" => "http://schema.org/",
@@ -111,7 +115,7 @@ class Product
         }
 
         $currency = $this->storeManager->getStore()->getCurrentCurrencyCode();
-        if ($product->getTypeId() == 'configurable') {
+        if ($product->getTypeId() == self::TYPE_CONFIGURABLE) {
             $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
             foreach ($simpleProducts as $simpleProduct) {
                 $data['offers'][] = $this->getOfferData($simpleProduct, $currency);
@@ -128,14 +132,19 @@ class Product
         return [
             "@type" => "Offer",
             "sku" => $product->getSku(),
-            "price" => number_format($product->getPrice(), 2),
+            "price" => number_format($this->getProductPrice($product), 2),
             "priceCurrency" => $currency,
-            "availability" => $product->getIsSalable() ? "InStock" : "OutOfStock",
+            "availability" => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             "url" => $product->getProductUrl()
         ];
     }
 
-    public function getReviewsData($data)
+    public function getProductPrice($product)
+    {
+        return $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+    }
+
+    public function addReviewsData($data)
     {
         $product = $this->getProduct();
 

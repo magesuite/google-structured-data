@@ -7,12 +7,18 @@ class SearchBox
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     private $storeManager;
+    /**
+     * @var \Magento\Framework\UrlInterface
+     */
+    private $urlBuilder;
 
     public function __construct(
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\UrlInterface $urlBuilder
     ){
 
         $this->storeManager = $storeManager;
+        $this->urlBuilder = $urlBuilder;
     }
 
     public function getSearchBoxData()
@@ -20,7 +26,7 @@ class SearchBox
         $store = $this->storeManager->getStore();
         $baseUrl = $store->getBaseUrl();
 
-        $searchUrl = $baseUrl . 'catalogsearch/result/?q={search_term_string}';
+        $searchUrl = $this->urlBuilder->getUrl('catalogsearch/result/?q={search_term_string}');
 
         $searchBoxData = [
             "@context" => "http://schema.org",

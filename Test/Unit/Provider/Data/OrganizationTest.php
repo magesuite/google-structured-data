@@ -1,8 +1,6 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider\Data;
 
-use Magento\TestFramework\Helper\Bootstrap;
-
 /**
  * @magentoDbIsolation enabled
  * @magentoAppIsolation enabled
@@ -10,13 +8,18 @@ use Magento\TestFramework\Helper\Bootstrap;
 class OrganizationTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @var \Magento\TestFramework\ObjectManager
+     */
+    protected $objectManager;
+    /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Organization
      */
     protected $organizationDataProvider;
 
     protected function setUp()
     {
-        $this->organizationDataProvider = Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\Organization::class);
+        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+        $this->organizationDataProvider = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\Organization::class);
     }
 
     /**

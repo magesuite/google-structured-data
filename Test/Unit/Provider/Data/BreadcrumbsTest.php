@@ -1,10 +1,12 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
-use Magento\TestFramework\Helper\Bootstrap;
-
 class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var \Magento\TestFramework\ObjectManager
+     */
+    protected $objectManager;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs
      */
@@ -12,7 +14,8 @@ class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->breadcrumbDataProvider = Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs::class);
+        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+        $this->breadcrumbDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs::class);
     }
 
 

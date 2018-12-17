@@ -1,14 +1,16 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Test\Integration\Provider;
 
-use Magento\TestFramework\Helper\Bootstrap;
-
 /**
  * @magentoDbIsolation enabled
  * @magentoAppIsolation enabled
  */
 class ProductTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var \Magento\TestFramework\ObjectManager
+     */
+    protected $objectManager;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
      */
@@ -26,9 +28,10 @@ class ProductTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->productDataProvider = Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
-        $this->registry = Bootstrap::getObjectManager()->get(\Magento\Framework\Registry::class);
-        $this->productRepository = Bootstrap::getObjectManager()->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+        $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
+        $this->registry = $this->objectManager->get(\Magento\Framework\Registry::class);
+        $this->productRepository = $this->objectManager->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
     }
 
     /**

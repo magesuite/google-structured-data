@@ -1,7 +1,7 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Observer;
 
-class AddAdditionalDataToRenderedPage implements \Magento\Framework\Event\ObserverInterface
+class AddStructuredDataToRenderedPage implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var \MageSuite\GoogleStructuredData\Service\JsonLdCreator

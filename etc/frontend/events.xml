@@ -1,7 +1,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="controller_front_send_response_before">
-        <observer name="magesuite_send_response_before" instance="MageSuite\GoogleStructuredData\Observer\AddAdditionalDataToRenderedPage"/>
+        <observer name="magesuite_send_response_before" instance="MageSuite\GoogleStructuredData\Observer\AddStructuredDataToRenderedPage"/>
     </event>
     <event name="controller_action_postdispatch_catalog_product_view">
         <observer name="magesuite_catalog_product_view" instance="MageSuite\GoogleStructuredData\Observer\AddStructuredDataToProduct"/>

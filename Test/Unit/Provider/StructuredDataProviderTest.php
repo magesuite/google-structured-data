@@ -1,10 +1,12 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
-use Magento\TestFramework\Helper\Bootstrap;
-
 class StructuredDataProviderTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var \Magento\TestFramework\ObjectManager
+     */
+    protected $objectManager;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider
      */
@@ -13,7 +15,8 @@ class StructuredDataProviderTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->structuredDataProvider = Bootstrap::getObjectManager()->get('\MageSuite\GoogleStructuredData\Provider\StructuredDataProvider');
+        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+        $this->structuredDataProvider = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get('\MageSuite\GoogleStructuredData\Provider\StructuredDataProvider');
     }
 
     public function testItAddDataCorrectly()
