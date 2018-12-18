@@ -22,16 +22,12 @@ class AddProductsDataToCategoryPage
     }
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result)
     {
-        $categoryProducts = $result;
-
-
         $i = 0;
-        foreach ($categoryProducts as $product) {
+        foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductStructuredData($product);
+            unset($productData['review']);
 
-            $structuredDataContainer = $this->structuredDataContainer;
-
-            $structuredDataContainer->add($productData, $structuredDataContainer::PRODUCT . '_' . $i);
+            $this->structuredDataContainer->add($productData, 'product_' . $i);
 
             $i++;
         }

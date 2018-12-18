@@ -1,29 +1,30 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Observer;
 
-class GenerateProductStructuredData implements \Magento\Framework\Event\ObserverInterface
+class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     private $structuredDataContainer;
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
+     * @var \MageSuite\GoogleStructuredData\Provider\Data\Organization
      */
-    private $productDataProvider;
+    private $organizationDataProvider;
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
 
+
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
+        \MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
-        $this->productDataProvider = $productDataProvider;
+        $this->organizationDataProvider = $organizationDataProvider;
         $this->scopeConfig = $scopeConfig;
     }
 
@@ -32,11 +33,11 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if(!$this->scopeConfig->getValue('structured_data/product_page/enabled')){
+        if(!$this->scopeConfig->getValue('structured_data/organization/enabled')){
             return;
         }
-        $productData = $this->productDataProvider->getProductStructuredData();
+        $organizationData = $this->organizationDataProvider->getOrganizationData();
 
-        $this->structuredDataContainer->add($productData, 'product');
+        $this->structuredDataContainer->add($organizationData, 'organization');
     }
 }

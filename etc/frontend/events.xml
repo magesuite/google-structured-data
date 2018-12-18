@@ -6,4 +6,8 @@
     <event name="controller_action_postdispatch_catalog_product_view">
         <observer name="magesuite_catalog_product_view" instance="MageSuite\GoogleStructuredData\Observer\GenerateProductStructuredData"/>
     </event>
+    <event name="layout_generate_blocks_after">
+        <observer name="magesuite_add_organization_data" instance="MageSuite\GoogleStructuredData\Observer\AddOrganizationData"/>
+        <observer name="magesuite_add_search_box_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
+    </event>
 </config>

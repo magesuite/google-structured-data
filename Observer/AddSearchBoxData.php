@@ -1,16 +1,16 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Observer;
 
-class GenerateProductStructuredData implements \Magento\Framework\Event\ObserverInterface
+class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     private $structuredDataContainer;
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
+     * @var \MageSuite\GoogleStructuredData\Provider\Data\SearchBox
      */
-    private $productDataProvider;
+    private $searchBoxDataProvider;
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
@@ -18,12 +18,12 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
+        \MageSuite\GoogleStructuredData\Provider\Data\SearchBox $searchBoxDataProvider,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
-        $this->productDataProvider = $productDataProvider;
+        $this->searchBoxDataProvider = $searchBoxDataProvider;
         $this->scopeConfig = $scopeConfig;
     }
 
@@ -32,11 +32,12 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if(!$this->scopeConfig->getValue('structured_data/product_page/enabled')){
+        if(!$this->scopeConfig->getValue('structured_data/search_box/enabled')){
             return;
         }
-        $productData = $this->productDataProvider->getProductStructuredData();
+        $searchBoxData = $this->searchBoxDataProvider->getSearchBoxData();
 
-        $this->structuredDataContainer->add($productData, 'product');
+        $this->structuredDataContainer->add($searchBoxData, 'search');
+
     }
 }

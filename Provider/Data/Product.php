@@ -29,13 +29,18 @@ class Product
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
      */
     private $productRepository;
+    /**
+     * @var \MageSuite\GoogleStructuredData\Repository\ProductReviews
+     */
+    private $productReviews;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Review\Model\ReviewFactory $reviewFactory,
         \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews
     )
     {
         $this->registry = $registry;
@@ -43,6 +48,7 @@ class Product
         $this->reviewFactory = $reviewFactory;
         $this->reviewCollectionFactory = $reviewCollectionFactory;
         $this->productRepository = $productRepository;
+        $this->productReviews = $productReviews;
     }
 
     public function getProduct()
@@ -70,21 +76,21 @@ class Product
 
         $product = $this->productRepository->get($product->getSku());
 
-        $data = $this->addBaseProductData($product);
+        $productData = $this->getBaseProductData($product);
 
-        $data = $this->addOfferData($data);
+        $offerData = $this->getOffers();
 
-        $data = $this->addReviewsData($data);
+        $reviewsData = $this->productReviews->getReviewsData($productData);
 
 
-        return $data;
+        return array_merge($productData, $offerData, $reviewsData);
     }
 
     /**
      * @param $product \Magento\Catalog\Model\Product
      * @return array
      */
-    public function addBaseProductData($product)
+    public function getBaseProductData($product)
     {
         $structuredData = [
             "@context" => "http://schema.org/",
@@ -116,14 +122,15 @@ class Product
         return $images;
     }
 
-    public function addOfferData($data)
+    public function getOffers()
     {
         $product = $this->getProduct();
 
         if (!$product) {
-           return $data;
+           return [];
         }
 
+        $data = [];
         $currency = $this->storeManager->getStore()->getCurrentCurrencyCode();
         if ($product->getTypeId() == self::TYPE_CONFIGURABLE) {
             $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
@@ -152,60 +159,5 @@ class Product
     public function getProductPrice($product)
     {
         return $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-    }
-
-    public function addReviewsData($data)
-    {
-        $product = $this->getProduct();
-
-        if (!$product) {
-            return $data;
-        }
-
-        $storeMaganer = $this->storeManager->getStore()->getId();
-        $reviews = $this->reviewFactory->create();
-
-        $reviews->getEntitySummary($product, $storeMaganer);
-
-        $ratingSummary = $product->getRatingSummary();
-
-        if ($ratingSummary->getRatingSummary() && $ratingSummary->getReviewsCount()) {
-            $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / 20): 0;
-            $reviewCount = $ratingSummary->getReviewsCount();
-
-            $data['aggregateRating'] = [
-                '@type' => 'AggregateRating',
-                'ratingValue' => $ratingValue,
-                'reviewCount' => $reviewCount
-            ];
-        }
-
-        $reviewsCollection = $this->reviewCollectionFactory->create();
-
-        $reviewsCollection->addStatusFilter(
-                \Magento\Review\Model\Review::STATUS_APPROVED)
-            ->addEntityFilter(
-                'product',
-                $product->getId()
-            )->setDateOrder()
-            ->setPageSize(10);
-
-        $reviewData = [];
-        foreach ($reviewsCollection as $review) {
-
-            $reviewData[] = [
-                "@type" => "Review",
-                "author" => $review->getNickname(),
-                "datePublished" => $review->getCreatedAt(),
-                "description" => $review->getDetail(),
-                "name" => $review->getTitle()
-            ];
-        }
-
-        if(!empty($reviewData)) {
-            $data['review'] = $reviewData;
-        }
-
-        return $data;
     }
 }

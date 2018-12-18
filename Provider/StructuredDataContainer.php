@@ -3,13 +3,6 @@ namespace MageSuite\GoogleStructuredData\Provider;
 
 class StructuredDataContainer
 {
-    const PRODUCT = 'product';
-    const CATEGORY = 'category';
-    const CMS = 'cms';
-    const BREADCRUMBS = 'breadcrumbs';
-    const SEARCH = 'search';
-    const ORGANIZATION = 'organization';
-
     private $data = [];
 
     public function structuredData()
