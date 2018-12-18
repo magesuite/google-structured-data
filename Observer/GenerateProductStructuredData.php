@@ -1,23 +1,23 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Observer;
 
-class AddStructuredDataToProduct implements \Magento\Framework\Event\ObserverInterface
+class GenerateProductStructuredData implements \Magento\Framework\Event\ObserverInterface
 {
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider
+     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataProvider;
+    private $structuredDataContainer;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
      */
     private $productDataProvider;
 
     public function __construct(
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider $structuredDataProvider,
+        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider
     )
     {
-        $this->structuredDataProvider = $structuredDataProvider;
+        $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;
     }
 
@@ -29,8 +29,8 @@ class AddStructuredDataToProduct implements \Magento\Framework\Event\ObserverInt
 
         $productData = $this->productDataProvider->getProductStructuredData();
 
-        $structuredDataProvider = $this->structuredDataProvider;
+        $structuredDataContainer = $this->structuredDataContainer;
 
-        $structuredDataProvider->add($productData, $structuredDataProvider::PRODUCT);
+        $structuredDataContainer->add($productData, $structuredDataContainer::PRODUCT);
     }
 }

@@ -1,34 +1,34 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
-class StructuredDataProviderTest extends \PHPUnit\Framework\TestCase
+class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Magento\TestFramework\ObjectManager
      */
     protected $objectManager;
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider
+     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    protected $structuredDataProvider;
+    protected $structuredDataContainer;
 
 
     protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
-        $this->structuredDataProvider = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get('\MageSuite\GoogleStructuredData\Provider\StructuredDataProvider');
+        $this->structuredDataContainer = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get('\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer');
     }
 
     public function testItAddDataCorrectly()
     {
-        $structuredDataProvider = $this->structuredDataProvider;
+        $structuredDataContainer = $this->structuredDataContainer;
 
         $expectedData = $this->getStructuredData();
         foreach ($expectedData as $node => $data) {
-            $structuredDataProvider->add($data, $node);
+            $structuredDataContainer->add($data, $node);
         }
 
-        $data = $structuredDataProvider->structuredData();
+        $data = $structuredDataContainer->structuredData();
 
         $this->assertArrayHasKey('product', $data);
         $this->assertArrayHasKey('breadcrumbs', $data);
@@ -42,12 +42,12 @@ class StructuredDataProviderTest extends \PHPUnit\Framework\TestCase
 
     public function testItAddKeyCorrectly()
     {
-        $structuredDataProvider = $this->structuredDataProvider;
+        $structuredDataContainer = $this->structuredDataContainer;
 
 
-        $structuredDataProvider->addKey('product', 'additional_key', 'test value');
+        $structuredDataContainer->addKey('product', 'additional_key', 'test value');
 
-        $data = $structuredDataProvider->structuredData();
+        $data = $structuredDataContainer->structuredData();
 
         $this->assertArrayHasKey('additional_key', $data['product']);
         $this->assertEquals('test value', $data['product']['additional_key']);
@@ -55,12 +55,12 @@ class StructuredDataProviderTest extends \PHPUnit\Framework\TestCase
 
     public function testItRemoveKeyCorrectly()
     {
-        $structuredDataProvider = $this->structuredDataProvider;
+        $structuredDataContainer = $this->structuredDataContainer;
 
 
-        $structuredDataProvider->removeKey('product', 'additional_key');
+        $structuredDataContainer->removeKey('product', 'additional_key');
 
-        $data = $structuredDataProvider->structuredData();
+        $data = $structuredDataContainer->structuredData();
 
         $this->assertArrayNotHasKey('additional_key', $data['product']);
     }

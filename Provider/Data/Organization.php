@@ -4,10 +4,6 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 class Organization
 {
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider
-     */
-    private $structuredDataProvider;
-    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     private $storeManager;
@@ -21,14 +17,11 @@ class Organization
     private $urlBuilder;
 
     public function __construct(
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider $structuredDataProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\UrlInterface $urlBuilder
     )
     {
-
-        $this->structuredDataProvider = $structuredDataProvider;
         $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
         $this->urlBuilder = $urlBuilder;

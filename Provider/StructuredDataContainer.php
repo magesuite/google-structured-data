@@ -1,7 +1,7 @@
 <?php
 namespace MageSuite\GoogleStructuredData\Provider;
 
-class StructuredDataProvider
+class StructuredDataContainer
 {
     const PRODUCT = 'product';
     const CATEGORY = 'category';

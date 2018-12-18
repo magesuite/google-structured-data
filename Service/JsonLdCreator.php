@@ -4,9 +4,9 @@ namespace MageSuite\GoogleStructuredData\Service;
 class JsonLdCreator
 {
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider
+     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataProvider;
+    private $structuredDataContainer;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\SearchBox
      */
@@ -18,12 +18,12 @@ class JsonLdCreator
 
 
     public function __construct(
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider $structuredDataProvider,
+        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\SearchBox $searchBoxDataProvider,
         \MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider
     )
     {
-        $this->structuredDataProvider = $structuredDataProvider;
+        $this->structuredDataContainer = $structuredDataContainer;
         $this->searchBoxDataProvider = $searchBoxDataProvider;
         $this->organizationDataProvider = $organizationDataProvider;
     }
@@ -34,7 +34,7 @@ class JsonLdCreator
         $this->addOrganizationStructuredData();
         $this->addSearchBoxStructuredData();
 
-        $structuredData = $this->structuredDataProvider->structuredData();
+        $structuredData = $this->structuredDataContainer->structuredData();
 
         $jsonLd = '';
         foreach ($structuredData as $data) {
@@ -48,17 +48,17 @@ class JsonLdCreator
     {
         $searchBoxData = $this->searchBoxDataProvider->getSearchBoxData();
 
-        $structuredDataProvider = $this->structuredDataProvider;
+        $structuredDataContainer = $this->structuredDataContainer;
 
-        $structuredDataProvider->add($searchBoxData, $structuredDataProvider::SEARCH);
+        $structuredDataContainer->add($searchBoxData, $structuredDataContainer::SEARCH);
     }
 
     public function addOrganizationStructuredData()
     {
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 
-        $structuredDataProvider = $this->structuredDataProvider;
+        $structuredDataContainer = $this->structuredDataContainer;
 
-        $structuredDataProvider->add($organizationData, $structuredDataProvider::ORGANIZATION);
+        $structuredDataContainer->add($organizationData, $structuredDataContainer::ORGANIZATION);
     }
 }

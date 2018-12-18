@@ -26,7 +26,7 @@ class AddStructuredDataToRenderedPage implements \Magento\Framework\Event\Observ
             return;
         }
 
-        $renderedStructuredData = $this->jsonLdCreator->getRenderedJsonLd() . '</body>';
+        $renderedStructuredData = sprintf('%s</body>', $this->jsonLdCreator->getRenderedJsonLd());
 
         $html = str_replace('</body>', $renderedStructuredData, $html);
 

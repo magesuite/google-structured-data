@@ -25,18 +25,24 @@ class Product
      * @var \Magento\Review\Model\ResourceModel\Review\CollectionFactory
      */
     private $reviewCollectionFactory;
+    /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
+    private $productRepository;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Review\Model\ReviewFactory $reviewFactory,
-        \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory
+        \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
     )
     {
         $this->registry = $registry;
         $this->storeManager = $storeManager;
         $this->reviewFactory = $reviewFactory;
         $this->reviewCollectionFactory = $reviewCollectionFactory;
+        $this->productRepository = $productRepository;
     }
 
     public function getProduct()
@@ -52,13 +58,17 @@ class Product
         return $this->product;
     }
 
-    public function getProductStructuredData()
+    public function getProductStructuredData($product = null)
     {
-        $product = $this->getProduct();
+        if(!$product) {
+            $product = $this->getProduct();
+        }
 
         if (!$product) {
             return [];
         }
+
+        $product = $this->productRepository->get($product->getSku());
 
         $data = $this->addBaseProductData($product);
 
@@ -177,7 +187,8 @@ class Product
             ->addEntityFilter(
                 'product',
                 $product->getId()
-            )->setDateOrder();
+            )->setDateOrder()
+            ->setPageSize(10);
 
         $reviewData = [];
         foreach ($reviewsCollection as $review) {

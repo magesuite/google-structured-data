@@ -4,9 +4,9 @@ namespace MageSuite\GoogleStructuredData\Plugin;
 class AddBreadcrumbsToDataProvider
 {
     /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider
+     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataProvider;
+    private $structuredDataContainer;
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -17,12 +17,12 @@ class AddBreadcrumbsToDataProvider
     private $breadcrumbsDataProvider;
 
     public function __construct(
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataProvider $structuredDataProvider,
+        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \Psr\Log\LoggerInterface $logger,
         \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbsDataProvider
     )
     {
-        $this->structuredDataProvider = $structuredDataProvider;
+        $this->structuredDataContainer = $structuredDataContainer;
         $this->logger = $logger;
         $this->breadcrumbsDataProvider = $breadcrumbsDataProvider;
     }
@@ -40,7 +40,7 @@ class AddBreadcrumbsToDataProvider
         try {
             $breadcrumbData = $this->breadcrumbsDataProvider->getBreadcrumbsData($breadcrumbs);
 
-            $structuredData = $this->structuredDataProvider;
+            $structuredData = $this->structuredDataContainer;
 
             $structuredData->add($breadcrumbData, $structuredData::BREADCRUMBS);
 

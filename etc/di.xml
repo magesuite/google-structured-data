@@ -4,4 +4,7 @@
         <plugin name="magesuite_remove_schema" type="\MageSuite\GoogleStructuredData\Plugin\RemoveSchemaInBlocks" sortOrder="1" />
         <plugin name="magesuite_assign_beradcrumbs" type="\MageSuite\GoogleStructuredData\Plugin\AddBreadcrumbsToDataProvider" sortOrder="1" />
     </type>
+    <type name="\Magento\Catalog\Block\Product\ListProduct">
+        <plugin name="magesuite_add_products_data_to_category" type="\MageSuite\GoogleStructuredData\Plugin\AddProductsDataToCategoryPage" sortOrder="1" />
+    </type>
 </config>
