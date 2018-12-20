@@ -29,6 +29,8 @@ class Organization
 
     public function getOrganizationData()
     {
+        $config = $this->getConfiguration();
+
         $folderName = \Magento\Config\Model\Config\Backend\Image\Logo::UPLOAD_DIR;
 
         $storeLogoPath = $this->scopeConfig->getValue(
@@ -43,14 +45,82 @@ class Organization
         $store = $this->storeManager->getStore();
         $baseUrl = $store->getBaseUrl();
 
+        $logoUrl = $config['logo'] ? $config['logo'] : $logoUrl;
+        $name = $config['name'] ? $config['name'] : $store->getName();
+
         $organizationData = [
             "@context" => "http://schema.org",
             "@type" => "Organization",
-            "name" => $store->getName(),
+            "name" => $name,
             "url" => $baseUrl,
             "logo" => $logoUrl
         ];
 
+        $contactData = [];
+        if($config['sales']){
+            $contactData['sales'] = [
+                '@type' => 'ContactPoint',
+                'telephone' => $config['sales'],
+                'contactType' => 'sales'
+            ];
+        }
+
+        if($config['technical']){
+            $contactData['technical'] = [
+                '@type' => 'ContactPoint',
+                'telephone' => $config['technical'],
+                'contactType' => 'technical support'
+            ];
+        }
+
+        if($config['customer_service']) {
+            $contactData['customer_service'] = [
+                '@type' => 'ContactPoint',
+                'telephone' => $config['customer_service'],
+                'contactType' => 'customer service'
+            ];
+        }
+
+        foreach ($contactData as $contact) {
+            $organizationData['contactPoint'][] = $contact;
+        }
+
+        $address = [
+            '@type' => 'PostalAddress'
+        ];
+
+        if($config['postal']){
+            $address['postalCode'] = $config['postal'];
+        }
+
+        if($config['region']){
+            $address['addressRegion'] = $config['region'];
+        }
+
+        if($config['city']){
+            $address['addressLocality'] = $config['city'];
+        }
+
+        if($config['country']){
+            $address['addressCountry'] = [
+                '@type' => 'Country',
+                'name' => $config['country']
+            ];
+        }
+
+        if($config['postal']){
+            $address['postalCode'] = $config['postal'];
+        }
+
+        if(count($address) > 1) {
+            $organizationData['address'] = $address;
+        }
+
         return $organizationData;
+    }
+
+    public function getConfiguration()
+    {
+        return $this->scopeConfig->getValue('structured_data/organization');
     }
 }

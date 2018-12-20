@@ -21,6 +21,36 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" >
+                    <label>Organization Name</label>
+                </field>
+                <field id="logo" translate="label" type="text" sortOrder="30" showInDefault="1" >
+                    <label>Logo Url</label>
+                </field>
+                <field id="description" translate="label" type="textarea" sortOrder="40" showInDefault="1" >
+                    <label>Description</label>
+                </field>
+                <field id="country" translate="label" type="text" sortOrder="50" showInDefault="1" >
+                    <label>Country</label>
+                </field>
+                <field id="region" translate="label" type="text" sortOrder="60" showInDefault="1" >
+                    <label>Region</label>
+                </field>
+                <field id="postal" translate="label" type="text" sortOrder="70" showInDefault="1" >
+                    <label>Postal Code</label>
+                </field>
+                <field id="city" translate="label" type="text" sortOrder="80" showInDefault="1" >
+                    <label>City</label>
+                </field>
+                <field id="sales" translate="label" type="text" sortOrder="90" showInDefault="1" >
+                    <label>Sales</label>
+                </field>
+                <field id="technical" translate="label" type="text" sortOrder="100" showInDefault="1" >
+                    <label>Technical Support</label>
+                </field>
+                <field id="customer_service" translate="label" type="text" sortOrder="110" showInDefault="1" >
+                    <label>Customer Support</label>
+                </field>
             </group>
             <group id="search_box" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Search Box</label>
@@ -29,18 +59,85 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
-            <group id="category_page" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="social" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Social Media Profiles</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" >
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="facebook" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Facebook</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="twitter" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Twitter</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="google_plus" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Google+</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="instagram" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Instagram</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="youtube" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>YouTube</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="linkedin" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>LinkedIn</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="myspace" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Myspace</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="pinterest" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Pinterest</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="soundcloud" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>SoundCloud</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+                <field id="tumblr" translate="label" type="text" sortOrder="10" showInDefault="1" >
+                    <label>Tumblr</label>
+                    <depends><field id='enabled'>1</field></depends>
+                </field>
+            </group>
+            <group id="category_page" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Category</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" >
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="description" translate="label" type="select" sortOrder="20" showInDefault="1" >
+                    <label>Description</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
-            <group id="product_page" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="product_page" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Product</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" >
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="description" translate="label" type="select" sortOrder="20" showInDefault="1" >
+                    <label>Description</label>
+                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                </field>
+                <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" >
+                    <label>Show Rating</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="brand" translate="label" type="select" sortOrder="40" showInDefault="1" >
+                    <label>Brand</label>
+                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                </field>
+                <field id="manufacturer" translate="label" type="select" sortOrder="50" showInDefault="1" >
+                    <label>Manufacturer</label>
+                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
                 </field>
             </group>
         </section>

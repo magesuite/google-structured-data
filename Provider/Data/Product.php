@@ -37,6 +37,10 @@ class Product
      * @var \Magento\Framework\Event\ManagerInterface
      */
     private $eventManager;
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    private $scopeConfig;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
@@ -45,7 +49,8 @@ class Product
         \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
-        \Magento\Framework\Event\ManagerInterface $eventManager
+        \Magento\Framework\Event\ManagerInterface $eventManager,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     )
     {
         $this->registry = $registry;
@@ -55,6 +60,7 @@ class Product
         $this->productRepository = $productRepository;
         $this->productReviews = $productReviews;
         $this->eventManager = $eventManager;
+        $this->scopeConfig = $scopeConfig;
     }
 
     public function getProduct()
@@ -103,10 +109,22 @@ class Product
             "@type" => "Product",
             "name" => $product->getName(),
             "image" => $this->getProductImages($product),
-            "description" => $product->getDescription(),
             "sku" => $product->getSku(),
-            "url" => $product->getProductUrl()
+            "url" => $product->getProductUrl(),
+            "condition" => "New"
         ];
+
+        if($description = $this->getAttributeValue($product, 'description')){
+            $structuredData['description'] = $description;
+        }
+
+        if($brand = $this->getAttributeValue($product, 'brand')) {
+            $structuredData['brand'] = $brand;
+        }
+
+        if($manufacturer = $this->getAttributeValue($product, 'manufacturer')){
+            $structuredData['manufacturer'] = $manufacturer;
+        }
 
         return $structuredData;
     }
@@ -169,6 +187,11 @@ class Product
 
     public function getReviewsData()
     {
+        $config = $this->getConfiguration();
+
+        if(!$config['show_rating']){
+            return [];
+        }
         $product = $this->getProduct();
 
         if (!$product) {
@@ -209,5 +232,23 @@ class Product
         }
 
         return $data;
+    }
+
+
+
+    public function getAttributeValue($product, $type)
+    {
+        $config = $this->getConfiguration();
+
+        if(!isset($config[$type])){
+            return '';
+        }
+
+        return $product->getAttributeText($config[$type]);
+    }
+
+    public function getConfiguration()
+    {
+        return $this->scopeConfig->getValue('structured_data/product_page');
     }
 }

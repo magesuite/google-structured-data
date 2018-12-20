@@ -9,5 +9,6 @@
     <event name="layout_generate_blocks_after">
         <observer name="magesuite_add_organization_data" instance="MageSuite\GoogleStructuredData\Observer\AddOrganizationData"/>
         <observer name="magesuite_add_search_box_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
+        <observer name="magesuite_add_social_data" instance="MageSuite\GoogleStructuredData\Observer\AddSocialData"/>
     </event>
 </config>
