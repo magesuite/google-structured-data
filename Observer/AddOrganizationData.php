@@ -6,15 +6,15 @@ class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataContainer;
+    protected $structuredDataContainer;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Organization
      */
-    private $organizationDataProvider;
+    protected $organizationDataProvider;
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
 
 
     public function __construct(

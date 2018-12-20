@@ -9,19 +9,19 @@ class ProductReviews
     /**
      * @var \Magento\Framework\Registry
      */
-    private $registry;
+    protected $registry;
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    private $storeManager;
+    protected $storeManager;
     /**
      * @var \Magento\Review\Model\ReviewFactory
      */
-    private $reviewFactory;
+    protected $reviewFactory;
     /**
      * @var \Magento\Review\Model\ResourceModel\Review\CollectionFactory
      */
-    private $reviewCollectionFactory;
+    protected $reviewCollectionFactory;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
@@ -35,6 +35,32 @@ class ProductReviews
         $this->reviewFactory = $reviewFactory;
         $this->reviewCollectionFactory = $reviewCollectionFactory;
     }
+
+    public function getRatingSummary($product)
+    {
+        $storeMaganer = $this->storeManager->getStore()->getId();
+        $reviews = $this->reviewFactory->create();
+
+        $reviews->getEntitySummary($product, $storeMaganer);
+
+        return $product->getRatingSummary();
+    }
+
+    public function getReviews($product)
+    {
+        $reviewsCollection = $this->reviewCollectionFactory->create();
+
+        $reviewsCollection->addStatusFilter(
+            \Magento\Review\Model\Review::STATUS_APPROVED)
+            ->addEntityFilter(
+                'product',
+                $product->getId()
+            )->setDateOrder()
+            ->setPageSize(10);
+
+        return $reviewsCollection;
+    }
+
     public function getReviewsData()
     {
         $product = $this->getProduct();
@@ -44,12 +70,8 @@ class ProductReviews
         }
 
         $data = [];
-        $storeMaganer = $this->storeManager->getStore()->getId();
-        $reviews = $this->reviewFactory->create();
 
-        $reviews->getEntitySummary($product, $storeMaganer);
-
-        $ratingSummary = $product->getRatingSummary();
+        $ratingSummary = $this->getRatingSummary($product);
 
         if ($ratingSummary->getRatingSummary() && $ratingSummary->getReviewsCount()) {
             $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / 20): 0;
@@ -62,18 +84,10 @@ class ProductReviews
             ];
         }
 
-        $reviewsCollection = $this->reviewCollectionFactory->create();
-
-        $reviewsCollection->addStatusFilter(
-            \Magento\Review\Model\Review::STATUS_APPROVED)
-            ->addEntityFilter(
-                'product',
-                $product->getId()
-            )->setDateOrder()
-            ->setPageSize(10);
+        $reviews = $this->getReviews($product);
 
         $reviewData = [];
-        foreach ($reviewsCollection as $review) {
+        foreach ($reviews as $review) {
 
             $reviewData[] = [
                 "@type" => "Review",
@@ -89,18 +103,5 @@ class ProductReviews
         }
 
         return $data;
-    }
-
-    public function getProduct()
-    {
-        $product = $this->registry->registry('current_product');
-
-        if(!$product){
-            return false;
-        }
-
-        $this->product = $product;
-
-        return $this->product;
     }
 }

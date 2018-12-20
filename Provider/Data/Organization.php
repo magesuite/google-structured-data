@@ -6,15 +6,15 @@ class Organization
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    private $storeManager;
+    protected $storeManager;
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
     /**
      * @var \Magento\Framework\UrlInterface
      */
-    private $urlBuilder;
+    protected $urlBuilder;
 
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,

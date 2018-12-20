@@ -6,7 +6,7 @@ class JsonLdCreator
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataContainer;
+    protected $structuredDataContainer;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer

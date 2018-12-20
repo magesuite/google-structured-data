@@ -6,11 +6,11 @@ class SearchBox
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    private $storeManager;
+    protected $storeManager;
     /**
      * @var \Magento\Framework\UrlInterface
      */
-    private $urlBuilder;
+    protected $urlBuilder;
 
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,

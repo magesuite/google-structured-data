@@ -6,7 +6,7 @@ class AddStructuredDataToRenderedPage implements \Magento\Framework\Event\Observ
     /**
      * @var \MageSuite\GoogleStructuredData\Service\JsonLdCreator
      */
-    private $jsonLdCreator;
+    protected $jsonLdCreator;
 
     public function __construct(\MageSuite\GoogleStructuredData\Service\JsonLdCreator $jsonLdCreator)
     {

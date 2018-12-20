@@ -6,19 +6,19 @@ class AddBreadcrumbsToDataProvider
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataContainer;
+    protected $structuredDataContainer;
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    private $logger;
+    protected $logger;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs
      */
-    private $breadcrumbsDataProvider;
+    protected $breadcrumbsDataProvider;
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,

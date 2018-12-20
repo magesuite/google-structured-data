@@ -32,7 +32,7 @@ class SearchBoxTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('WebSite', $searchBoxData['@type']);
         $this->assertEquals('SearchAction', $searchBoxData['potentialAction']['@type']);
-        $this->assertEquals('http://localhost/index.php/catalogsearch/result/?q={search_term_string}', $searchBoxData['potentialAction']['target']);
+        $this->assertEquals('http://localhost/index.php/catalogsearch/result/?q={search_term_string}/', $searchBoxData['potentialAction']['target']);
         $this->assertEquals('required name=search_term_string', $searchBoxData['potentialAction']['query-input']);
     }
 }

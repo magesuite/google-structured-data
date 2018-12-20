@@ -3,7 +3,7 @@ namespace MageSuite\GoogleStructuredData\Provider;
 
 class StructuredDataContainer
 {
-    private $data = [];
+    protected $data = [];
 
     public function structuredData()
     {

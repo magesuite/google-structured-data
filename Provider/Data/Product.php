@@ -12,27 +12,31 @@ class Product
     /**
      * @var \Magento\Framework\Registry
      */
-    private $registry;
+    protected $registry;
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    private $storeManager;
+    protected $storeManager;
     /**
      * @var \Magento\Review\Model\ReviewFactory
      */
-    private $reviewFactory;
+    protected $reviewFactory;
     /**
      * @var \Magento\Review\Model\ResourceModel\Review\CollectionFactory
      */
-    private $reviewCollectionFactory;
+    protected $reviewCollectionFactory;
     /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
      */
-    private $productRepository;
+    protected $productRepository;
     /**
      * @var \MageSuite\GoogleStructuredData\Repository\ProductReviews
      */
-    private $productReviews;
+    protected $productReviews;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    private $eventManager;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
@@ -40,7 +44,8 @@ class Product
         \Magento\Review\Model\ReviewFactory $reviewFactory,
         \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews
+        \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
+        \Magento\Framework\Event\ManagerInterface $eventManager
     )
     {
         $this->registry = $registry;
@@ -49,6 +54,7 @@ class Product
         $this->reviewCollectionFactory = $reviewCollectionFactory;
         $this->productRepository = $productRepository;
         $this->productReviews = $productReviews;
+        $this->eventManager = $eventManager;
     }
 
     public function getProduct()
@@ -80,7 +86,7 @@ class Product
 
         $offerData = $this->getOffers();
 
-        $reviewsData = $this->productReviews->getReviewsData($productData);
+        $reviewsData = $this->getReviewsData();
 
 
         return array_merge($productData, $offerData, $reviewsData);
@@ -159,5 +165,49 @@ class Product
     public function getProductPrice($product)
     {
         return $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+    }
+
+    public function getReviewsData()
+    {
+        $product = $this->getProduct();
+
+        if (!$product) {
+            return [];
+        }
+
+        $data = [];
+
+        $ratingSummary = $this->productReviews->getRatingSummary($product);
+
+        if ($ratingSummary->getRatingSummary() && $ratingSummary->getReviewsCount()) {
+            $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / 20): 0;
+            $reviewCount = $ratingSummary->getReviewsCount();
+
+            $data['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => $ratingValue,
+                'reviewCount' => $reviewCount
+            ];
+        }
+
+        $reviews = $this->productReviews->getReviews($product);
+
+        $reviewData = [];
+        foreach ($reviews as $review) {
+
+            $reviewData[] = [
+                "@type" => "Review",
+                "author" => $review->getNickname(),
+                "datePublished" => $review->getCreatedAt(),
+                "description" => $review->getDetail(),
+                "name" => $review->getTitle()
+            ];
+        }
+
+        if(!empty($reviewData)) {
+            $data['review'] = $reviewData;
+        }
+
+        return $data;
     }
 }

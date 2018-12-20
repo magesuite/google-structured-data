@@ -6,11 +6,11 @@ class AddProductsDataToCategoryPage
     /**
     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
     */
-    private $structuredDataContainer;
+    protected $structuredDataContainer;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
      */
-    private $productDataProvider;
+    protected $productDataProvider;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,

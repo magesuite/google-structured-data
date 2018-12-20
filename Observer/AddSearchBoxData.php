@@ -6,15 +6,15 @@ class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
-    private $structuredDataContainer;
+    protected $structuredDataContainer;
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\SearchBox
      */
-    private $searchBoxDataProvider;
+    protected $searchBoxDataProvider;
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
