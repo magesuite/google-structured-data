@@ -15,16 +15,28 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    private $eventManager;
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    private $registry;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
+        \Magento\Framework\Registry $registry
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;
         $this->scopeConfig = $scopeConfig;
+        $this->eventManager = $eventManager;
+        $this->registry = $registry;
     }
 
     /**
@@ -37,6 +49,23 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
         }
         $productData = $this->productDataProvider->getProductStructuredData();
 
-        $this->structuredDataContainer->add($productData, 'product');
+        $productDataObject = new \Magento\Framework\DataObject();
+
+        $productDataObject->setData($productData);
+
+        $this->eventManager->dispatch('add_product_structured_data_after', ['structured_data' => $productDataObject, 'node' => 'product', 'product' => $this->getProduct()]);
+
+        $this->structuredDataContainer->add($productDataObject->getData(), 'product');
+    }
+
+    public function getProduct()
+    {
+        $product = $this->registry->registry('current_product');
+
+        if(!$product){
+            return false;
+        }
+
+        return $product;
     }
 }
