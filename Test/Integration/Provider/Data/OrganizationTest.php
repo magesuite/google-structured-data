@@ -1,5 +1,5 @@
 <?php
-namespace MageSuite\GoogleStructuredData\Test\Unit\Provider\Data;
+namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 
 /**
  * @magentoDbIsolation enabled
@@ -25,6 +25,7 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
+     * @magentoConfigFixture default/structured_data/organization/logo testlogo.png
      */
     public function testItReturnOrganizationDataCorrectly()
     {

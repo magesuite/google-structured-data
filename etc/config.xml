@@ -16,7 +16,12 @@
             </category_page>
             <product_page>
                 <enabled>1</enabled>
+                <show_rating>1</show_rating>
+                <description>description</description>
             </product_page>
+            <social>
+                <enabled>1</enabled>
+            </social>
         </structured_data>
     </default>
 </config>

@@ -41,6 +41,10 @@ class Product
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
+    /**
+     * @var \Magento\Eav\Model\Entity\Attribute
+     */
+    private $attribute;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
@@ -50,7 +54,8 @@ class Product
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
         \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Eav\Model\Entity\Attribute $attribute
     )
     {
         $this->registry = $registry;
@@ -61,6 +66,7 @@ class Product
         $this->productReviews = $productReviews;
         $this->eventManager = $eventManager;
         $this->scopeConfig = $scopeConfig;
+        $this->attribute = $attribute;
     }
 
     public function getProduct()
@@ -239,12 +245,19 @@ class Product
     public function getAttributeValue($product, $type)
     {
         $config = $this->getConfiguration();
-
         if(!isset($config[$type])){
             return '';
         }
 
-        return $product->getAttributeText($config[$type]);
+        $attribute = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $config[$type]);
+        $attributeType = $attribute->getFrontendInput();
+
+        if($attributeType == 'multiselect' || $attributeType == 'select'){
+            $value = $product->getAttributeText($config[$type]);
+        } else {
+            $value = $product->getData($config[$type]);
+        }
+        return $value;
     }
 
     public function getConfiguration()

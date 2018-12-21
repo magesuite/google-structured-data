@@ -67,7 +67,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                 'priceCurrency' => "USD",
                 'availability' => "InStock",
                 'url' => "http://localhost/index.php/simple-product.html",
-            ]
+            ],
+            'condition' => 'New'
         ];
     }
 }

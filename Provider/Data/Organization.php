@@ -45,8 +45,8 @@ class Organization
         $store = $this->storeManager->getStore();
         $baseUrl = $store->getBaseUrl();
 
-        $logoUrl = $config['logo'] ? $config['logo'] : $logoUrl;
-        $name = $config['name'] ? $config['name'] : $store->getName();
+        $logoUrl = (isset($config['logo']) && $config['logo']) ? $config['logo'] : $logoUrl;
+        $name = (isset($config['name']) && $config['name']) ? $config['name'] : $store->getName();
 
         $organizationData = [
             "@context" => "http://schema.org",
@@ -57,7 +57,7 @@ class Organization
         ];
 
         $contactData = [];
-        if($config['sales']){
+        if(isset($config['sales']) && $config['sales']){
             $contactData['sales'] = [
                 '@type' => 'ContactPoint',
                 'telephone' => $config['sales'],
@@ -65,7 +65,7 @@ class Organization
             ];
         }
 
-        if($config['technical']){
+        if(isset($config['technical']) && $config['technical']){
             $contactData['technical'] = [
                 '@type' => 'ContactPoint',
                 'telephone' => $config['technical'],
@@ -73,7 +73,7 @@ class Organization
             ];
         }
 
-        if($config['customer_service']) {
+        if(isset($config['customer_service']) && $config['customer_service']) {
             $contactData['customer_service'] = [
                 '@type' => 'ContactPoint',
                 'telephone' => $config['customer_service'],
@@ -89,26 +89,26 @@ class Organization
             '@type' => 'PostalAddress'
         ];
 
-        if($config['postal']){
+        if(isset($config['postal']) && $config['postal']){
             $address['postalCode'] = $config['postal'];
         }
 
-        if($config['region']){
+        if(isset($config['region']) && $config['region']){
             $address['addressRegion'] = $config['region'];
         }
 
-        if($config['city']){
+        if(isset($config['city']) && $config['city']){
             $address['addressLocality'] = $config['city'];
         }
 
-        if($config['country']){
+        if(isset($config['country']) && $config['country']){
             $address['addressCountry'] = [
                 '@type' => 'Country',
                 'name' => $config['country']
             ];
         }
 
-        if($config['postal']){
+        if(isset($config['postal']) && $config['postal']){
             $address['postalCode'] = $config['postal'];
         }
 
