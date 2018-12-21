@@ -36,6 +36,7 @@ class AddSocialData implements \Magento\Framework\Event\ObserverInterface
         if(!$this->scopeConfig->getValue('structured_data/social/enabled')){
             return;
         }
+
         $socialData = $this->socialDataProvider->getSocialData();
 
         $this->structuredDataContainer->add($socialData, 'social');

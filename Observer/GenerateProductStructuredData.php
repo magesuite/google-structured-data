@@ -23,13 +23,18 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
      * @var \Magento\Framework\Registry
      */
     private $registry;
+    /**
+     * @var \Magento\Framework\DataObjectFactory
+     */
+    private $dataObjectFactory;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\DataObjectFactory $dataObjectFactory
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
@@ -37,6 +42,7 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
         $this->scopeConfig = $scopeConfig;
         $this->eventManager = $eventManager;
         $this->registry = $registry;
+        $this->dataObjectFactory = $dataObjectFactory;
     }
 
     /**
@@ -47,9 +53,10 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
         if(!$this->scopeConfig->getValue('structured_data/product_page/enabled')){
             return;
         }
+
         $productData = $this->productDataProvider->getProductStructuredData();
 
-        $productDataObject = new \Magento\Framework\DataObject();
+        $productDataObject = $this->dataObjectFactory->create();
 
         $productDataObject->setData($productData);
 

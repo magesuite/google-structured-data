@@ -43,7 +43,17 @@ class ProductReviews
 
         $reviews->getEntitySummary($product, $storeMaganer);
 
-        return $product->getRatingSummary();
+        $ratingSummary = $product->getRatingSummary();
+
+        $ratingStars = 5;
+
+        $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / (100 / $ratingStars)): 0;
+        $reviewCount = $ratingSummary->getReviewsCount() ? $ratingSummary->getReviewsCount() : 0;
+
+        return [
+            'rating_value' => $ratingValue,
+            'review_count' => $reviewCount
+        ];
     }
 
     public function getReviews($product)
@@ -59,49 +69,5 @@ class ProductReviews
             ->setPageSize(10);
 
         return $reviewsCollection;
-    }
-
-    public function getReviewsData()
-    {
-        $product = $this->getProduct();
-
-        if (!$product) {
-            return [];
-        }
-
-        $data = [];
-
-        $ratingSummary = $this->getRatingSummary($product);
-
-        if ($ratingSummary->getRatingSummary() && $ratingSummary->getReviewsCount()) {
-            $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / 20): 0;
-            $reviewCount = $ratingSummary->getReviewsCount();
-
-            $data['aggregateRating'] = [
-                '@type' => 'AggregateRating',
-                'ratingValue' => $ratingValue,
-                'reviewCount' => $reviewCount
-            ];
-        }
-
-        $reviews = $this->getReviews($product);
-
-        $reviewData = [];
-        foreach ($reviews as $review) {
-
-            $reviewData[] = [
-                "@type" => "Review",
-                "author" => $review->getNickname(),
-                "datePublished" => $review->getCreatedAt(),
-                "description" => $review->getDetail(),
-                "name" => $review->getTitle()
-            ];
-        }
-
-        if(!empty($reviewData)) {
-            $data['review'] = $reviewData;
-        }
-
-        return $data;
     }
 }

@@ -208,14 +208,11 @@ class Product
 
         $ratingSummary = $this->productReviews->getRatingSummary($product);
 
-        if ($ratingSummary->getRatingSummary() && $ratingSummary->getReviewsCount()) {
-            $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / 20): 0;
-            $reviewCount = $ratingSummary->getReviewsCount();
-
+        if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
             $data['aggregateRating'] = [
                 '@type' => 'AggregateRating',
-                'ratingValue' => $ratingValue,
-                'reviewCount' => $reviewCount
+                'ratingValue' => $ratingSummary['rating_value'],
+                'reviewCount' => $ratingSummary['review_count']
             ];
         }
 

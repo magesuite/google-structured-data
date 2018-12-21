@@ -51,7 +51,6 @@ class AddBreadcrumbsToDataProvider
             $breadcrumbData = $this->breadcrumbsDataProvider->getBreadcrumbsData($breadcrumbs);
 
             $this->structuredDataContainer->add($breadcrumbData, 'breadcrumbs');
-
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }

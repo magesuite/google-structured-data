@@ -10,11 +10,8 @@ class Attributes implements \Magento\Framework\Option\ArrayInterface
     private $collectionFactory;
 
 
-    public function __construct(
-        \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory
-    )
+    public function __construct(\Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory)
     {
-
         $this->collectionFactory = $collectionFactory;
     }
 
@@ -28,7 +25,9 @@ class Attributes implements \Magento\Framework\Option\ArrayInterface
         $attributesCollection = $this->collectionFactory->create();
 
         $attributes = [];
+
         $attributes[] = ['value' => 0, 'label' => '--Please select--'];
+
         foreach ($attributesCollection as $attribute) {
             $attributes[] = ['value' => $attribute->getAttributeCode(), 'label' => $attribute->getAttributeCode()];
         }

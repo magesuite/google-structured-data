@@ -36,6 +36,7 @@ class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
         if(!$this->scopeConfig->getValue('structured_data/organization/enabled')){
             return;
         }
+
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 
         $this->structuredDataContainer->add($organizationData, 'organization');

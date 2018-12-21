@@ -35,9 +35,9 @@ class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
         if(!$this->scopeConfig->getValue('structured_data/search_box/enabled')){
             return;
         }
+
         $searchBoxData = $this->searchBoxDataProvider->getSearchBoxData();
 
         $this->structuredDataContainer->add($searchBoxData, 'search');
-
     }
 }
