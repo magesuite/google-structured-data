@@ -1,6 +1,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="controller_front_send_response_before">
-        <observer name="magesuite_send_response_before" instance="MageSuite\GoogleStructuredData\Observer\AddAdditionalDataToRenderedPage"/>
+        <observer name="structured_data_send_response_before" instance="MageSuite\GoogleStructuredData\Observer\AddStructuredDataToRenderedPage"/>
+    </event>
+    <event name="controller_action_postdispatch_catalog_product_view">
+        <observer name="structured_data_catalog_product_view" instance="MageSuite\GoogleStructuredData\Observer\GenerateProductStructuredData"/>
+    </event>
+    <event name="layout_generate_blocks_after">
+        <observer name="add_organization_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddOrganizationData"/>
+        <observer name="add_search_box_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
+        <observer name="add_social_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSocialData"/>
     </event>
 </config>
