@@ -3,6 +3,7 @@ namespace MageSuite\GoogleStructuredData\Repository;
 
 class ProductReviews
 {
+    const RATING_STARS = 5;
 
     protected $product = false;
 
@@ -45,9 +46,7 @@ class ProductReviews
 
         $ratingSummary = $product->getRatingSummary();
 
-        $ratingStars = 5;
-
-        $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / (100 / $ratingStars)): 0;
+        $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / (100 / self::RATING_STARS)): 0;
         $reviewCount = $ratingSummary->getReviewsCount() ? $ratingSummary->getReviewsCount() : 0;
 
         return [

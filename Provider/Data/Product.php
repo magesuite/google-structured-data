@@ -34,17 +34,13 @@ class Product
      */
     protected $productReviews;
     /**
-     * @var \Magento\Framework\Event\ManagerInterface
-     */
-    private $eventManager;
-    /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    private $scopeConfig;
+    protected $scopeConfig;
     /**
      * @var \Magento\Eav\Model\Entity\Attribute
      */
-    private $attribute;
+    protected $attribute;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
@@ -53,7 +49,6 @@ class Product
         \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Eav\Model\Entity\Attribute $attribute
     )
@@ -64,7 +59,6 @@ class Product
         $this->reviewCollectionFactory = $reviewCollectionFactory;
         $this->productRepository = $productRepository;
         $this->productReviews = $productReviews;
-        $this->eventManager = $eventManager;
         $this->scopeConfig = $scopeConfig;
         $this->attribute = $attribute;
     }

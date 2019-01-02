@@ -28,7 +28,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
             $structuredDataContainer->add($data, $node);
         }
 
-        $data = $structuredDataContainer->structuredData();
+        $data = $structuredDataContainer->getStructuredData();
 
         $this->assertArrayHasKey('product', $data);
         $this->assertArrayHasKey('breadcrumbs', $data);
@@ -47,7 +47,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
 
         $structuredDataContainer->addKey('product', 'additional_key', 'test value');
 
-        $data = $structuredDataContainer->structuredData();
+        $data = $structuredDataContainer->getStructuredData();
 
         $this->assertArrayHasKey('additional_key', $data['product']);
         $this->assertEquals('test value', $data['product']['additional_key']);
@@ -60,7 +60,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
 
         $structuredDataContainer->removeKey('product', 'additional_key');
 
-        $data = $structuredDataContainer->structuredData();
+        $data = $structuredDataContainer->getStructuredData();
 
         $this->assertArrayNotHasKey('additional_key', $data['product']);
     }

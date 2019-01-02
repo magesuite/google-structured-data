@@ -5,7 +5,7 @@ class StructuredDataContainer
 {
     protected $data = [];
 
-    public function structuredData()
+    public function getStructuredData()
     {
         return $this->data;
     }

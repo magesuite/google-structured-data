@@ -18,15 +18,15 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
     /**
      * @var \Magento\Framework\Event\ManagerInterface
      */
-    private $eventManager;
+    protected $eventManager;
     /**
      * @var \Magento\Framework\Registry
      */
-    private $registry;
+    protected $registry;
     /**
      * @var \Magento\Framework\DataObjectFactory
      */
-    private $dataObjectFactory;
+    protected $dataObjectFactory;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,

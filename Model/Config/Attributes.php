@@ -7,7 +7,7 @@ class Attributes implements \Magento\Framework\Option\ArrayInterface
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory
      */
-    private $collectionFactory;
+    protected $collectionFactory;
 
 
     public function __construct(\Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory)

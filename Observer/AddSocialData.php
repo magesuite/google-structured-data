@@ -14,7 +14,7 @@ class AddSocialData implements \Magento\Framework\Event\ObserverInterface
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Social
      */
-    private $socialDataProvider;
+    protected $socialDataProvider;
 
 
     public function __construct(

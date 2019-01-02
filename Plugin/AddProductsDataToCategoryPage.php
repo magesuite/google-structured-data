@@ -14,11 +14,11 @@ class AddProductsDataToCategoryPage
     /**
      * @var \Magento\Framework\Event\ManagerInterface
      */
-    private $eventManager;
+    protected $eventManager;
     /**
      * @var \Magento\Framework\DataObjectFactory
      */
-    private $dataObjectFactory;
+    protected $dataObjectFactory;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,

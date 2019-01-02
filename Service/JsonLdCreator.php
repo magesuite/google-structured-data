@@ -18,7 +18,7 @@ class JsonLdCreator
 
     public function getRenderedJsonLd()
     {
-        $structuredData = $this->structuredDataContainer->structuredData();
+        $structuredData = $this->structuredDataContainer->getStructuredData();
 
         $jsonLd = '';
         foreach ($structuredData as $data) {
