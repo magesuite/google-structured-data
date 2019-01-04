@@ -111,7 +111,7 @@ class Product
             "image" => $this->getProductImages($product),
             "sku" => $product->getSku(),
             "url" => $product->getProductUrl(),
-            "condition" => "New"
+            "itemCondition" => "NewCondition"
         ];
 
         if($description = $this->getAttributeValue($product, 'description')){
