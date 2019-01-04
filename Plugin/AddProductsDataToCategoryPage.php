@@ -19,21 +19,31 @@ class AddProductsDataToCategoryPage
      * @var \Magento\Framework\DataObjectFactory
      */
     protected $dataObjectFactory;
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    private $scopeConfig;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\DataObjectFactory $dataObjectFactory
+        \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;
         $this->eventManager = $eventManager;
         $this->dataObjectFactory = $dataObjectFactory;
+        $this->scopeConfig = $scopeConfig;
     }
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result)
     {
+        if(!$this->scopeConfig->getValue('structured_data/category_page/enabled')){
+            return $result;
+        }
+
         $i = 0;
         foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductStructuredData($product);
