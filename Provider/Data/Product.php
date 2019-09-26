@@ -86,8 +86,6 @@ class Product
             return [];
         }
 
-        $product = $this->productRepository->get($product->getSku());
-
         $productData = $this->getBaseProductData($product);
 
         $offerData = $this->getOffers();
