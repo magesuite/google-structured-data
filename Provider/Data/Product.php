@@ -136,6 +136,10 @@ class Product
         $mediaGallery = $product->getMediaGalleryImages();
 
         $images = [];
+        
+        if (!is_array($mediaGallery)){
+            return $images;
+        }
 
         foreach ($mediaGallery as $image) {
             $images[] = $image->getUrl();
