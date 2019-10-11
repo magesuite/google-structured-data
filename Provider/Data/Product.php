@@ -9,6 +9,8 @@ class Product
 
     protected $product = false;
 
+    protected $attributesCache = [];
+
     /**
      * @var \Magento\Framework\Registry
      */
@@ -242,7 +244,7 @@ class Product
             return '';
         }
 
-        $attribute = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $config[$type]);
+        $attribute = $this->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $config[$type]);
         $attributeType = $attribute->getFrontendInput();
 
         if($attributeType == 'multiselect' || $attributeType == 'select'){
@@ -256,5 +258,13 @@ class Product
     public function getConfiguration()
     {
         return $this->scopeConfig->getValue('structured_data/product_page');
+    }
+
+    protected function getAttribute($attributeCode) {
+        if(!isset($this->attributesCache[$attributeCode])) {
+            $this->attributesCache[$attributeCode] = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+        }
+
+        return $this->attributesCache[$attributeCode];
     }
 }

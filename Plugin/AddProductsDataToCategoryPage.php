@@ -44,6 +44,10 @@ class AddProductsDataToCategoryPage
             return $result;
         }
 
+        if($subject->getStructuredDataCalculated() === true) {
+            return $result;
+        }
+
         $i = 0;
         foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductStructuredData($product);
@@ -60,6 +64,8 @@ class AddProductsDataToCategoryPage
 
             $i++;
         }
+
+        $subject->setStructuredDataCalculated(true);
 
         return $result;
     }
