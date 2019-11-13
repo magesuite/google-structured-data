@@ -139,7 +139,7 @@ class Product
 
         $images = [];
         
-        if (!is_array($mediaGallery)){
+        if (!is_array($mediaGallery->getItems())){
             return $images;
         }
 
