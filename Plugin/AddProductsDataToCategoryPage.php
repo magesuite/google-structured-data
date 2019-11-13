@@ -48,6 +48,7 @@ class AddProductsDataToCategoryPage
             return $result;
         }
 
+        $result->addMediaGalleryData();
         $i = 0;
         foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductStructuredData($product);
