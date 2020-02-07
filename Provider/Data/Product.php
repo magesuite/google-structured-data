@@ -6,6 +6,7 @@ class Product
     const IN_STOCK = 'InStock';
     const OUT_OF_STOCK = 'OutOfStock';
     const TYPE_CONFIGURABLE = 'configurable';
+    const NO_OPTION_SELECTED = '0';
 
     protected $product = false;
 
@@ -240,7 +241,7 @@ class Product
     public function getAttributeValue($product, $type)
     {
         $config = $this->getConfiguration();
-        if(!isset($config[$type]) || $config[$type]==="0"){
+        if(!isset($config[$type]) || $config[$type]===self::NO_OPTION_SELECTED){
             return '';
         }
 
