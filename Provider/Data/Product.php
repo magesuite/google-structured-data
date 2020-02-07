@@ -6,6 +6,7 @@ class Product
     const IN_STOCK = 'InStock';
     const OUT_OF_STOCK = 'OutOfStock';
     const TYPE_CONFIGURABLE = 'configurable';
+    const NO_OPTION_SELECTED = '0';
 
     protected $product = false;
 
@@ -138,7 +139,7 @@ class Product
         $mediaGallery = $product->getMediaGalleryImages();
 
         $images = [];
-        
+
         if (!is_array($mediaGallery->getItems())){
             return $images;
         }
@@ -155,7 +156,7 @@ class Product
         $product = $this->getProduct();
 
         if (!$product) {
-           return [];
+            return [];
         }
 
         $data = [];
@@ -240,11 +241,11 @@ class Product
     public function getAttributeValue($product, $type)
     {
         $config = $this->getConfiguration();
-        if(!isset($config[$type])){
+        if(!isset($config[$type]) || $config[$type]===self::NO_OPTION_SELECTED){
             return '';
         }
 
-        $attribute = $this->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $config[$type]);
+        $attribute = $this->getAttribute($config[$type]);
         $attributeType = $attribute->getFrontendInput();
 
         if($attributeType == 'multiselect' || $attributeType == 'select'){
