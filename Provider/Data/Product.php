@@ -263,7 +263,8 @@ class Product
 
     protected function getAttribute($attributeCode) {
         if(!isset($this->attributesCache[$attributeCode])) {
-            $this->attributesCache[$attributeCode] = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+            $attribute = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+            $this->attributesCache[$attributeCode] = clone $attribute;
         }
 
         return $this->attributesCache[$attributeCode];
