@@ -25,8 +25,7 @@ class AddBreadcrumbsToDataProvider
         \Psr\Log\LoggerInterface $logger,
         \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbsDataProvider,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-    )
-    {
+    ) {
         $this->structuredDataContainer = $structuredDataContainer;
         $this->logger = $logger;
         $this->breadcrumbsDataProvider = $breadcrumbsDataProvider;
@@ -44,7 +43,11 @@ class AddBreadcrumbsToDataProvider
     public function addBreadcrumbsToProvider($breadcrumbs)
     {
         try {
-            if(!$this->scopeConfig->getValue('structured_data/breadcrumbs/enabled')){
+            if (!$this->scopeConfig->getValue('structured_data/breadcrumbs/enabled')) {
+                return;
+            }
+
+            if (empty($breadcrumbs)) {
                 return;
             }
 
