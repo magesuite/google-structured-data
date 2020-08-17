@@ -90,9 +90,7 @@ class Product
         }
 
         $productData = $this->getBaseProductData($product);
-
         $offerData = $this->getOffers();
-
         $reviewsData = $this->getReviewsData();
 
 
@@ -137,7 +135,6 @@ class Product
     public function getProductImages($product)
     {
         $mediaGallery = $product->getMediaGalleryImages();
-
         $images = [];
 
         if (!is_array($mediaGallery->getItems())){
@@ -161,8 +158,10 @@ class Product
 
         $data = [];
         $currency = $this->storeManager->getStore()->getCurrentCurrencyCode();
+
         if ($product->getTypeId() == self::TYPE_CONFIGURABLE) {
             $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+
             foreach ($simpleProducts as $simpleProduct) {
                 $data['offers'][] = $this->getOfferData($simpleProduct, $currency);
             }
@@ -193,17 +192,12 @@ class Product
     public function getReviewsData()
     {
         $config = $this->getConfiguration();
-
-        if(!$config['show_rating']){
-            return [];
-        }
         $product = $this->getProduct();
+        $data = [];
 
-        if (!$product) {
+        if (!$config['show_rating'] || !$product) {
             return [];
         }
-
-        $data = [];
 
         $ratingSummary = $this->productReviews->getRatingSummary($product);
 
@@ -215,32 +209,47 @@ class Product
             ];
         }
 
-        $reviews = $this->productReviews->getReviews($product);
-
+        $reviews = $this->productReviews->getReviews($product)->setDateOrder();
+        $reviews->getSelect()
+            ->joinLeft(
+                ['rov' => $reviews->getTable('rating_option_vote')],
+                'main_table.review_id = rov.review_id',
+                ['percent']
+            );
         $reviewData = [];
-        foreach ($reviews as $review) {
 
-            $reviewData[] = [
-                "@type" => "Review",
-                "author" => $review->getNickname(),
-                "datePublished" => $review->getCreatedAt(),
-                "description" => $review->getDetail(),
-                "name" => $review->getTitle()
+        foreach ($reviews as $review) {
+            $row = [
+                '@type' => 'Review',
+                'author' => $review->getNickname(),
+                'datePublished' => $review->getCreatedAt(),
+                'description' => $review->getDetail(),
+                'name' => $review->getTitle()
             ];
+
+            if ($percent = $review->getData('percent')) {
+                $row['reviewRating'] = [
+                    '@type' => 'Rating',
+                    'bestRating' => 5,
+                    'ratingValue' => ($percent / 20),
+                    'worstRating' => 1
+                ];
+            }
+
+            $reviewData[] = $row;
         }
 
-        if(!empty($reviewData)) {
+        if (!empty($reviewData)) {
             $data['review'] = $reviewData;
         }
 
         return $data;
     }
 
-
-
     public function getAttributeValue($product, $type)
     {
         $config = $this->getConfiguration();
+
         if(!isset($config[$type]) || $config[$type]===self::NO_OPTION_SELECTED){
             return '';
         }
@@ -253,6 +262,7 @@ class Product
         } else {
             $value = $product->getData($config[$type]);
         }
+
         return $value;
     }
 
@@ -262,7 +272,7 @@ class Product
     }
 
     protected function getAttribute($attributeCode) {
-        if(!isset($this->attributesCache[$attributeCode])) {
+        if (!isset($this->attributesCache[$attributeCode])) {
             $attribute = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
             $this->attributesCache[$attributeCode] = clone $attribute;
         }
