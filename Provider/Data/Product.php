@@ -215,7 +215,7 @@ class Product
                 ['rov' => $reviews->getTable('rating_option_vote')],
                 'main_table.review_id = rov.review_id',
                 ['percent']
-            );
+            )->group('main_table.review_id');
         $reviewData = [];
 
         foreach ($reviews as $review) {
