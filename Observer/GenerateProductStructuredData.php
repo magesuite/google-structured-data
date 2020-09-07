@@ -29,7 +29,7 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
     protected $dataObjectFactory;
 
     /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Product
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
      */
     protected $configuration;
 
@@ -39,7 +39,7 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
-        \MageSuite\GoogleStructuredData\Helper\Product $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
     ) {
         $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;
