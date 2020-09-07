@@ -14,14 +14,14 @@ class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
     protected $organizationDataProvider;
 
     /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Organization
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Organization
      */
     protected $configuration;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider,
-        \MageSuite\GoogleStructuredData\Helper\Organization $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
