@@ -1,14 +1,18 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Model\Config;
 
 class Attributes implements \Magento\Framework\Option\ArrayInterface
 {
+    /**
+     * @var array
+     */
+    protected $options = null;
 
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory
      */
     protected $collectionFactory;
-
 
     public function __construct(\Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory)
     {
@@ -16,24 +20,26 @@ class Attributes implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * Get order period array
-     *
      * @return array
      */
     public function toOptionArray()
     {
-        $attributesCollection = $this->collectionFactory->create();
+        if (!$this->options) {
+            $attributesCollection = $this->collectionFactory->create();
+            $this->options = [['value' => 0, 'label' => __('--Please select--')]];
 
-        $attributes = [];
-
-        $attributes[] = ['value' => 0, 'label' => '--Please select--'];
-
-        foreach ($attributesCollection as $attribute) {
-            $attributes[] = ['value' => $attribute->getAttributeCode(), 'label' => $attribute->getAttributeCode()];
+            foreach ($attributesCollection as $attribute) {
+                $this->options[] = [
+                    'value' => $attribute->getAttributeCode(),
+                    'label' => sprintf(
+                        '%s (%s)',
+                        $attribute->getDefaultFrontendLabel(),
+                        $attribute->getAttributeCode()
+                    )
+                ];
+            }
         }
 
-        return $attributes;
+        return $this->options;
     }
-
-
 }
