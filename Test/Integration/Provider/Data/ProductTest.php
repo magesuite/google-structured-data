@@ -17,11 +17,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected $productDataProvider;
 
     /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $registry;
-
-    /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
      */
     protected $productRepository;
@@ -30,7 +25,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
-        $this->registry = $this->objectManager->get(\Magento\Framework\Registry::class);
         $this->productRepository = $this->objectManager->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
     }
 
@@ -42,17 +36,31 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testItReturnProductDataCorrectly()
     {
         $product = $this->productRepository->get('simple');
-        $registry = $this->registry;
-        $registry->register('current_product', $product);
-
-        $productData = $this->productDataProvider->getProductStructuredData();
+        $productData = $this->productDataProvider->getProductStructuredData($product);
 
         $this->assertEquals($this->expectedData(), $productData);
     }
 
-    protected function expectedData()
+    /**
+     * @magentoDbIsolation enabled
+     * @magentoAppIsolation enabled
+     * @magentoDataFixture Magento/Catalog/_files/product_simple.php
+     */
+    public function testProductWithSpecialPriceData()
     {
-        return [
+        $product = $this->productRepository->get('simple');
+        $product->setSpecialPrice(10);
+        $product->setSpecialFromDate(date('Y-m-d', strtotime('-1 day')));
+        $product->setSpecialToDate($this->getSpecialToDate());
+        $productData = $this->productDataProvider->getProductStructuredData($product);
+        $expectedData = $this->expectedData(true);
+
+        $this->assertEquals($expectedData, $productData);
+    }
+
+    protected function expectedData($withSpecialPrice = false)
+    {
+        $data = [
             '@context' => "http://schema.org/",
             '@type' => "Product",
             'name' => "Simple Product",
@@ -70,5 +78,16 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             ],
             'itemCondition' => 'NewCondition'
         ];
+
+        if ($withSpecialPrice) {
+            $data['offers']['priceValidUntil'] = $this->getSpecialToDate();
+        }
+
+        return $data;
+    }
+
+    protected function getSpecialToDate()
+    {
+        return date('Y-m-d', strtotime('+1 day'));
     }
 }

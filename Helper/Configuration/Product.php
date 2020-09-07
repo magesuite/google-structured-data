@@ -1,6 +1,6 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Helper;
+namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
 class Product extends \Magento\Framework\App\Helper\AbstractHelper
 {

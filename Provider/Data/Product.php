@@ -44,7 +44,7 @@ class Product
     protected $attribute;
 
     /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Product
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
      */
     protected $configuration;
 
@@ -56,7 +56,7 @@ class Product
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
         \Magento\Eav\Model\Entity\Attribute $attribute,
-        \MageSuite\GoogleStructuredData\Helper\Product $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
     ) {
         $this->localeDate = $localeDate;
         $this->storeManager = $storeManager;
