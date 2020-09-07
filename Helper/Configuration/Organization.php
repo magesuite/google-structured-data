@@ -1,6 +1,6 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Helper;
+namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
 class Organization extends \Magento\Framework\App\Helper\AbstractHelper
 {

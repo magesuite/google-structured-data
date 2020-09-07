@@ -19,7 +19,7 @@ class Organization
     protected $urlBuilder;
 
     /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Organization
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Organization
      */
     protected $configuration;
 
@@ -27,7 +27,7 @@ class Organization
         \Magento\Theme\Block\Html\Header\Logo $logo,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\UrlInterface $urlBuilder,
-        \MageSuite\GoogleStructuredData\Helper\Organization $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration
     ) {
         $this->logo = $logo;
         $this->storeManager = $storeManager;
