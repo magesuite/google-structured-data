@@ -165,10 +165,13 @@ class Product
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             'url' => $product->getProductUrl()
         ];
+        $store = $product->getStore();
+        $specialFromDate = $product->getSpecialFromDate();
+        $specialToDate = $product->getSpecialToDate();
+        $inRange = $this->localeDate->isScopeDateInInterval($store, $specialFromDate, $specialToDate);
 
-        if ($product->getSpecialPrice() &&
-            $this->localeDate->isScopeDateInInterval($product->getStore(), $product->getSpecialFromDate(), $product->getSpecialToDate())) {
-            $data['priceValidUntil'] = date('Y-m-d', strtotime($product->getSpecialToDate()));
+        if ($product->getSpecialPrice() && $specialToDate && $inRange) {
+            $data['priceValidUntil'] = date('Y-m-d', strtotime($specialToDate));
         }
 
         return $data;
