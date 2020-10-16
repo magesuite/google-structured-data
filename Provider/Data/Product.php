@@ -6,6 +6,9 @@ class Product
     const IN_STOCK = 'InStock';
     const OUT_OF_STOCK = 'OutOfStock';
 
+    const CACHE_KEY = 'google_structured_data_product_%s_%s';
+    const CACHE_GROUP = 'google_structured_data_product';
+
     protected $attributesCache = [];
 
     /**
@@ -48,6 +51,16 @@ class Product
      */
     protected $configuration;
 
+    /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    protected $cache;
+
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
+
     public function __construct(
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -56,7 +69,9 @@ class Product
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
         \Magento\Eav\Model\Entity\Attribute $attribute,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
+        \Magento\Framework\App\CacheInterface $cache,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
     ) {
         $this->localeDate = $localeDate;
         $this->storeManager = $storeManager;
@@ -66,15 +81,33 @@ class Product
         $this->productReviews = $productReviews;
         $this->attribute = $attribute;
         $this->configuration = $configuration;
+        $this->cache = $cache;
+        $this->serializer = $serializer;
     }
 
     public function getProductStructuredData(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
+        $cacheKey = $this->getCacheKey($product);
+
+        if(($cachedData = $this->cache->load($cacheKey)) != false) {
+            return $this->serializer->unserialize($cachedData);
+        }
+
         $productData = $this->getBaseProductData($product);
         $offerData = $this->getOffers($product);
         $reviewsData = $this->getReviewsData($product);
 
-        return array_merge($productData, $offerData, $reviewsData);
+        $result = array_merge($productData, $offerData, $reviewsData);
+
+        $identities = $this->getIdentities($product);
+
+        $this->cache->save(
+            $this->serializer->serialize($result),
+            $cacheKey,
+            $identities
+        );
+
+        return $result;
     }
 
     /**
@@ -259,5 +292,28 @@ class Product
         }
 
         return $this->attributesCache[$attributeCode];
+    }
+
+    protected function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product) {
+        return sprintf(
+            self::CACHE_KEY,
+            $product->getId(),
+            $this->storeManager->getStore()->getId()
+        );
+    }
+
+    protected function getIdentities(\Magento\Catalog\Api\Data\ProductInterface $product) {
+        $identities = $product->getIdentities();
+        $identities[] = self::CACHE_GROUP;
+
+        $key = array_search(\Magento\Catalog\Model\Product::CACHE_TAG, $identities);
+
+        if ($key == false) {
+            return $identities;
+        }
+
+        unset($identities[$key]);
+
+        return $identities;
     }
 }

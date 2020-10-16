@@ -16,7 +16,7 @@ class SearchBoxTest extends \PHPUnit\Framework\TestCase
      */
     protected $searchBoxDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->searchBoxDataProvider = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\SearchBox::class);
