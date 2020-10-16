@@ -13,7 +13,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
     protected $structuredDataContainer;
 
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->structuredDataContainer = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get('\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer');

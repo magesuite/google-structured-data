@@ -26,7 +26,7 @@ class SocialTest extends \PHPUnit\Framework\TestCase
      */
     protected $productRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->socialDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Social::class);
