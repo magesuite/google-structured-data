@@ -40,10 +40,15 @@ class AddProductsDataToCategoryPage
     }
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result)
     {
-        if(!$this->scopeConfig->getValue('structured_data/category_page/enabled')){
+        if(!$this->scopeConfig->getValue('structured_data/category_page/include_products')){
             return $result;
         }
 
+        if($subject->getStructuredDataCalculated() === true) {
+            return $result;
+        }
+
+        $result->addMediaGalleryData();
         $i = 0;
         foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductStructuredData($product);
@@ -60,6 +65,8 @@ class AddProductsDataToCategoryPage
 
             $i++;
         }
+
+        $subject->setStructuredDataCalculated(true);
 
         return $result;
     }

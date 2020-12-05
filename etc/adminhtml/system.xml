@@ -13,6 +13,7 @@
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
             </group>
             <group id="organization" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -20,12 +21,15 @@
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
                 <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Organization Name</label>
+                    <comment>Custom website name, if empty default one will be used.</comment>
                 </field>
                 <field id="logo" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Logo Url</label>
+                    <comment>Custom website logo url, if empty default one will be used.</comment>
                 </field>
                 <field id="description" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Description</label>
@@ -57,6 +61,7 @@
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
             </group>
             <group id="social" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -64,53 +69,65 @@
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
                 <field id="facebook" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Facebook</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to facebook profile.</comment>
                 </field>
                 <field id="twitter" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Twitter</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to twitter profile.</comment>
                 </field>
                 <field id="google_plus" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Google+</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to google+ profile.</comment>
                 </field>
                 <field id="instagram" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Instagram</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to instagram profile.</comment>
                 </field>
                 <field id="youtube" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>YouTube</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to youtube profile.</comment>
                 </field>
                 <field id="linkedin" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>LinkedIn</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to linkedin profile.</comment>
                 </field>
                 <field id="myspace" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Myspace</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to myspace profile.</comment>
                 </field>
                 <field id="pinterest" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Pinterest</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to pinterest profile.</comment>
                 </field>
                 <field id="soundcloud" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SoundCloud</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to soundcloud profile.</comment>
                 </field>
                 <field id="tumblr" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Tumblr</label>
                     <depends><field id='enabled'>1</field></depends>
+                    <comment>Full url to tumblr profile.</comment>
                 </field>
             </group>
             <group id="category_page" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Category</label>
-                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="include_products" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether category page contains product data.</comment>
                 </field>
             </group>
             <group id="product_page" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -118,22 +135,27 @@
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
                 <field id="description" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Description</label>
                     <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                    <comment>Defines which attribute will be used to describe product description.</comment>
                 </field>
                 <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show Rating</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines if rating should be included in structured data.</comment>
                 </field>
                 <field id="brand" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Brand</label>
                     <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                    <comment>Defines which attribute will be used to describe product brand.</comment>
                 </field>
                 <field id="manufacturer" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Manufacturer</label>
                     <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                    <comment>Defines which attribute will be used to describe product manufacturer.</comment>
                 </field>
             </group>
         </section>

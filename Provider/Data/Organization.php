@@ -4,79 +4,73 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 class Organization
 {
     /**
+     * @var \Magento\Theme\Block\Html\Header\Logo
+     */
+    protected $logo;
+
+    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
+
     /**
      * @var \Magento\Framework\UrlInterface
      */
     protected $urlBuilder;
 
+    /**
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Organization
+     */
+    protected $configuration;
+
     public function __construct(
+        \Magento\Theme\Block\Html\Header\Logo $logo,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Framework\UrlInterface $urlBuilder
-    )
-    {
+        \Magento\Framework\UrlInterface $urlBuilder,
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration
+    ) {
+        $this->logo = $logo;
         $this->storeManager = $storeManager;
-        $this->scopeConfig = $scopeConfig;
         $this->urlBuilder = $urlBuilder;
+        $this->configuration = $configuration;
     }
 
     public function getOrganizationData()
     {
-        $config = $this->getConfiguration();
-
-        $folderName = \Magento\Config\Model\Config\Backend\Image\Logo::UPLOAD_DIR;
-
-        $storeLogoPath = $this->scopeConfig->getValue(
-            'design/header/logo_src',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-
-        $path = $folderName . '/' . $storeLogoPath;
-        $logoUrl = $this->urlBuilder
-                ->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]) . $path;
-
         $store = $this->storeManager->getStore();
-        $baseUrl = $store->getBaseUrl();
-
-        $logoUrl = (isset($config['logo']) && $config['logo']) ? $config['logo'] : $logoUrl;
-        $name = (isset($config['name']) && $config['name']) ? $config['name'] : $store->getName();
-
+        $logoUrl = empty($this->configuration->getLogo())
+            ? $this->logo->getLogoSrc() : $this->configuration->getLogo();
+        $name = empty($this->configuration->getName())
+            ? $store->getName() : $this->configuration->getName();
         $organizationData = [
             "@context" => "http://schema.org",
             "@type" => "Organization",
             "name" => $name,
-            "url" => $baseUrl,
+            "url" => $store->getBaseUrl(),
             "logo" => $logoUrl
         ];
-
         $contactData = [];
-        if(isset($config['sales']) && $config['sales']){
+
+        if (!empty($this->configuration->getSales())) {
             $contactData['sales'] = [
                 '@type' => 'ContactPoint',
-                'telephone' => $config['sales'],
+                'telephone' => $this->configuration->getSales(),
                 'contactType' => 'sales'
             ];
         }
 
-        if(isset($config['technical']) && $config['technical']){
+        if (!empty($this->configuration->getTechnical())) {
             $contactData['technical'] = [
                 '@type' => 'ContactPoint',
-                'telephone' => $config['technical'],
+                'telephone' => $this->configuration->getTechnical(),
                 'contactType' => 'technical support'
             ];
         }
 
-        if(isset($config['customer_service']) && $config['customer_service']) {
+        if (!empty($this->configuration->getCustomerService())) {
             $contactData['customer_service'] = [
                 '@type' => 'ContactPoint',
-                'telephone' => $config['customer_service'],
+                'telephone' => $this->configuration->getCustomerService(),
                 'contactType' => 'customer service'
             ];
         }
@@ -85,42 +79,35 @@ class Organization
             $organizationData['contactPoint'][] = $contact;
         }
 
-        $address = [
-            '@type' => 'PostalAddress'
-        ];
+        $address = ['@type' => 'PostalAddress'];
 
-        if(isset($config['postal']) && $config['postal']){
-            $address['postalCode'] = $config['postal'];
+        if (!empty($this->configuration->getPostal())) {
+            $address['postalCode'] = $this->configuration->getPostal();
         }
 
-        if(isset($config['region']) && $config['region']){
-            $address['addressRegion'] = $config['region'];
+        if (!empty($this->configuration->getRegion())) {
+            $address['addressRegion'] = $this->configuration->getRegion();
         }
 
-        if(isset($config['city']) && $config['city']){
-            $address['addressLocality'] = $config['city'];
+        if (!empty($this->configuration->getCity())){
+            $address['addressLocality'] = $this->configuration->getCity();
         }
 
-        if(isset($config['country']) && $config['country']){
+        if (!empty($this->configuration->getCountry())){
             $address['addressCountry'] = [
                 '@type' => 'Country',
-                'name' => $config['country']
+                'name' => $this->configuration->getCountry()
             ];
         }
 
-        if(isset($config['postal']) && $config['postal']){
-            $address['postalCode'] = $config['postal'];
+        if (!empty($this->configuration->getPostal())) {
+            $address['postalCode'] = $this->configuration->getPostal();
         }
 
-        if(count($address) > 1) {
+        if (count($address) > 1) {
             $organizationData['address'] = $address;
         }
 
         return $organizationData;
-    }
-
-    public function getConfiguration()
-    {
-        return $this->scopeConfig->getValue('structured_data/organization');
     }
 }

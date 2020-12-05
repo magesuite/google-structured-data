@@ -5,11 +5,17 @@ class Breadcrumbs
 {
     public function getBreadcrumbsData($breadcrumbs)
     {
-
         $breadcrumbData = [
             "@context" => "http://schema.org",
             '@type' => 'BreadcrumbList',
         ];
+
+        if (!is_array($breadcrumbs)){
+            $breadcrumbData['itemListElement'] = [];
+
+            return $breadcrumbData;
+        }
+        
         $breadcrumbList = [];
         $i = 1;
         foreach ($breadcrumbs as $breadcrumb) {

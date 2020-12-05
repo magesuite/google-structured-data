@@ -12,7 +12,7 @@ class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
      */
     protected $breadcrumbDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->breadcrumbDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs::class);

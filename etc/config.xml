@@ -12,7 +12,7 @@
                 <enabled>1</enabled>
             </search_box>
             <category_page>
-                <enabled>1</enabled>
+                <include_products>1</include_products>
             </category_page>
             <product_page>
                 <enabled>1</enabled>

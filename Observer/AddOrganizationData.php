@@ -7,25 +7,26 @@ class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     protected $structuredDataContainer;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Organization
      */
     protected $organizationDataProvider;
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
 
+    /**
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Organization
+     */
+    protected $configuration;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration
     )
     {
         $this->structuredDataContainer = $structuredDataContainer;
         $this->organizationDataProvider = $organizationDataProvider;
-        $this->scopeConfig = $scopeConfig;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -33,7 +34,7 @@ class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if(!$this->scopeConfig->getValue('structured_data/organization/enabled')){
+        if (!$this->configuration->isEnabled()) {
             return;
         }
 
