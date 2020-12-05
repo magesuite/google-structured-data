@@ -114,8 +114,14 @@ class Product
             "itemCondition" => "NewCondition"
         ];
 
-        if($description = $this->getAttributeValue($product, 'description')){
+        if($shdescription = $this->getAttributeValue($product, 'short_description')) {
             $structuredData['description'] = $description;
+        } else if($description = $this->getAttributeValue($product, 'description')) {
+            $structuredData['description'] = $description;
+        }
+        
+        if($ean = $this->getAttributeValue($product, 'ean')) {
+            $structuredData['gtin'] = $ean;
         }
 
         if($brand = $this->getAttributeValue($product, 'brand')) {
@@ -175,6 +181,7 @@ class Product
             "sku" => $product->getSku(),
             "price" => number_format($this->getProductPrice($product), 2),
             "priceCurrency" => $currency,
+            "priceValidUntil" => new DateTime('+7day')->format('Y-m-d'),
             "availability" => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             "url" => $product->getProductUrl()
         ];
@@ -202,13 +209,11 @@ class Product
 
         $ratingSummary = $this->productReviews->getRatingSummary($product);
 
-        if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
-            $data['aggregateRating'] = [
-                '@type' => 'AggregateRating',
-                'ratingValue' => $ratingSummary['rating_value'],
-                'reviewCount' => $ratingSummary['review_count']
-            ];
-        }
+        $data['aggregateRating'] = [
+            '@type' => 'AggregateRating',
+            'ratingValue' => $ratingSummary['rating_value'],
+            'reviewCount' => $ratingSummary['review_count']
+        ];
 
         $reviews = $this->productReviews->getReviews($product);
 
@@ -224,9 +229,7 @@ class Product
             ];
         }
 
-        if(!empty($reviewData)) {
-            $data['review'] = $reviewData;
-        }
+        $data['review'] = $reviewData;
 
         return $data;
     }
