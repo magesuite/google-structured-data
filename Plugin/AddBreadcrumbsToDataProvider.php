@@ -1,35 +1,39 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Plugin;
 
 class AddBreadcrumbsToDataProvider
 {
     /**
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration
+     */
+    protected $configuration;
+
+    /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     protected $structuredDataContainer;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs
      */
     protected $breadcrumbsDataProvider;
+
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var \Psr\Log\LoggerInterface
      */
-    protected $scopeConfig;
+    protected $logger;
 
     public function __construct(
+        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \Psr\Log\LoggerInterface $logger,
         \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbsDataProvider,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Psr\Log\LoggerInterface $logger
     ) {
+        $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
-        $this->logger = $logger;
         $this->breadcrumbsDataProvider = $breadcrumbsDataProvider;
-        $this->scopeConfig = $scopeConfig;
+        $this->logger = $logger;
     }
 
     public function aroundAssign(\Magento\Framework\View\Element\Template $subject, callable $proceed, $key = '', $index = null)
@@ -37,13 +41,14 @@ class AddBreadcrumbsToDataProvider
         if ($key == 'crumbs') {
             $this->addBreadcrumbsToProvider($index);
         }
+
         return $proceed($key, $index);
     }
 
     public function addBreadcrumbsToProvider($breadcrumbs)
     {
         try {
-            if (!$this->scopeConfig->getValue('structured_data/breadcrumbs/enabled')) {
+            if (!$this->configuration->isBreadcrumbsEnabled()) {
                 return;
             }
 

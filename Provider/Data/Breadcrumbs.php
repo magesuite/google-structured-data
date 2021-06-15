@@ -10,14 +10,15 @@ class Breadcrumbs
             '@type' => 'BreadcrumbList',
         ];
 
-        if (!is_array($breadcrumbs)){
+        if (!is_array($breadcrumbs)) {
             $breadcrumbData['itemListElement'] = [];
 
             return $breadcrumbData;
         }
-        
+
         $breadcrumbList = [];
         $i = 1;
+
         foreach ($breadcrumbs as $breadcrumb) {
             if (!$breadcrumb['link']) {
                 continue;

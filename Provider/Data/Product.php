@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Product
@@ -89,7 +90,7 @@ class Product
     {
         $cacheKey = $this->getCacheKey($product);
 
-        if(($cachedData = $this->cache->load($cacheKey)) != false) {
+        if (($cachedData = $this->cache->load($cacheKey)) != false) {
             return $this->serializer->unserialize($cachedData);
         }
 
@@ -125,17 +126,15 @@ class Product
             'url' => $product->getProductUrl(),
             'itemCondition' => 'NewCondition'
         ];
-        $attributes = ['description', 'brand', 'manufacturer'];
 
+        $attributes = ['description', 'brand', 'manufacturer'];
         foreach ($attributes as $attribute) {
             $methodName = 'get' . ucfirst($attribute);
-
             if (!method_exists($this->configuration, $methodName)) {
                 continue;
             }
 
             $attributeCode = $this->configuration->$methodName();
-
             if (empty($attributeCode)) {
                 continue;
             }
@@ -157,7 +156,6 @@ class Product
     protected function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
         $mediaGallery = $product->getMediaGalleryImages();
-
         if (!is_array($mediaGallery->getItems())) {
             return [];
         }
@@ -198,6 +196,7 @@ class Product
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             'url' => $product->getProductUrl()
         ];
+
         $store = $product->getStore();
         $specialFromDate = $product->getSpecialFromDate();
         $specialToDate = $product->getSpecialToDate();
@@ -294,7 +293,8 @@ class Product
         return $this->attributesCache[$attributeCode];
     }
 
-    protected function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product) {
+    protected function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product)
+    {
         return sprintf(
             self::CACHE_KEY,
             $product->getId(),
@@ -302,7 +302,8 @@ class Product
         );
     }
 
-    protected function getIdentities(\Magento\Catalog\Api\Data\ProductInterface $product) {
+    protected function getIdentities(\Magento\Catalog\Api\Data\ProductInterface $product)
+    {
         $identities = $product->getIdentities();
         $identities[] = self::CACHE_GROUP;
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Organization
@@ -38,10 +39,8 @@ class Organization
     public function getOrganizationData()
     {
         $store = $this->storeManager->getStore();
-        $logoUrl = empty($this->configuration->getLogo())
-            ? $this->logo->getLogoSrc() : $this->configuration->getLogo();
-        $name = empty($this->configuration->getName())
-            ? $store->getName() : $this->configuration->getName();
+        $logoUrl = empty($this->configuration->getLogo()) ? $this->logo->getLogoSrc() : $this->configuration->getLogo();
+        $name = empty($this->configuration->getName()) ? $store->getName() : $this->configuration->getName();
         $organizationData = [
             "@context" => "http://schema.org",
             "@type" => "Organization",
@@ -89,11 +88,11 @@ class Organization
             $address['addressRegion'] = $this->configuration->getRegion();
         }
 
-        if (!empty($this->configuration->getCity())){
+        if (!empty($this->configuration->getCity())) {
             $address['addressLocality'] = $this->configuration->getCity();
         }
 
-        if (!empty($this->configuration->getCountry())){
+        if (!empty($this->configuration->getCountry())) {
             $address['addressCountry'] = [
                 '@type' => 'Country',
                 'name' => $this->configuration->getCountry()

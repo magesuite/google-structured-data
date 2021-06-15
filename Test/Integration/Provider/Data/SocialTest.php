@@ -37,11 +37,11 @@ class SocialTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @magentoConfigFixture default/structured_data/social/facebook facebook
-     * @magentoConfigFixture default/structured_data/social/twitter twitter
-     * @magentoConfigFixture default/structured_data/social/google_plus google plus
-     * @magentoConfigFixture default/structured_data/social/instagram instagram
-     * @magentoConfigFixture default/structured_data/social/youtube youtube
+     * @magentoConfigFixture current_store structured_data/social/facebook facebook
+     * @magentoConfigFixture current_store structured_data/social/twitter twitter
+     * @magentoConfigFixture current_store structured_data/social/google_plus google plus
+     * @magentoConfigFixture current_store structured_data/social/instagram instagram
+     * @magentoConfigFixture current_store structured_data/social/youtube youtube
      */
     public function testItReturnSocialDataCorrectly()
     {

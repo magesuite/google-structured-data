@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Provider;
 
 class StructuredDataContainer
@@ -9,7 +10,6 @@ class StructuredDataContainer
     {
         return $this->data;
     }
-
 
     public function add($data, $node)
     {

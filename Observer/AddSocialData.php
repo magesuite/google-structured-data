@@ -1,30 +1,32 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Observer;
 
 class AddSocialData implements \Magento\Framework\Event\ObserverInterface
 {
     /**
+     * @var  \MageSuite\GoogleStructuredData\Helper\Configuration\Social
+     */
+    protected $configuration;
+
+    /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     protected $structuredDataContainer;
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Social
      */
     protected $socialDataProvider;
 
-
     public function __construct(
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Social $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Social $socialDataProvider,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \MageSuite\GoogleStructuredData\Provider\Data\Social $socialDataProvider
     )
     {
+        $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
-        $this->scopeConfig = $scopeConfig;
         $this->socialDataProvider = $socialDataProvider;
     }
 
@@ -33,7 +35,7 @@ class AddSocialData implements \Magento\Framework\Event\ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if(!$this->scopeConfig->getValue('structured_data/social/enabled')){
+        if (!$this->configuration->isEnabled()) {
             return;
         }
 
