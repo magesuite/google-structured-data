@@ -1,30 +1,33 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Observer;
 
 class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
 {
     /**
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration
+     */
+    protected $configuration;
+
+    /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     protected $structuredDataContainer;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\SearchBox
      */
     protected $searchBoxDataProvider;
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
 
     public function __construct(
+        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\SearchBox $searchBoxDataProvider,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \MageSuite\GoogleStructuredData\Provider\Data\SearchBox $searchBoxDataProvider
     )
     {
+        $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
         $this->searchBoxDataProvider = $searchBoxDataProvider;
-        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -32,7 +35,7 @@ class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if(!$this->scopeConfig->getValue('structured_data/search_box/enabled')){
+        if (!$this->configuration->isSearchBoxEnabled()) {
             return;
         }
 
