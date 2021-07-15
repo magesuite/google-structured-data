@@ -62,6 +62,11 @@ class Product
      */
     protected $serializer;
 
+    /**
+     * @var \Magento\Framework\Escaper
+     */
+    protected $escaper;
+
     public function __construct(
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -72,7 +77,8 @@ class Product
         \Magento\Eav\Model\Entity\Attribute $attribute,
         \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
         \Magento\Framework\App\CacheInterface $cache,
-        \Magento\Framework\Serialize\SerializerInterface $serializer
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
+        \Magento\Framework\Escaper $escaper
     ) {
         $this->localeDate = $localeDate;
         $this->storeManager = $storeManager;
@@ -84,6 +90,7 @@ class Product
         $this->configuration = $configuration;
         $this->cache = $cache;
         $this->serializer = $serializer;
+        $this->escaper = $escaper;
     }
 
     public function getProductStructuredData(\Magento\Catalog\Api\Data\ProductInterface $product)
@@ -120,9 +127,9 @@ class Product
         $structuredData = [
             '@context' => 'http://schema.org/',
             '@type' => 'Product',
-            'name' => $product->getName(),
+            'name' => $this->escaper->escapeHtml($product->getName()),
             'image' => $this->getProductImages($product),
-            'sku' => $product->getSku(),
+            'sku' => $this->escaper->escapeHtml($product->getSku()),
             'url' => $product->getProductUrl(),
             'itemCondition' => 'NewCondition'
         ];
@@ -190,7 +197,7 @@ class Product
     {
         $data = [
             '@type' => 'Offer',
-            'sku' => $product->getSku(),
+            'sku' => $this->escaper->escapeHtml($product->getSku()),
             'price' => number_format($this->getProductPrice($product), 2),
             'priceCurrency' => $currency,
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
@@ -243,10 +250,10 @@ class Product
         foreach ($reviews as $review) {
             $row = [
                 '@type' => 'Review',
-                'author' => $review->getNickname(),
+                'author' => $this->escaper->escapeHtml($review->getNickname()),
                 'datePublished' => $review->getCreatedAt(),
-                'description' => $review->getDetail(),
-                'name' => $review->getTitle()
+                'description' => $this->escaper->escapeHtml($review->getDetail()),
+                'name' => $this->escaper->escapeHtml($review->getTitle())
             ];
 
             if ($percent = $review->getData('percent')) {
@@ -280,7 +287,7 @@ class Product
             $value = $product->getData($attributeCode);
         }
 
-        return $value;
+        return $this->escaper->escapeHtml($value);
     }
 
     protected function getAttribute($attributeCode)
