@@ -71,7 +71,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             '@type' => "Product",
             'name' => "Simple Product",
             'image' => [],
-            'description' => "Description with <b>html tag</b>",
+            'description' => 'Description with &lt;b&gt;html tag&lt;/b&gt;',
             'sku' => "simple",
             'url' => "http://localhost/index.php/simple-product.html",
             'offers' => [
