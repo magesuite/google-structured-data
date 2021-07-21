@@ -22,6 +22,11 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected $productRepository;
 
     /**
+     * @var \Magento\Review\Model\ResourceModel\Review\Collection
+     */
+    protected $reviewCollectionFactory;
+
+    /**
      * @var \Magento\Framework\App\CacheInterface
      */
     protected $cache;
@@ -31,6 +36,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
         $this->productRepository = $this->objectManager->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+        $this->reviewCollectionFactory = $this->objectManager->create(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
         $this->cache = $this->objectManager->create(\Magento\Framework\App\CacheInterface::class);
     }
 
@@ -62,6 +68,23 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $expectedData = $this->expectedData(true);
 
         $this->assertEquals($expectedData, $productData);
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation enabled
+     * @magentoDataFixture loadReviews
+     */
+    public function testProductStructuredDataReviewsFilteredByStore()
+    {
+        $product = $this->productRepository->get('simple');
+        $productData = $this->productDataProvider->getProductStructuredData($product);
+
+        $reviewCollection = $this->reviewCollectionFactory->create();
+        $reviewCollection->addStoreFilter($product->getStoreId());
+
+        $this->assertEquals(2, count($productData['review']));
     }
 
     protected function expectedData($withSpecialPrice = false)
@@ -99,5 +122,10 @@ class ProductTest extends \PHPUnit\Framework\TestCase
 
     public function tearDown(): void {
         $this->cache->clean([\MageSuite\GoogleStructuredData\Provider\Data\Product::CACHE_GROUP]);
+    }
+
+    public static function loadReviews()
+    {
+        require __DIR__ . '/../../_files/reviews_multistore.php';
     }
 }

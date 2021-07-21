@@ -238,7 +238,9 @@ class Product
             ];
         }
 
-        $reviews = $this->productReviews->getReviews($product)->setDateOrder();
+        $reviews = $this->productReviews->getReviews($product)
+            ->setDateOrder()
+            ->addStoreFilter($this->storeManager->getStore()->getId());
         $reviews->getSelect()
             ->joinLeft(
                 ['rov' => $reviews->getTable('rating_option_vote')],
