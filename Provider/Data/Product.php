@@ -198,7 +198,7 @@ class Product
         $data = [
             '@type' => 'Offer',
             'sku' => $this->escaper->escapeHtml($product->getSku()),
-            'price' => number_format($this->getProductPrice($product), 2),
+            'price' => number_format($this->getProductPrice($product), 2, '.', ''),
             'priceCurrency' => $currency,
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             'url' => $product->getProductUrl()
