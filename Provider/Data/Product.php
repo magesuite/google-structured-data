@@ -184,7 +184,7 @@ class Product
             $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
 
             foreach ($simpleProducts as $simpleProduct) {
-                $data['offers'][] = $this->getOfferData($simpleProduct, $currency);
+                $data['offers'][] = $this->getOfferData($simpleProduct, $currency, $product);
             }
         } else {
             $data['offers'] = $this->getOfferData($product, $currency);
@@ -193,7 +193,7 @@ class Product
         return $data;
     }
 
-    protected function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, $currency)
+    protected function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, $currency, $configurableProduct = null)
     {
         $data = [
             '@type' => 'Offer',
@@ -201,7 +201,7 @@ class Product
             'price' => number_format($this->getProductPrice($product), 2, '.', ''),
             'priceCurrency' => $currency,
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
-            'url' => $product->getProductUrl()
+            'url' => $configurableProduct ? $configurableProduct->getProductUrl() : $product->getProductUrl()
         ];
 
         $store = $product->getStore();
