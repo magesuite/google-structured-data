@@ -184,7 +184,10 @@ class Product
             $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
 
             foreach ($simpleProducts as $simpleProduct) {
-                $data['offers'][] = $this->getOfferData($simpleProduct, $currency);
+                $offer = $this->getOfferData($simpleProduct, $currency);
+                $offer['url'] = $product->getProductUrl();
+
+                $data['offers'][] = $offer;
             }
         } else {
             $data['offers'] = $this->getOfferData($product, $currency);
