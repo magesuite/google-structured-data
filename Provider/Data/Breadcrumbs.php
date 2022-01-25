@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Breadcrumbs

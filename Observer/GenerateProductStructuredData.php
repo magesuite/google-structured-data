@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Observer;
 
 class GenerateProductStructuredData implements \Magento\Framework\Event\ObserverInterface
@@ -49,9 +50,6 @@ class GenerateProductStructuredData implements \Magento\Framework\Event\Observer
         $this->configuration = $configuration;
     }
 
-    /**
-     * @param \Magento\Framework\Event\Observer $observer
-     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $product = $this->getProduct();

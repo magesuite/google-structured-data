@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider\Data;
 
 /**
@@ -11,6 +12,7 @@ class SearchBoxTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\TestFramework\ObjectManager
      */
     protected $objectManager;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\SearchBox
      */

@@ -23,8 +23,7 @@ class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
         \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\SearchBox $searchBoxDataProvider
-    )
-    {
+    ) {
         $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
         $this->searchBoxDataProvider = $searchBoxDataProvider;

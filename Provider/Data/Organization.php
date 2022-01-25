@@ -41,6 +41,7 @@ class Organization
         $store = $this->storeManager->getStore();
         $logoUrl = empty($this->configuration->getLogo()) ? $this->logo->getLogoSrc() : $this->configuration->getLogo();
         $name = empty($this->configuration->getName()) ? $store->getName() : $this->configuration->getName();
+
         $organizationData = [
             "@context" => "http://schema.org",
             "@type" => "Organization",

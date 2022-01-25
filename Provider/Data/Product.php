@@ -118,10 +118,6 @@ class Product
         return $result;
     }
 
-    /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @return array
-     */
     protected function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
         $structuredData = [
@@ -148,18 +144,13 @@ class Product
 
             try {
                 $structuredData[$attribute] = $this->getAttributeValue($product, $attributeCode);
-            } catch (\Exception $e) {
-                // do nothing
+            } catch (\Exception $e) { //phpcs:ignore
             }
         }
 
         return $structuredData;
     }
 
-    /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @return array
-     */
     protected function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
         $mediaGallery = $product->getMediaGalleryImages();

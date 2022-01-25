@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
 class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
@@ -7,11 +8,11 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\TestFramework\ObjectManager
      */
     protected $objectManager;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
      */
     protected $structuredDataContainer;
-
 
     protected function setUp(): void
     {
@@ -44,7 +45,6 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
     {
         $structuredDataContainer = $this->structuredDataContainer;
 
-
         $structuredDataContainer->addKey('product', 'additional_key', 'test value');
 
         $data = $structuredDataContainer->getStructuredData();
@@ -56,7 +56,6 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
     public function testItRemoveKeyCorrectly()
     {
         $structuredDataContainer = $this->structuredDataContainer;
-
 
         $structuredDataContainer->removeKey('product', 'additional_key');
 

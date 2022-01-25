@@ -17,8 +17,7 @@ class Social
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\GoogleStructuredData\Helper\Configuration\Social $configuration
-    )
-    {
+    ) {
         $this->storeManager = $storeManager;
         $this->configuration = $configuration;
     }
@@ -45,5 +44,4 @@ class Social
 
         return $socialData;
     }
-
 }
