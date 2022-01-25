@@ -27,7 +27,6 @@ class StructuredDataContainer
         return $this->data[$node][$key];
     }
 
-
     public function removeKey($node, $key)
     {
         if (isset($this->data[$node]) && isset($this->data[$node][$key])) {
@@ -35,9 +34,6 @@ class StructuredDataContainer
         }
     }
 
-    /**
-     * Destruct registry items
-     */
     public function __destruct()
     {
         $this->data = [];

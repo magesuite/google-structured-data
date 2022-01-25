@@ -2,6 +2,7 @@
 
 namespace MageSuite\GoogleStructuredData\Plugin;
 
+// phpcs:ignoreFile
 class AddProductsDataToCategoryPage
 {
     /**
@@ -10,8 +11,8 @@ class AddProductsDataToCategoryPage
     protected $configuration;
 
     /**
-    * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
-    */
+     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
+     */
     protected $structuredDataContainer;
 
     /**
@@ -35,8 +36,7 @@ class AddProductsDataToCategoryPage
         \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Framework\DataObjectFactory $dataObjectFactory
-    )
-    {
+    ) {
         $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;

@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Service;
 
 class JsonLdCreator
@@ -10,11 +11,9 @@ class JsonLdCreator
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer
-    )
-    {
+    ) {
         $this->structuredDataContainer = $structuredDataContainer;
     }
-
 
     public function getRenderedJsonLd()
     {

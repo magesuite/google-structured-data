@@ -6,7 +6,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="MageSuite_GoogleStructuredData::config_structured_data" title="Magesuite Google Structured Data"/>
+                            <resource id="MageSuite_GoogleStructuredData::config_structured_data" title="MageSuite Google Structured Data"/>
                         </resource>
                     </resource>
                 </resource>

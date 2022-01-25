@@ -16,7 +16,7 @@ class SearchBox
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\UrlInterface $urlBuilder
-    ){
+    ) {
 
         $this->storeManager = $storeManager;
         $this->urlBuilder = $urlBuilder;

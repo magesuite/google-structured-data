@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 
 /**
@@ -11,6 +12,7 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\TestFramework\ObjectManager
      */
     protected $objectManager;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Organization
      */

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="\Magento\Framework\View\Element\Template">
-        <plugin name="remove_schema_in_blocks" type="\MageSuite\GoogleStructuredData\Plugin\RemoveSchemaInBlocks" sortOrder="1" />
-        <plugin name="assign_breadcrumbs" type="\MageSuite\GoogleStructuredData\Plugin\AddBreadcrumbsToDataProvider" sortOrder="1" />
+    <type name="Magento\Framework\View\Element\Template">
+        <plugin name="remove_schema_in_blocks" type="MageSuite\GoogleStructuredData\Plugin\RemoveSchemaInBlocks" sortOrder="1" />
+        <plugin name="assign_breadcrumbs" type="MageSuite\GoogleStructuredData\Plugin\AddBreadcrumbsToDataProvider" sortOrder="1" />
     </type>
-    <type name="\Magento\Catalog\Block\Product\ListProduct">
-        <plugin name="add_products_data_to_category" type="\MageSuite\GoogleStructuredData\Plugin\AddProductsDataToCategoryPage" sortOrder="1" />
+    <type name="Magento\Catalog\Block\Product\ListProduct">
+        <plugin name="add_products_data_to_category" type="MageSuite\GoogleStructuredData\Plugin\AddProductsDataToCategoryPage" sortOrder="1" />
     </type>
 </config>

@@ -1,6 +1,8 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Plugin;
 
+// phpcs:ignoreFile
 class RemoveSchemaInBlocks
 {
     public function aroundGetData(\Magento\Framework\View\Element\Template $subject, callable $proceed, $key = '', $index = null)

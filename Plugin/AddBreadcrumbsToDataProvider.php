@@ -2,6 +2,7 @@
 
 namespace MageSuite\GoogleStructuredData\Plugin;
 
+// phpcs:ignoreFile
 class AddBreadcrumbsToDataProvider
 {
     /**

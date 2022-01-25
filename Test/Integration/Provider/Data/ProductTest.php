@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Test\Integration\Provider;
 
 /**
@@ -11,6 +12,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\TestFramework\ObjectManager
      */
     protected $objectManager;
+
     /**
      * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
      */
@@ -120,7 +122,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         return date('Y-m-d', strtotime('+1 day'));
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         $this->cache->clean([\MageSuite\GoogleStructuredData\Provider\Data\Product::CACHE_GROUP]);
     }
 

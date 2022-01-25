@@ -1,4 +1,5 @@
 <?php
+
 namespace MageSuite\GoogleStructuredData\Observer;
 
 class AddStructuredDataToRenderedPage implements \Magento\Framework\Event\ObserverInterface
