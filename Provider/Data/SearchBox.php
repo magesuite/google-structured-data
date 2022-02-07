@@ -8,18 +8,19 @@ class SearchBox
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
+
     /**
      * @var \Magento\Framework\UrlInterface
      */
     protected $urlBuilder;
 
     public function __construct(
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\UrlInterface $urlBuilder
+        \Magento\Framework\UrlInterface $urlBuilder,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
 
-        $this->storeManager = $storeManager;
         $this->urlBuilder = $urlBuilder;
+        $this->storeManager = $storeManager;
     }
 
     public function getSearchBoxData()

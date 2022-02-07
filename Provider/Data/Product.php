@@ -10,52 +10,10 @@ class Product
     const CACHE_KEY = 'google_structured_data_product_%s_%s';
     const CACHE_GROUP = 'google_structured_data_product';
 
-    protected $attributesCache = [];
-
     /**
      * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
-    protected $localeDate;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
-     * @var \Magento\Review\Model\ReviewFactory
-     */
-    protected $reviewFactory;
-
-    /**
-     * @var \Magento\Review\Model\ResourceModel\Review\CollectionFactory
-     */
-    protected $reviewCollectionFactory;
-
-    /**
-     * @var \Magento\Catalog\Api\ProductRepositoryInterface
-     */
-    protected $productRepository;
-
-    /**
-     * @var \MageSuite\GoogleStructuredData\Repository\ProductReviews
-     */
-    protected $productReviews;
-
-    /**
-     * @var \Magento\Eav\Model\Entity\Attribute
-     */
-    protected $attribute;
-
-    /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
-     */
-    protected $configuration;
-
-    /**
-     * @var \Magento\Framework\App\CacheInterface
-     */
-    protected $cache;
+    protected $timezone;
 
     /**
      * @var \Magento\Framework\Serialize\SerializerInterface
@@ -63,47 +21,74 @@ class Product
     protected $serializer;
 
     /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    protected $cache;
+
+    /**
      * @var \Magento\Framework\Escaper
      */
     protected $escaper;
 
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute
+     */
+    protected $compositeAttributeDataProvider;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews
+     */
+    protected $getProductReviews;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary
+     */
+    protected $getProductRattingSummary;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
+     */
+    protected $configuration;
+
     public function __construct(
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Review\Model\ReviewFactory $reviewFactory,
-        \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \MageSuite\GoogleStructuredData\Repository\ProductReviews $productReviews,
-        \Magento\Eav\Model\Entity\Attribute $attribute,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
-        \Magento\Framework\App\CacheInterface $cache,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \Magento\Framework\Escaper $escaper
+        \Magento\Framework\App\CacheInterface $cache,
+        \Magento\Framework\Escaper $escaper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
+        \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
+        \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
     ) {
-        $this->localeDate = $localeDate;
-        $this->storeManager = $storeManager;
-        $this->reviewFactory = $reviewFactory;
-        $this->reviewCollectionFactory = $reviewCollectionFactory;
-        $this->productRepository = $productRepository;
-        $this->productReviews = $productReviews;
-        $this->attribute = $attribute;
-        $this->configuration = $configuration;
-        $this->cache = $cache;
+        $this->timezone = $timezone;
         $this->serializer = $serializer;
+        $this->cache = $cache;
         $this->escaper = $escaper;
+        $this->storeManager = $storeManager;
+        $this->compositeAttributeDataProvider = $compositeAttributeDataProvider;
+        $this->getProductReviews = $getProductReviews;
+        $this->getProductRattingSummary = $getProductRattingSummary;
+        $this->configuration = $configuration;
     }
 
     public function getProductStructuredData(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
-        $cacheKey = $this->getCacheKey($product);
+        $store = $this->storeManager->getStore();
+        $cacheKey = $this->getCacheKey($product, $store);
 
         if (($cachedData = $this->cache->load($cacheKey)) != false) {
             return $this->serializer->unserialize($cachedData);
         }
 
-        $productData = $this->getBaseProductData($product);
-        $offerData = $this->getOffers($product);
-        $reviewsData = $this->getReviewsData($product);
+        $productData = $this->getBaseProductData($product, $store);
+        $offerData = $this->getOffers($product, $store);
+        $reviewsData = $this->getReviewsData($product, $store);
 
         $result = array_merge($productData, $offerData, $reviewsData);
 
@@ -118,7 +103,7 @@ class Product
         return $result;
     }
 
-    protected function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product)
+    public function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product, $store)
     {
         $structuredData = [
             '@context' => 'http://schema.org/',
@@ -130,78 +115,49 @@ class Product
             'itemCondition' => 'NewCondition'
         ];
 
-        $attributes = ['description', 'brand', 'manufacturer'];
-        foreach ($attributes as $attribute) {
-            $methodName = 'get' . ucfirst($attribute);
-            if (!method_exists($this->configuration, $methodName)) {
-                continue;
-            }
+        $attributeData = $this->compositeAttributeDataProvider->getAttributeData($product);
 
-            $attributeCode = $this->configuration->$methodName();
-            if (empty($attributeCode)) {
-                continue;
-            }
-
-            try {
-                $structuredData[$attribute] = $this->getAttributeValue($product, $attributeCode);
-            } catch (\Exception $e) { //phpcs:ignore
-            }
-        }
-
-        return $structuredData;
+        return array_merge($structuredData, $attributeData);
     }
 
-    protected function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product)
+    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, $store)
     {
-        $mediaGallery = $product->getMediaGalleryImages();
-        if (!is_array($mediaGallery->getItems())) {
-            return [];
-        }
-
-        $images = [];
-        foreach ($mediaGallery as $image) {
-            $images[] = $image->getUrl();
-        }
-
-        return $images;
-    }
-
-    protected function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product)
-    {
-        $currency = $this->storeManager->getStore()->getCurrentCurrencyCode();
         $data = [];
+        $currency = $store->getCurrentCurrencyCode();
 
         if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
             $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+            $productUrl = $product->getProductUrl();
 
             foreach ($simpleProducts as $simpleProduct) {
-                $offer = $this->getOfferData($simpleProduct, $currency);
-                $offer['url'] = $product->getProductUrl();
+                $offer = $this->getOfferData($simpleProduct, $store, $currency);
+                $offer['url'] = $productUrl;
 
                 $data['offers'][] = $offer;
             }
         } else {
-            $data['offers'] = $this->getOfferData($product, $currency);
+            $data['offers'] = $this->getOfferData($product, $store, $currency);
         }
 
         return $data;
     }
 
-    protected function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, $currency)
+    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, $store, $currency)
     {
+        $productPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+
         $data = [
             '@type' => 'Offer',
             'sku' => $this->escaper->escapeHtml($product->getSku()),
-            'price' => number_format($this->getProductPrice($product), 2, '.', ''),
+            'price' => number_format($productPrice, 2, '.', ''),
             'priceCurrency' => $currency,
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             'url' => $product->getProductUrl()
         ];
 
-        $store = $product->getStore();
         $specialFromDate = $product->getSpecialFromDate();
         $specialToDate = $product->getSpecialToDate();
-        $inRange = $this->localeDate->isScopeDateInInterval($store, $specialFromDate, $specialToDate);
+        $inRange = $this->timezone->isScopeDateInInterval($store, $specialFromDate, $specialToDate);
 
         if ($product->getSpecialPrice() && $specialToDate && $inRange) {
             $data['priceValidUntil'] = date('Y-m-d', strtotime($specialToDate));
@@ -210,19 +166,14 @@ class Product
         return $data;
     }
 
-    protected function getProductPrice(\Magento\Catalog\Api\Data\ProductInterface $product)
-    {
-        return $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-    }
-
-    protected function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product)
+    public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, $store)
     {
         if (!$this->configuration->isShowRating()) {
             return [];
         }
 
         $data = [];
-        $ratingSummary = $this->productReviews->getRatingSummary($product);
+        $ratingSummary = $this->getProductRattingSummary->excute($product, $store->getId());
 
         if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
             $data['aggregateRating'] = [
@@ -232,15 +183,7 @@ class Product
             ];
         }
 
-        $reviews = $this->productReviews->getReviews($product)
-            ->setDateOrder()
-            ->addStoreFilter($this->storeManager->getStore()->getId());
-        $reviews->getSelect()
-            ->joinLeft(
-                ['rov' => $reviews->getTable('rating_option_vote')],
-                'main_table.review_id = rov.review_id',
-                ['percent']
-            )->group('main_table.review_id');
+        $reviews = $this->getProductReviews->excute($product, $store->getId());
         $reviewData = [];
 
         foreach ($reviews as $review) {
@@ -271,37 +214,27 @@ class Product
         return $data;
     }
 
-    protected function getAttributeValue(\Magento\Catalog\Api\Data\ProductInterface $product, $attributeCode)
+    public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
-        $attribute = $this->getAttribute($attributeCode);
-        $attributeType = $attribute->getFrontendInput();
-        $types = ['select', 'multiselect'];
-
-        if (in_array($attributeType, $types)) {
-            $value = $product->getAttributeText($attributeCode);
-        } else {
-            $value = $product->getData($attributeCode);
+        $mediaGallery = $product->getMediaGalleryImages();
+        if (!is_array($mediaGallery->getItems())) {
+            return [];
         }
 
-        return $this->escaper->escapeHtml($value);
-    }
-
-    protected function getAttribute($attributeCode)
-    {
-        if (!isset($this->attributesCache[$attributeCode])) {
-            $attribute = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
-            $this->attributesCache[$attributeCode] = clone $attribute;
+        $images = [];
+        foreach ($mediaGallery as $image) {
+            $images[] = $image->getUrl();
         }
 
-        return $this->attributesCache[$attributeCode];
+        return $images;
     }
 
-    protected function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product)
+    protected function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product, $store)
     {
         return sprintf(
             self::CACHE_KEY,
             $product->getId(),
-            $this->storeManager->getStore()->getId()
+            $store->getId()
         );
     }
 

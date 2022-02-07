@@ -29,9 +29,6 @@ class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
         $this->searchBoxDataProvider = $searchBoxDataProvider;
     }
 
-    /**
-     * @param \Magento\Framework\Event\Observer $observer
-     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         if (!$this->configuration->isSearchBoxEnabled()) {

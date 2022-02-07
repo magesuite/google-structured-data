@@ -1,8 +1,7 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Plugin;
+namespace MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduct;
 
-// phpcs:ignoreFile
 class AddProductsDataToCategoryPage
 {
     /**

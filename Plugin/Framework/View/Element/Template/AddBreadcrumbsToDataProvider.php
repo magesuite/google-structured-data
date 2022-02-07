@@ -1,8 +1,7 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Plugin;
+namespace MageSuite\GoogleStructuredData\Plugin\Framework\View\Element\Template;
 
-// phpcs:ignoreFile
 class AddBreadcrumbsToDataProvider
 {
     /**
