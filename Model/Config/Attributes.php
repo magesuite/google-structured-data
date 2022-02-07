@@ -19,9 +19,6 @@ class Attributes implements \Magento\Framework\Option\ArrayInterface
         $this->collectionFactory = $collectionFactory;
     }
 
-    /**
-     * @return array
-     */
     public function toOptionArray()
     {
         if (!$this->options) {

@@ -137,15 +137,15 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
-                <field id="description" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Description</label>
-                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
-                    <comment>Defines which attribute will be used to describe product description.</comment>
-                </field>
-                <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="show_rating" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show Rating</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if rating should be included in structured data.</comment>
+                </field>
+                <field id="description" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Description</label>
+                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                    <comment>Defines which attribute will be used to describe product description.</comment>
                 </field>
                 <field id="brand" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Brand</label>

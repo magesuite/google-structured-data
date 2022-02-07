@@ -1,10 +1,33 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Framework\View\Element\Template">
-        <plugin name="remove_schema_in_blocks" type="MageSuite\GoogleStructuredData\Plugin\RemoveSchemaInBlocks" sortOrder="1" />
-        <plugin name="assign_breadcrumbs" type="MageSuite\GoogleStructuredData\Plugin\AddBreadcrumbsToDataProvider" sortOrder="1" />
+    <type name="MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute">
+        <arguments>
+            <argument name="attributeDataProviders" xsi:type="array">
+                <item name="description" xsi:type="array">
+                    <item name="attribute" xsi:type="string">description</item>
+                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\GenericConfigured</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+                <item name="brand" xsi:type="array">
+                    <item name="attribute" xsi:type="string">brand</item>
+                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\GenericConfigured</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+                <item name="manufacturer" xsi:type="array">
+                    <item name="attribute" xsi:type="string">manufacturer</item>
+                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\GenericConfigured</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </arguments>
     </type>
+
+    <type name="Magento\Framework\View\Element\Template">
+        <plugin name="remove_schema_in_blocks" type="MageSuite\GoogleStructuredData\Plugin\Framework\View\Element\Template\RemoveSchemaInBlocks" sortOrder="10" />
+        <plugin name="assign_breadcrumbs" type="MageSuite\GoogleStructuredData\Plugin\Framework\View\Element\Template\AddBreadcrumbsToDataProvider" sortOrder="20" />
+    </type>
+
     <type name="Magento\Catalog\Block\Product\ListProduct">
-        <plugin name="add_products_data_to_category" type="MageSuite\GoogleStructuredData\Plugin\AddProductsDataToCategoryPage" sortOrder="1" />
+        <plugin name="add_products_data_to_category" type="MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduct\AddProductsDataToCategoryPage" sortOrder="10" />
     </type>
 </config>

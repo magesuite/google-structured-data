@@ -11,49 +11,21 @@ class Product extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $config;
 
-    /**
-     * @return bool
-     */
     public function isEnabled()
     {
-        return (bool) $this->getConfig()->getEnabled();
+        return (bool)$this->getConfig()->getEnabled();
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->getConfig()->getDescription();
-    }
-
-    /**
-     * @return bool
-     */
     public function isShowRating()
     {
-        return (bool) $this->getConfig()->getShowRating();
+        return (bool)$this->getConfig()->getShowRating();
     }
 
-    /**
-     * @return string
-     */
-    public function getBrand()
+    public function getConfiguredAttribute($attributeCode)
     {
-        return $this->getConfig()->getBrand();
+        return $this->getConfig()->getData($attributeCode);
     }
 
-    /**
-     * @return string
-     */
-    public function getManufacturer()
-    {
-        return $this->getConfig()->getManufacturer();
-    }
-
-    /**
-     * @return \Magento\Framework\DataObject
-     */
     protected function getConfig()
     {
         if ($this->config === null) {

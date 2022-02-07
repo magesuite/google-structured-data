@@ -29,9 +29,6 @@ class AddSocialData implements \Magento\Framework\Event\ObserverInterface
         $this->socialDataProvider = $socialDataProvider;
     }
 
-    /**
-     * @param \Magento\Framework\Event\Observer $observer
-     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         if (!$this->configuration->isEnabled()) {

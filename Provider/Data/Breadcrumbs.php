@@ -24,6 +24,7 @@ class Breadcrumbs
             if (!$breadcrumb['link']) {
                 continue;
             }
+
             $name = is_object($breadcrumb['label']) ? $breadcrumb['label']->getText() : $breadcrumb['label'];
             $breadcrumbList[] = [
                 '@type' => 'ListItem',

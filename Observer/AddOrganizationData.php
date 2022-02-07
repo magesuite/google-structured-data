@@ -29,9 +29,6 @@ class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
         $this->configuration = $configuration;
     }
 
-    /**
-     * @param \Magento\Framework\Event\Observer $observer
-     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         if (!$this->configuration->isEnabled()) {

@@ -9,9 +9,8 @@ class JsonLdCreator
      */
     protected $structuredDataContainer;
 
-    public function __construct(
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer
-    ) {
+    public function __construct(\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer)
+    {
         $this->structuredDataContainer = $structuredDataContainer;
     }
 

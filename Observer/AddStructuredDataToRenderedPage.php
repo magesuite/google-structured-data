@@ -14,9 +14,6 @@ class AddStructuredDataToRenderedPage implements \Magento\Framework\Event\Observ
         $this->jsonLdCreator = $jsonLdCreator;
     }
 
-    /**
-     * @param \Magento\Framework\Event\Observer $observer
-     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $response = $observer->getResponse();

@@ -15,24 +15,17 @@ class Organization
     protected $storeManager;
 
     /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    protected $urlBuilder;
-
-    /**
      * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Organization
      */
     protected $configuration;
 
     public function __construct(
-        \Magento\Theme\Block\Html\Header\Logo $logo,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\UrlInterface $urlBuilder,
+        \Magento\Theme\Block\Html\Header\Logo $logo,
         \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration
     ) {
-        $this->logo = $logo;
         $this->storeManager = $storeManager;
-        $this->urlBuilder = $urlBuilder;
+        $this->logo = $logo;
         $this->configuration = $configuration;
     }
 
