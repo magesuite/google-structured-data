@@ -1,8 +1,8 @@
-Enabled,Ingeschakeld
-Description,Omschrijving
-Country,Land
-City,Plaats
-Sales,Verkopen
-"Customer Support",Klantenservice
-Category,Categorie
-Product,Product
+"Category","Categorie"
+"City","Plaats"
+"Country","Land"
+"Customer Support","Klantenservice"
+"Description","Omschrijving"
+"Is Enabled","Ingeschakeld"
+"Product","Product"
+"Sales","Verkopen"

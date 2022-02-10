@@ -1,8 +1,8 @@
-Enabled,Habilitado
-Description,Descripción
-Country,País
-City,Ciudad
-Sales,Ventas
+"Category","Categoría"
+"City","Ciudad"
+"Country","País"
 "Customer Support","Soporte al cliente"
-Category,Categoría
-Product,Producto
+"Description","Descripción"
+"Is Enabled","Habilitado"
+"Product","Producto"
+"Sales","Ventas"

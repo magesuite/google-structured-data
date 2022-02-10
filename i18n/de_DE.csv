@@ -1,9 +1,9 @@
-Enabled,Aktiviert
-Description,Beschreibung
-Country,Land
-City,Stadt
-Sales,Verkäufe
-"Customer Support",Kundenservice
-Category,Kategorie
-Product,Produkt
-Brand,Marke
+"Brand","Marke"
+"Category","Kategorie"
+"City","Stadt"
+"Country","Land"
+"Customer Support","Kundenservice"
+"Description","Beschreibung"
+"Is Enabled","Aktiviert"
+"Product","Produkt"
+"Sales","Verkäufe"

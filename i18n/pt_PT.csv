@@ -1,8 +1,8 @@
-Enabled,Ativo
-Description,Descrição
-Country,País
-City,Cidade
-Sales,Vendas
+"Category","Categoria"
+"City","Cidade"
+"Country","País"
 "Customer Support","Apoio ao Cliente"
-Category,Categoria
-Product,Produto
+"Description","Descrição"
+"Is Enabled","Ativo"
+"Product","Produto"
+"Sales","Vendas"
