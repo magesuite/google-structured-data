@@ -3,24 +3,26 @@
     <default>
         <structured_data>
             <breadcrumbs>
-                <enabled>1</enabled>
+                <is_enabled>1</is_enabled>
             </breadcrumbs>
             <organization>
-                <enabled>1</enabled>
+                <is_enabled>1</is_enabled>
             </organization>
             <search_box>
-                <enabled>1</enabled>
+                <is_enabled>1</is_enabled>
             </search_box>
             <category_page>
                 <include_products>1</include_products>
             </category_page>
             <product_page>
-                <enabled>1</enabled>
+                <is_enabled>1</is_enabled>
                 <show_rating>1</show_rating>
-                <description>description</description>
+                <attributes>
+                    <description>description</description>
+                </attributes>
             </product_page>
             <social>
-                <enabled>1</enabled>
+                <is_enabled>1</is_enabled>
             </social>
         </structured_data>
     </default>

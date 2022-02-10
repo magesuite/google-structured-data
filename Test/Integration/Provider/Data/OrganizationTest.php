@@ -25,16 +25,42 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @magentoDbIsolation enabled
-     * @magentoAppIsolation enabled
-     * @magentoConfigFixture default/structured_data/organization/logo testlogo.png
+     * @magentoConfigFixture current_store structured_data/organization/logo testlogo.png
+     * @magentoConfigFixture current_store structured_data/organization/address/postal 00000
+     * @magentoConfigFixture current_store structured_data/organization/address/city City
+     * @magentoConfigFixture current_store structured_data/organization/address/street Street 1
+     * @magentoConfigFixture current_store structured_data/organization/address/country DE
+     * @magentoConfigFixture current_store structured_data/organization/address/country DE
+     * @magentoConfigFixture current_store structured_data/organization/contact/sales_telephone 111222333
+     * @magentoConfigFixture current_store structured_data/organization/contact/sales_email test@example.com
      */
     public function testItReturnOrganizationDataCorrectly()
     {
+        $expectedData = [
+            '@context' => 'http://schema.org',
+            '@type' => 'Organization',
+            'name' => 'Default Store View',
+            'url' => 'http://localhost/index.php/',
+            'logo' => 'testlogo.png',
+            'address' => [
+                '@type' => 'PostalAddress',
+                'postalCode' => '00000',
+                'addressLocality' => 'City',
+                'streetAddress' => 'Street 1',
+                'addressCountry' => 'DE',
+            ],
+            'contactPoint' => [
+                [
+                    '@type' => 'ContactPoint',
+                    'contactType' => 'sales',
+                    'telephone' => '111222333',
+                    'email' => 'test@example.com',
+                ]
+            ]
+        ];
+
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 
-        $this->assertEquals('Organization', $organizationData['@type']);
-        $this->assertEquals('Default Store View', $organizationData['name']);
-        $this->assertEquals('http://localhost/index.php/', $organizationData['url']);
+        $this->assertEquals($expectedData, $organizationData);
     }
 }

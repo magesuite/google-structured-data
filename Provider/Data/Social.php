@@ -34,7 +34,7 @@ class Social
         ];
 
         $socialProfiles = $this->configuration->getSocialProfiles();
-        foreach ($socialProfiles->getData() as $socialProfile) {
+        foreach ($socialProfiles as $socialProfile) {
             if (!$socialProfile) {
                 continue;
             }

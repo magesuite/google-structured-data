@@ -4,75 +4,40 @@ namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
 class Organization extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    const XML_PATH_ORGANIZATION = 'structured_data/organization';
-
-    /**
-     * @var \Magento\Framework\DataObject
-     */
-    protected $config;
+    const XML_PATH_ORGANIZATION_IS_ENABLED = 'structured_data/organization/is_enabled';
+    const XML_PATH_ORGANIZATION_NAME = 'structured_data/organization/name';
+    const XML_PATH_ORGANIZATION_LOGO = 'structured_data/organization/logo';
+    const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
+    const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
+    const XML_PATH_ORGANIZATION_CONTACT = 'structured_data/organization/contact';
 
     public function isEnabled()
     {
-        return (bool) $this->getConfig()->getEnabled();
+        return (bool)$this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getName()
     {
-        return $this->getConfig()->getName();
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getLogo()
     {
-        return $this->getConfig()->getLogo();
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_LOGO, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getDescription()
     {
-        return $this->getConfig()->getDescription();
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_DESCRIPTION, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getCountry()
+    public function getAddressData()
     {
-        return $this->getConfig()->getCountry();
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_ADDRESS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? [];
     }
 
-    public function getRegion()
+    public function getContactData()
     {
-        return $this->getConfig()->getRegion();
-    }
-
-    public function getPostal()
-    {
-        return $this->getConfig()->getPostal();
-    }
-
-    public function getCity()
-    {
-        return $this->getConfig()->getCity();
-    }
-
-    public function getSales()
-    {
-        return $this->getConfig()->getSales();
-    }
-
-    public function getTechnical()
-    {
-        return $this->getConfig()->getTechnical();
-    }
-
-    public function getCustomerService()
-    {
-        return $this->getConfig()->getCustomerService();
-    }
-
-    protected function getConfig()
-    {
-        if ($this->config === null) {
-            $config = $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-            $this->config = new \Magento\Framework\DataObject($config);
-        }
-
-        return $this->config;
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_CONTACT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? [];
     }
 }

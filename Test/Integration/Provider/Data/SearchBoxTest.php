@@ -1,6 +1,6 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Test\Unit\Provider\Data;
+namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 
 /**
  * @magentoDbIsolation enabled
@@ -24,10 +24,6 @@ class SearchBoxTest extends \PHPUnit\Framework\TestCase
         $this->searchBoxDataProvider = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\SearchBox::class);
     }
 
-    /**
-     * @magentoDbIsolation enabled
-     * @magentoAppIsolation enabled
-     */
     public function testItReturnSearchBoxDataCorrectly()
     {
         $searchBoxData = $this->searchBoxDataProvider->getSearchBoxData();

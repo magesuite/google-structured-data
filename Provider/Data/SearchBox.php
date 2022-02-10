@@ -30,7 +30,7 @@ class SearchBox
 
         $searchUrl = $this->urlBuilder->getUrl('catalogsearch/result/?q={search_term_string}');
 
-        $searchBoxData = [
+        return [
             "@context" => "http://schema.org",
             "@type" => "WebSite",
             "url" => $baseUrl,
@@ -40,7 +40,5 @@ class SearchBox
                 "query-input" => "required name=search_term_string"
             ]
         ];
-
-        return $searchBoxData;
     }
 }

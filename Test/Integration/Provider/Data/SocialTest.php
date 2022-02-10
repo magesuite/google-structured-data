@@ -18,43 +18,22 @@ class SocialTest extends \PHPUnit\Framework\TestCase
      */
     protected $socialDataProvider;
 
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $registry;
-
-    /**
-     * @var \Magento\Catalog\Api\ProductRepositoryInterface
-     */
-    protected $productRepository;
-
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->socialDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Social::class);
-        $this->registry = $this->objectManager->get(\Magento\Framework\Registry::class);
-        $this->productRepository = $this->objectManager->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
     }
 
     /**
-     * @magentoDbIsolation enabled
-     * @magentoAppIsolation enabled
-     * @magentoConfigFixture current_store structured_data/social/facebook facebook
-     * @magentoConfigFixture current_store structured_data/social/twitter twitter
-     * @magentoConfigFixture current_store structured_data/social/google_plus google plus
-     * @magentoConfigFixture current_store structured_data/social/instagram instagram
-     * @magentoConfigFixture current_store structured_data/social/youtube youtube
+     * @magentoConfigFixture current_store structured_data/social/profiles/facebook facebook
+     * @magentoConfigFixture current_store structured_data/social/profiles/twitter twitter
+     * @magentoConfigFixture current_store structured_data/social/profiles/google_plus google plus
+     * @magentoConfigFixture current_store structured_data/social/profiles/instagram instagram
+     * @magentoConfigFixture current_store structured_data/social/profiles/youtube youtube
      */
     public function testItReturnSocialDataCorrectly()
     {
-        $socialData = $this->socialDataProvider->getSocialData();
-
-        $this->assertEquals($this->expectedData(), $socialData);
-    }
-
-    protected function expectedData()
-    {
-        return [
+        $expectedData = [
             '@context' => "http://schema.org",
             '@type' => "Person",
             'name' => "Default Store View",
@@ -67,5 +46,9 @@ class SocialTest extends \PHPUnit\Framework\TestCase
                 'youtube'
             ]
         ];
+
+        $socialData = $this->socialDataProvider->getSocialData();
+
+        $this->assertEquals($expectedData, $socialData);
     }
 }

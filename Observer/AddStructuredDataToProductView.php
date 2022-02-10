@@ -1,0 +1,65 @@
+<?php
+
+namespace MageSuite\GoogleStructuredData\Observer;
+
+class AddStructuredDataToProductView implements \Magento\Framework\Event\ObserverInterface
+{
+    /**
+     * @var \Magento\Framework\DataObjectFactory
+     */
+    protected $dataObjectFactory;
+
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
+     */
+    protected $configuration;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
+     */
+    protected $structuredDataContainer;
+
+    /**
+     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
+     */
+    protected $productDataProvider;
+
+    public function __construct(
+        \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        \Magento\Framework\Registry $registry,
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
+        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
+        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider
+    ) {
+        $this->dataObjectFactory = $dataObjectFactory;
+        $this->registry = $registry;
+        $this->configuration = $configuration;
+        $this->structuredDataContainer = $structuredDataContainer;
+        $this->productDataProvider = $productDataProvider;
+    }
+
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        $product = $this->getProduct();
+
+        if (!$this->configuration->isEnabled() || !$product) {
+            return;
+        }
+
+        $productData = $this->productDataProvider->execute($product, true);
+        $productDataObject = $this->dataObjectFactory->create();
+        $productDataObject->setData($productData);
+
+        $this->structuredDataContainer->add($productDataObject->getData(), 'product');
+    }
+
+    public function getProduct()
+    {
+        return $this->registry->registry('current_product');
+    }
+}

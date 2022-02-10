@@ -19,6 +19,23 @@ class Organization
      */
     protected $configuration;
 
+    protected $addressFieldsMapping = [
+        'postal' => 'postalCode',
+        'city' => 'addressLocality',
+        'street' => 'streetAddress',
+        'region' => 'addressRegion',
+        'country' => 'addressCountry'
+    ];
+
+    protected $contactFieldsMapping = [
+        'sales_telephone' => 'sales',
+        'sales_email' => 'sales',
+        'technical_telephone' => 'technical support',
+        'technical_email' => 'technical support',
+        'customer_service_telephone' => 'customer service',
+        'customer_service_email' => 'customer service'
+    ];
+
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Theme\Block\Html\Header\Logo $logo,
@@ -42,63 +59,44 @@ class Organization
             "url" => $store->getBaseUrl(),
             "logo" => $logoUrl
         ];
-        $contactData = [];
-
-        if (!empty($this->configuration->getSales())) {
-            $contactData['sales'] = [
-                '@type' => 'ContactPoint',
-                'telephone' => $this->configuration->getSales(),
-                'contactType' => 'sales'
-            ];
-        }
-
-        if (!empty($this->configuration->getTechnical())) {
-            $contactData['technical'] = [
-                '@type' => 'ContactPoint',
-                'telephone' => $this->configuration->getTechnical(),
-                'contactType' => 'technical support'
-            ];
-        }
-
-        if (!empty($this->configuration->getCustomerService())) {
-            $contactData['customer_service'] = [
-                '@type' => 'ContactPoint',
-                'telephone' => $this->configuration->getCustomerService(),
-                'contactType' => 'customer service'
-            ];
-        }
-
-        foreach ($contactData as $contact) {
-            $organizationData['contactPoint'][] = $contact;
-        }
 
         $address = ['@type' => 'PostalAddress'];
-
-        if (!empty($this->configuration->getPostal())) {
-            $address['postalCode'] = $this->configuration->getPostal();
+        $addressData = $this->configuration->getAddressData();
+        foreach ($addressData as $key => $value) {
+            if (!isset($this->addressFieldsMapping, $key)) {
+                continue;
+            }
+            $address[$this->addressFieldsMapping[$key]] = $value;
         }
-
-        if (!empty($this->configuration->getRegion())) {
-            $address['addressRegion'] = $this->configuration->getRegion();
-        }
-
-        if (!empty($this->configuration->getCity())) {
-            $address['addressLocality'] = $this->configuration->getCity();
-        }
-
-        if (!empty($this->configuration->getCountry())) {
-            $address['addressCountry'] = [
-                '@type' => 'Country',
-                'name' => $this->configuration->getCountry()
-            ];
-        }
-
-        if (!empty($this->configuration->getPostal())) {
-            $address['postalCode'] = $this->configuration->getPostal();
-        }
-
         if (count($address) > 1) {
             $organizationData['address'] = $address;
+        }
+
+        $contact = [];
+        $contactData = $this->configuration->getContactData();
+        foreach ($contactData as $key => $value) {
+            if (!isset($this->contactFieldsMapping[$key])) {
+                continue;
+            }
+
+            if (!isset($contact[$this->contactFieldsMapping[$key]])) {
+                $contact[$this->contactFieldsMapping[$key]] = [
+                    '@type' => 'ContactPoint',
+                    'contactType' => 'sales'
+                ];
+            }
+
+            if (strpos($key, '_email') !== false) {
+                $contact[$this->contactFieldsMapping[$key]]['email'] = $value;
+            }
+            if (strpos($key, '_telephone') !== false) {
+                $contact[$this->contactFieldsMapping[$key]]['telephone'] = $value;
+            }
+
+        }
+
+        foreach ($contact as $item) {
+            $organizationData['contactPoint'][] = array_filter($item);
         }
 
         return $organizationData;
