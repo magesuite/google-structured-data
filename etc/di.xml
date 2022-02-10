@@ -1,5 +1,14 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverPool">
+        <arguments>
+            <argument name="productTypeResolvers" xsi:type="array">
+                <item name="configurable" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver\Configurable</item>
+                <item name="grouped" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver\Grouped</item>
+            </argument>
+        </arguments>
+    </type>
+    
     <type name="MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute">
         <arguments>
             <argument name="attributeDataProviders" xsi:type="array">

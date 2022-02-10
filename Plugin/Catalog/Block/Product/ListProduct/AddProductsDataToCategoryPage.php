@@ -5,6 +5,11 @@ namespace MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduc
 class AddProductsDataToCategoryPage
 {
     /**
+     * @var \Magento\Framework\DataObjectFactory
+     */
+    protected $dataObjectFactory;
+
+    /**
      * @var \MageSuite\GoogleStructuredData\Helper\Configuration
      */
     protected $configuration;
@@ -19,27 +24,15 @@ class AddProductsDataToCategoryPage
      */
     protected $productDataProvider;
 
-    /**
-     * @var \Magento\Framework\Event\ManagerInterface
-     */
-    protected $eventManager;
-
-    /**
-     * @var \Magento\Framework\DataObjectFactory
-     */
-    protected $dataObjectFactory;
-
     public function __construct(
+        \Magento\Framework\DataObjectFactory $dataObjectFactory,
         \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\DataObjectFactory $dataObjectFactory
+        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider
     ) {
         $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;
-        $this->eventManager = $eventManager;
         $this->dataObjectFactory = $dataObjectFactory;
     }
 
@@ -54,15 +47,13 @@ class AddProductsDataToCategoryPage
         }
 
         $i = 0;
+
         $result->addMediaGalleryData();
         foreach ($result as $product) {
-            $productData = $this->productDataProvider->getProductStructuredData($product);
-            unset($productData['review']);
+            $productData = $this->productDataProvider->execute($product, false);
 
             $productDataObject = $this->dataObjectFactory->create();
             $productDataObject->setData($productData);
-
-            $this->eventManager->dispatch('add_product_structured_data_after', ['structured_data' => $productDataObject, 'node' => 'product_' . $i, 'product' => $product]);
 
             $this->structuredDataContainer->add($productDataObject->getData(), 'product_' . $i);
 
