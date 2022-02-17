@@ -163,6 +163,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     public function testGroupedProductData()
     {
+        $expectedProductCounts = 2;
         $expectedData = [
             0 => [
                 '@context' => 'http://schema.org/',
@@ -183,7 +184,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                 'itemCondition' => 'NewCondition',
             ]
         ];
-        $expectedProductCounts = 2;
 
         $product = $this->productRepository->get('grouped-product');
         $productData = $this->productDataProvider->execute($product);
