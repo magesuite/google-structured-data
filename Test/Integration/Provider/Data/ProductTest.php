@@ -48,7 +48,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @magentoDataFixture Magento/Catalog/_files/product_simple.php
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      */
     public function testSimpleProductData()
     {
@@ -60,60 +60,61 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'description' => 'Description with &lt;b&gt;html tag&lt;/b&gt;',
             'sku' => 'simple',
             'url' => 'http://localhost/index.php/simple-product.html',
-            'itemCondition' => 'NewCondition',
-            'offers' => [
-                '@type' => 'Offer',
-                'sku' => 'simple',
-                'price' => '10.00',
-                'priceCurrency' => 'USD',
-                'availability' => 'InStock',
-                'url' => 'http://localhost/index.php/simple-product.html',
-            ]
+            'itemCondition' => 'NewCondition'
+        ];
+        $expectedOfferData = [
+            '@type' => 'Offer',
+            'sku' => 'simple',
+            'price' => '10.00',
+            'priceCurrency' => 'USD',
+            'availability' => 'InStock',
+            'url' => 'http://localhost/index.php/simple-product.html'
         ];
 
         $product = $this->productRepository->get('simple');
-
         $productData = $this->productDataProvider->execute($product);
 
         foreach ($expectedData as $key => $data) {
             $this->assertEquals($data, $productData[$key]);
         }
+        foreach ($expectedOfferData as $key => $data) {
+            $this->assertEquals($data, $productData['offers'][$key]);
+        }
     }
 
     /**
-     * @magentoDataFixture Magento/Catalog/_files/product_simple.php
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      */
     public function testProductDataWithSpecialPrice()
     {
         $expectedData = [
             '@context' => 'http://schema.org/',
             '@type' => 'Product',
-            'name' => 'Simple Product',
+            'name' => 'Simple Product with Special Price',
             'image' => [],
             'description' => 'Description with &lt;b&gt;html tag&lt;/b&gt;',
-            'sku' => 'simple',
-            'url' => 'http://localhost/index.php/simple-product.html',
-            'itemCondition' => 'NewCondition',
-            'offers' => [
-                '@type' => 'Offer',
-                'sku' => 'simple',
-                'price' => '5.00',
-                'priceCurrency' => 'USD',
-                'priceValidUntil' => date('Y-m-d', strtotime('+1 day')),
-                'availability' => 'InStock',
-                'url' => 'http://localhost/index.php/simple-product.html',
-            ]
+            'sku' => 'simple_special_price',
+            'url' => 'http://localhost/index.php/simple-product-with-special-price.html',
+            'itemCondition' => 'NewCondition'
+        ];
+        $expectedOfferData = [
+            '@type' => 'Offer',
+            'sku' => 'simple_special_price',
+            'price' => '5.00',
+            'priceCurrency' => 'USD',
+            'priceValidUntil' => date('Y-m-d', strtotime('+1 day')),
+            'availability' => 'InStock',
+            'url' => 'http://localhost/index.php/simple-product-with-special-price.html'
         ];
 
-        $product = $this->productRepository->get('simple');
-        $product->setSpecialPrice(5);
-        $product->setSpecialFromDate(date('Y-m-d', strtotime('-1 day')));
-        $product->setSpecialToDate(date('Y-m-d', strtotime('+1 day')));
-
+        $product = $this->productRepository->get('simple_special_price');
         $productData = $this->productDataProvider->execute($product);
 
         foreach ($expectedData as $key => $data) {
             $this->assertEquals($data, $productData[$key]);
+        }
+        foreach ($expectedOfferData as $key => $data) {
+            $this->assertEquals($data, $productData['offers'][$key]);
         }
     }
 
