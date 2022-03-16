@@ -143,7 +143,14 @@ class Product
             }
 
             try {
-                $structuredData[$attribute] = $this->getAttributeValue($product, $attributeCode);
+                if ($attribute === 'brand') {
+                    $structuredData[$attribute] = [
+                        '@type' => 'Brand',
+                        'name' => $this->getAttributeValue($product, $attributeCode)
+                    ];
+                } else {
+                    $structuredData[$attribute] = $this->getAttributeValue($product, $attributeCode);
+                }
             } catch (\Exception $e) { //phpcs:ignore
             }
         }
@@ -246,7 +253,10 @@ class Product
         foreach ($reviews as $review) {
             $row = [
                 '@type' => 'Review',
-                'author' => $this->escaper->escapeHtml($review->getNickname()),
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $this->escaper->escapeHtml($review->getNickname())
+                ],
                 'datePublished' => $review->getCreatedAt(),
                 'description' => $this->escaper->escapeHtml($review->getDetail()),
                 'name' => $this->escaper->escapeHtml($review->getTitle())
