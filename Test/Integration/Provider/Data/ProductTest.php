@@ -164,35 +164,37 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testGroupedProductData()
     {
         $expectedProductCounts = 2;
-        $expectedData = [
-            0 => [
-                '@context' => 'http://schema.org/',
-                '@type' => 'Product',
-                'name' => 'Simple Product',
-                'image' => [],
-                'sku' => 'simple',
-                'url' => 'http://localhost/index.php/grouped-product.html',
-                'itemCondition' => 'NewCondition',
-            ],
-            1 => [
-                '@context' => 'http://schema.org/',
-                '@type' => 'Product',
-                'name' => 'Virtual Product',
-                'image' => [],
-                'sku' => 'virtual-product',
-                'url' => 'http://localhost/index.php/grouped-product.html',
-                'itemCondition' => 'NewCondition',
-            ]
+        $expectedSimpleProductData = [
+            '@context' => 'http://schema.org/',
+            '@type' => 'Product',
+            'name' => 'Simple Product',
+            'image' => [],
+            'sku' => 'simple',
+            'url' => 'http://localhost/index.php/grouped-product.html',
+            'itemCondition' => 'NewCondition',
+        ];
+        $expectedVirtualProductData = [
+            '@context' => 'http://schema.org/',
+            '@type' => 'Product',
+            'name' => 'Virtual Product',
+            'image' => [],
+            'sku' => 'virtual-product',
+            'url' => 'http://localhost/index.php/grouped-product.html',
+            'itemCondition' => 'NewCondition',
         ];
 
         $product = $this->productRepository->get('grouped-product');
         $productData = $this->productDataProvider->execute($product);
 
         $this->assertEquals($expectedProductCounts, count($productData));
-        foreach ($expectedData as $productIndex => $expectedSingleData) {
-            foreach ($expectedSingleData as $key => $data) {
-                $this->assertEquals($data, $productData[$productIndex][$key]);
-            }
+        $simpleProductKey = array_search('simple', array_column($productData, 'sku'));
+        foreach ($expectedSimpleProductData as $key => $data) {
+            $this->assertEquals($data, $productData[$simpleProductKey][$key]);
+        }
+
+        $virtualProductKey = array_search('virtual-product', array_column($productData, 'sku'));
+        foreach ($expectedVirtualProductData as $key => $data) {
+            $this->assertEquals($data, $productData[$virtualProductKey][$key]);
         }
     }
 }
