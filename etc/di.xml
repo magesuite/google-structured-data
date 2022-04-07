@@ -1,5 +1,13 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="MageSuite\GoogleStructuredData\Plugin\GroupedProduct\Model\Product\Type\Grouped\AddAttributesToAssociatedProducts">
+        <arguments>
+            <argument name="attributesToSelect" xsi:type="array">
+                <item name="0" xsi:type="string">url_key</item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverPool">
         <arguments>
             <argument name="productTypeResolvers" xsi:type="array">

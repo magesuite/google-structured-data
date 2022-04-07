@@ -9,25 +9,6 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
      */
     protected $parentProduct;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Model\Product\Grouped\GetAssociatedProducts
-     */
-    protected $getAssociatedProducts;
-
-    public function __construct(
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
-        \Magento\Framework\Escaper $escaper,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
-        \MageSuite\GoogleStructuredData\Model\Product\Grouped\GetAssociatedProducts $getAssociatedProducts,
-        \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
-        \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
-    ) {
-        parent::__construct($timezone, $escaper, $compositeAttributeDataProvider, $getProductReviews, $getProductRattingSummary, $configuration);
-
-        $this->getAssociatedProducts = $getAssociatedProducts;
-    }
-
     public function isApplicable($productTypeId)
     {
         return $productTypeId == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
@@ -38,7 +19,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         $productData = [];
 
         $this->setParentProduct($product);
-        $associatedProducts = $this->getAssociatedProducts->execute($product, $this->compositeAttributeDataProvider->getEavAttributeCodes());
+        $associatedProducts = $product->getTypeInstance()->getAssociatedProducts($product);
         foreach ($associatedProducts as $associatedProduct) {
             $associatedProductData = $this->getProductStructuredData($associatedProduct, $store, $withReviews);
 
