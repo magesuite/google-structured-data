@@ -1,6 +1,6 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Test\Integration\Provider;
+namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 
 /**
  * @magentoDbIsolation enabled
