@@ -4,7 +4,7 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Product
 {
-    const CACHE_KEY = 'google_structured_data_product_%s_%s';
+    const CACHE_KEY = 'google_structured_data_product_%s_%s_%s';
     const CACHE_GROUP = 'google_structured_data_product';
 
     /**
