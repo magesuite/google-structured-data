@@ -44,7 +44,7 @@ class Product
         $store = $this->storeManager->getStore();
         $cacheKey = $this->getCacheKey($product, $store, $withReviews);
 
-        if (($cachedData = $this->cache->load($cacheKey)) != false) {
+        if (($cachedData = $this->cache->load($cacheKey))) {
             return $this->serializer->unserialize($cachedData);
         }
 
@@ -78,7 +78,7 @@ class Product
         $identities[] = self::CACHE_GROUP;
 
         $key = array_search(\Magento\Catalog\Model\Product::CACHE_TAG, $identities);
-        if ($key == false) {
+        if (!$key) {
             return $identities;
         }
 
