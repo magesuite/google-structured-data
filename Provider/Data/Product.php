@@ -62,7 +62,7 @@ class Product
         return $productData;
     }
 
-    protected function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true)
+    public function getCacheKey(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true)
     {
         return sprintf(
             self::CACHE_KEY,
@@ -72,7 +72,7 @@ class Product
         );
     }
 
-    protected function getIdentities(\Magento\Catalog\Api\Data\ProductInterface $product)
+    public function getIdentities(\Magento\Catalog\Api\Data\ProductInterface $product)
     {
         $identities = $product->getIdentities();
         $identities[] = self::CACHE_GROUP;
