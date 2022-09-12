@@ -4,7 +4,7 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Configurable extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
-    public function isApplicable($productTypeId)
+    public function isApplicable($productTypeId): bool
     {
         return $productTypeId == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
     }

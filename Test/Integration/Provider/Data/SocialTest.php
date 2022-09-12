@@ -8,19 +8,14 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
  */
 class SocialTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Social
-     */
-    protected $socialDataProvider;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Social $socialDataProvider;
 
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+
         $this->socialDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Social::class);
     }
 

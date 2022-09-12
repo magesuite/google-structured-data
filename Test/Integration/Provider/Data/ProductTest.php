@@ -8,34 +8,20 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
  */
 class ProductTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
-     */
-    protected $productDataProvider;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
 
-    /**
-     * @var \Magento\Catalog\Api\ProductRepositoryInterface
-     */
-    protected $productRepository;
+    protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
 
-    /**
-     * @var \Magento\Review\Model\ResourceModel\Review\Collection
-     */
-    protected $reviewCollectionFactory;
+    protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
 
-    /**
-     * @var \Magento\Framework\App\CacheInterface
-     */
-    protected $cache;
+    protected ?\Magento\Framework\App\CacheInterface $cache;
 
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
         $this->productRepository = $this->objectManager->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
         $this->reviewCollectionFactory = $this->objectManager->create(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);

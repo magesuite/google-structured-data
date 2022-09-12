@@ -4,19 +4,14 @@ namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
 class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs
-     */
-    protected $breadcrumbDataProvider;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbDataProvider;
 
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+
         $this->breadcrumbDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs::class);
     }
 
@@ -27,11 +22,11 @@ class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
         $breadcrumbData = $this->breadcrumbDataProvider->getBreadcrumbsData($breadcrumbs);
 
         $this->assertEquals('BreadcrumbList', $breadcrumbData['@type']);
-        $this->assertEquals(4, count($breadcrumbData['itemListElement']));
+        $this->assertEquals(3, count($breadcrumbData['itemListElement']));
 
-        foreach ($breadcrumbData['itemListElement'] as $i => $crumb) {
-            $this->assertEquals($breadcrumbs[$i]['link'], $crumb['item']['@id']);
-            $this->assertEquals($breadcrumbs[$i]['label'], $crumb['item']['name']);
+        foreach ($breadcrumbData['itemListElement'] as $index => $crumb) {
+            $this->assertEquals($breadcrumbs[$index + 1]['link'], $crumb['item']['@id']);
+            $this->assertEquals($breadcrumbs[$index + 1]['label'], $crumb['item']['name']);
         }
     }
 
@@ -40,7 +35,8 @@ class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
         return [
             [
                 'label' => 'Home',
-                'link' => 'http://localhost/index.php'
+                'link' => 'http://localhost/index.php',
+                'first' => true
             ],
             [
                 'label' => 'Women',

@@ -4,15 +4,9 @@ namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
 class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
-     */
-    protected $structuredDataContainer;
+    protected ?\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
 
     protected function setUp(): void
     {

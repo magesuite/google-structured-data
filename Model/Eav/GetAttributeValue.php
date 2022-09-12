@@ -4,14 +4,11 @@ namespace MageSuite\GoogleStructuredData\Model\Eav;
 
 class GetAttributeValue
 {
-    /**
-     * @var \Magento\Eav\Model\Entity\Attribute
-     */
-    protected $attribute;
+    protected \Magento\Eav\Model\Entity\Attribute $attribute;
 
-    protected $attributeTextTypes = ['select', 'multiselect'];
+    protected array $attributeTextTypes = ['select', 'multiselect'];
 
-    protected $attributesCache = [];
+    protected array $attributesCache = [];
 
     public function __construct(\Magento\Eav\Model\Entity\Attribute $attribute)
     {

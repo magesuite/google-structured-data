@@ -6,10 +6,7 @@ class GetProductRattingSummary
 {
     const RATING_STARS = 5;
 
-    /**
-     * @var \Magento\Review\Model\ReviewFactory
-     */
-    protected $reviewFactory;
+    protected \Magento\Review\Model\ReviewFactory $reviewFactory;
 
     public function __construct(\Magento\Review\Model\ReviewFactory $reviewFactory)
     {

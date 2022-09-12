@@ -4,30 +4,15 @@ namespace MageSuite\GoogleStructuredData\Observer;
 
 class AddStructuredDataToProductView implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var \Magento\Framework\DataObjectFactory
-     */
-    protected $dataObjectFactory;
+    protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
 
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $registry;
+    protected \Magento\Framework\Registry $registry;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
-     */
-    protected $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
-     */
-    protected $structuredDataContainer;
+    protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
-     */
-    protected $productDataProvider;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
 
     public function __construct(
         \Magento\Framework\DataObjectFactory $dataObjectFactory,

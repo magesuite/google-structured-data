@@ -4,15 +4,9 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Social
 {
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
+    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
 
-    /**
-     * @var  \MageSuite\GoogleStructuredData\Helper\Configuration\Social
-     */
-    protected $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Social $configuration;
 
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,

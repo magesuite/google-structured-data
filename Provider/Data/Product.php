@@ -7,25 +7,13 @@ class Product
     const CACHE_KEY = 'google_structured_data_product_%s_%s_%s';
     const CACHE_GROUP = 'google_structured_data_product';
 
-    /**
-     * @var \Magento\Framework\Serialize\SerializerInterface
-     */
-    protected $serializer;
+    protected \Magento\Framework\Serialize\SerializerInterface $serializer;
 
-    /**
-     * @var \Magento\Framework\App\CacheInterface
-     */
-    protected $cache;
+    protected \Magento\Framework\App\CacheInterface $cache;
 
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
+    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverPool
-     */
-    protected $productTypeResolverPool;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverPool $productTypeResolverPool;
 
     public function __construct(
         \Magento\Framework\Serialize\SerializerInterface $serializer,
