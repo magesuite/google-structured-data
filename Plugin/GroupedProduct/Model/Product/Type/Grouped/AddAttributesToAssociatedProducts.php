@@ -4,12 +4,9 @@ namespace MageSuite\GoogleStructuredData\Plugin\GroupedProduct\Model\Product\Typ
 
 class AddAttributesToAssociatedProducts
 {
-    protected $attributesToSelect;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute
-     */
-    protected $compositeAttributeDataProvider;
+    protected array $attributesToSelect;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,

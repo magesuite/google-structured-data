@@ -4,15 +4,9 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product;
 
 class TypeResolverPool
 {
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver\DefaultResolver
-     */
-    protected TypeResolver\DefaultResolver $defaultResolver;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver\DefaultResolver $defaultResolver;
 
-    /**
-     * @var array
-     */
-    protected $productTypeResolvers;
+    protected array $productTypeResolvers;
 
     public function __construct(
         \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver\DefaultResolver $defaultResolver,

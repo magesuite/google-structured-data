@@ -4,10 +4,7 @@ namespace MageSuite\GoogleStructuredData\Service;
 
 class JsonLdCreator
 {
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
-     */
-    protected $structuredDataContainer;
+    protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
 
     public function __construct(\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer)
     {

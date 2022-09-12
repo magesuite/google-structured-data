@@ -4,20 +4,11 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Organization
 {
-    /**
-     * @var \Magento\Theme\Block\Html\Header\Logo
-     */
-    protected $logo;
+    protected \Magento\Theme\Block\Html\Header\Logo $logo;
 
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
+    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Organization
-     */
-    protected $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration;
 
     protected $addressFieldsMapping = [
         'postal' => 'postalCode',

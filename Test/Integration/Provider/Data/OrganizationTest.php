@@ -8,19 +8,14 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
  */
 class OrganizationTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Organization
-     */
-    protected $organizationDataProvider;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider;
 
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+
         $this->organizationDataProvider = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\MageSuite\GoogleStructuredData\Provider\Data\Organization::class);
     }
 

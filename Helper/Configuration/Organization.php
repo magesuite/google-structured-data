@@ -2,7 +2,7 @@
 
 namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
-class Organization extends \Magento\Framework\App\Helper\AbstractHelper
+class Organization
 {
     const XML_PATH_ORGANIZATION_IS_ENABLED = 'structured_data/organization/is_enabled';
     const XML_PATH_ORGANIZATION_NAME = 'structured_data/organization/name';
@@ -10,6 +10,13 @@ class Organization extends \Magento\Framework\App\Helper\AbstractHelper
     const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
     const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
     const XML_PATH_ORGANIZATION_CONTACT = 'structured_data/organization/contact';
+
+    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
+
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface)
+    {
+        $this->scopeConfig = $scopeConfigInterface;
+    }
 
     public function isEnabled()
     {

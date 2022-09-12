@@ -7,35 +7,17 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     const IN_STOCK = 'InStock';
     const OUT_OF_STOCK = 'OutOfStock';
 
-    /**
-     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
-     */
-    protected $timezone;
+    protected \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone;
 
-    /**
-     * @var \Magento\Framework\Escaper
-     */
-    protected $escaper;
+    protected \Magento\Framework\Escaper $escaper;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute
-     */
-    protected $compositeAttributeDataProvider;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews
-     */
-    protected $getProductReviews;
+    protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary
-     */
-    protected $getProductRattingSummary;
+    protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
-     */
-    protected $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
 
     public function __construct(
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
@@ -53,12 +35,12 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         $this->configuration = $configuration;
     }
 
-    public function isApplicable($productTypeId)
+    public function isApplicable($productTypeId): bool
     {
         return true;
     }
 
-    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true)
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true): array
     {
         return $this->getProductStructuredData($product, $store, $withReviews);
     }

@@ -4,25 +4,13 @@ namespace MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduc
 
 class AddProductsDataToCategoryPage
 {
-    /**
-     * @var \Magento\Framework\DataObjectFactory
-     */
-    protected $dataObjectFactory;
+    protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Configuration
-     */
-    protected $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer
-     */
-    protected $structuredDataContainer;
+    protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Provider\Data\Product
-     */
-    protected $productDataProvider;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
 
     public function __construct(
         \Magento\Framework\DataObjectFactory $dataObjectFactory,

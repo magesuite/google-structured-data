@@ -4,10 +4,7 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute;
 
 class Eav implements \MageSuite\GoogleStructuredData\Provider\Data\Product\AttributeInterface
 {
-    /**
-     * @var \MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue
-     */
-    protected $getAttributeValue;
+    protected \MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue $getAttributeValue;
 
     public function __construct(\MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue $getAttributeValue)
     {

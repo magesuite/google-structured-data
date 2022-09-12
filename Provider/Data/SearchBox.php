@@ -4,15 +4,9 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class SearchBox
 {
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
+    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
 
-    /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    protected $urlBuilder;
+    protected \Magento\Framework\UrlInterface $urlBuilder;
 
     public function __construct(
         \Magento\Framework\UrlInterface $urlBuilder,

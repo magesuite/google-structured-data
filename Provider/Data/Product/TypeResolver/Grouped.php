@@ -4,17 +4,14 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
-    /**
-     * @var \Magento\Catalog\Api\Data\ProductInterface
-     */
-    protected $parentProduct;
+    protected \Magento\Catalog\Api\Data\ProductInterface $parentProduct;
 
-    public function isApplicable($productTypeId)
+    public function isApplicable($productTypeId): bool
     {
         return $productTypeId == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
     }
 
-    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true)
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true): array
     {
         $productData = [];
 

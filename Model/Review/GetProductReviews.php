@@ -4,10 +4,7 @@ namespace MageSuite\GoogleStructuredData\Model\Review;
 
 class GetProductReviews
 {
-    /**
-     * @var \Magento\Review\Model\ResourceModel\Review\CollectionFactory
-     */
-    protected $reviewCollectionFactory;
+    protected \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
 
     public function __construct(\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory)
     {

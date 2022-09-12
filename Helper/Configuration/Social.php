@@ -2,10 +2,17 @@
 
 namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
-class Social extends \Magento\Framework\App\Helper\AbstractHelper
+class Social
 {
     const XML_PATH_SOCIAL_IS_ENABLED = 'structured_data/social/is_enabled';
     const XML_PATH_SOCIAL_PROFILES = 'structured_data/social/profiles';
+
+    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
+
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface)
+    {
+        $this->scopeConfig = $scopeConfigInterface;
+    }
 
     public function isEnabled()
     {

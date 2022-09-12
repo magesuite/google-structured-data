@@ -4,6 +4,13 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Breadcrumbs
 {
+    protected \Magento\Framework\UrlInterface $url;
+
+    public function __construct(\Magento\Framework\UrlInterface $url)
+    {
+        $this->url = $url;
+    }
+
     public function getBreadcrumbsData($breadcrumbs)
     {
         $breadcrumbData = [
@@ -21,8 +28,12 @@ class Breadcrumbs
         $i = 1;
 
         foreach ($breadcrumbs as $breadcrumb) {
-            if (!$breadcrumb['link']) {
+            if (isset($breadcrumb['first']) && $breadcrumb['first']) {
                 continue;
+            }
+
+            if (!$breadcrumb['link']) {
+                $breadcrumb['link'] = $this->url->getCurrentUrl();
             }
 
             $name = is_object($breadcrumb['label']) ? $breadcrumb['label']->getText() : $breadcrumb['label'];

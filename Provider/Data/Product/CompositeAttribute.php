@@ -8,25 +8,13 @@ class CompositeAttribute
     const ATTRIBUTE_CONFIGURED_EAV = 'configured_eav';
     const ATTRIBUTE_CUSTOM = 'custom';
 
-    /**
-     * @var \Magento\Framework\Escaper
-     */
-    protected $escaper;
+    protected \Magento\Framework\Escaper $escaper;
 
-    /**
-     * @var \MageSuite\GoogleStructuredData\Helper\Configuration\Product
-     */
-    protected $productConfiguration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
 
-    /**
-     * @var AttributeInterface[]
-     */
-    protected $attributeDataProviders;
+    protected array $attributeDataProviders;
 
-    /**
-     * @var array
-     */
-    protected $eavAttributeCodes;
+    protected array $eavAttributeCodes = [];
 
     public function __construct(
         \Magento\Framework\Escaper $escaper,
@@ -76,7 +64,7 @@ class CompositeAttribute
 
     public function getEavAttributeCodes()
     {
-        if ($this->eavAttributeCodes) {
+        if (!empty($this->eavAttributeCodes)) {
             return $this->eavAttributeCodes;
         }
 
