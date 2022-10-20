@@ -45,7 +45,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $this->getProductStructuredData($product, $store, $withReviews);
     }
 
-    public function getProductStructuredData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true)
+    public function getProductStructuredData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true): array
     {
         $productData = $this->getBaseProductData($product, $store);
         $offerData = $this->getOffers($product, $store);
@@ -55,7 +55,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return array_merge($productData, $offerData, $reviewsData);
     }
 
-    public function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store)
+    public function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $structuredData = [
             '@context' => 'http://schema.org/',
@@ -72,7 +72,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return array_merge($structuredData, $attributeData);
     }
 
-    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, $store)
+    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, $store): array
     {
         $currency = $store->getCurrentCurrencyCode();
 
@@ -81,7 +81,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         ];
     }
 
-    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, $currency)
+    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, $currency): array
     {
         $productPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
 
@@ -105,7 +105,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $data;
     }
 
-    public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store)
+    public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         if (!$this->configuration->isShowRating()) {
             return [];
@@ -128,7 +128,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         foreach ($reviews as $review) {
             $row = [
                 '@type' => 'Review',
-                'author' => $this->escaper->escapeHtml($review->getNickname()),
+                'author' => ['@type' => 'Person', 'name' => $this->escaper->escapeHtml($review->getNickname())],
                 'datePublished' => $review->getCreatedAt(),
                 'description' => $this->escaper->escapeHtml($review->getDetail()),
                 'name' => $this->escaper->escapeHtml($review->getTitle())
@@ -153,7 +153,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $data;
     }
 
-    public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product)
+    public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product): array
     {
         $mediaGallery = $product->getMediaGalleryImages();
         if (!is_array($mediaGallery->getItems())) {

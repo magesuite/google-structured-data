@@ -16,7 +16,7 @@ class Social
         $this->configuration = $configuration;
     }
 
-    public function getSocialData()
+    public function getSocialData(): array
     {
         $store = $this->storeManager->getStore();
         $baseUrl = $store->getBaseUrl();

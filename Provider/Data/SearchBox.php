@@ -17,7 +17,7 @@ class SearchBox
         $this->storeManager = $storeManager;
     }
 
-    public function getSearchBoxData()
+    public function getSearchBoxData(): array
     {
         $store = $this->storeManager->getStore();
         $baseUrl = $store->getBaseUrl();

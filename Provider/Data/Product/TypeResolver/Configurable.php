@@ -9,7 +9,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         return $productTypeId == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
     }
 
-    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, $store)
+    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, $store): array
     {
         $data = [];
         $currency = $store->getCurrentCurrencyCode();

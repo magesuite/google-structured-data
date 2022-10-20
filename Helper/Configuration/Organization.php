@@ -18,32 +18,32 @@ class Organization
         $this->scopeConfig = $scopeConfigInterface;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getLogo()
+    public function getLogo(): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_LOGO, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_DESCRIPTION, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getAddressData()
+    public function getAddressData(): array
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_ADDRESS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? [];
     }
 
-    public function getContactData()
+    public function getContactData(): array
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_CONTACT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? [];
     }

@@ -24,19 +24,19 @@
                     <item name="attribute_name" xsi:type="string">description</item>
                     <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Eav</item>
                     <item name="type" xsi:type="string">configured_eav</item>
-                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="disabled" xsi:type="boolean">false</item>
                 </item>
                 <item name="brand" xsi:type="array">
                     <item name="attribute_name" xsi:type="string">brand</item>
-                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Eav</item>
+                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Brand</item>
                     <item name="type" xsi:type="string">configured_eav</item>
-                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="disabled" xsi:type="boolean">false</item>
                 </item>
                 <item name="manufacturer" xsi:type="array">
                     <item name="attribute_name" xsi:type="string">manufacturer</item>
                     <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Eav</item>
                     <item name="type" xsi:type="string">configured_eav</item>
-                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="disabled" xsi:type="boolean">false</item>
                 </item>
             </argument>
         </arguments>

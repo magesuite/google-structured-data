@@ -11,7 +11,7 @@ class Breadcrumbs
         $this->url = $url;
     }
 
-    public function getBreadcrumbsData($breadcrumbs)
+    public function getBreadcrumbsData($breadcrumbs): array
     {
         $breadcrumbData = [
             "@context" => "http://schema.org",

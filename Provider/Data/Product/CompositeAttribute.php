@@ -27,7 +27,7 @@ class CompositeAttribute
         $this->attributeDataProviders = array_filter(
             $attributeDataProviders,
             function ($item) {
-                return (!isset($item['disable']) || !$item['disable']) && $item['class'] && $item['type'];
+                return (!isset($item['disabled']) || !$item['disabled']) && $item['class'] && $item['type'];
             }
         );
     }
@@ -54,7 +54,15 @@ class CompositeAttribute
                 $attributeValue = null;
             }
 
-            if ($attributeValue) {
+            if (!$attributeValue) {
+                continue;
+            }
+
+            if (is_array($attributeValue)) {
+                foreach ($attributeValue as $index => $value) {
+                    $attributeData[$attributeKey][$index] = $this->escaper->escapeHtml($value);
+                }
+            } else {
                 $attributeData[$attributeKey] = $this->escaper->escapeHtml($attributeValue);
             }
         }
@@ -62,7 +70,7 @@ class CompositeAttribute
         return $attributeData;
     }
 
-    public function getEavAttributeCodes()
+    public function getEavAttributeCodes(): array
     {
         if (!empty($this->eavAttributeCodes)) {
             return $this->eavAttributeCodes;

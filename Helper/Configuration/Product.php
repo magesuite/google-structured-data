@@ -18,34 +18,34 @@ class Product
         $this->scopeConfig = $scopeConfigInterface;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isShowRating()
+    public function isShowRating(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_SHOW_SATING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getConfiguredAttribute($attributeCode)
+    public function getConfiguredAttribute($attributeCode): ?string
     {
         $attributesConfig = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_ATTRIBUTES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
         return $attributesConfig[$attributeCode] ?? null;
     }
 
-    public function isUseParentProductUrlForGrouped()
+    public function isUseParentProductUrlForGrouped(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isUseParentProductImagesForGrouped()
+    public function isUseParentProductImagesForGrouped(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isUseParentProductReviewsForGrouped()
+    public function isUseParentProductReviewsForGrouped(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
