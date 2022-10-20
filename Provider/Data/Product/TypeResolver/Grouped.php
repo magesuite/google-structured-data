@@ -33,7 +33,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         return $productData;
     }
 
-    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, $currency)
+    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, $currency): array
     {
         $offerData = parent::getOfferData($product, $store, $currency);
 
@@ -44,7 +44,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         return $offerData;
     }
 
-    public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store)
+    public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $reviewProduct = $this->configuration->isUseParentProductReviewsForGrouped() ? $this->getParentProduct() : $product;
 

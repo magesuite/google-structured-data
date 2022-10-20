@@ -27,7 +27,7 @@ class Product
         $this->productTypeResolverPool = $productTypeResolverPool;
     }
 
-    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, bool $withReviews = true)
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, bool $withReviews = true): array
     {
         $store = $this->storeManager->getStore();
         $cacheKey = $this->getCacheKey($product, $store, $withReviews);

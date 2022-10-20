@@ -14,12 +14,12 @@ class Social
         $this->scopeConfig = $scopeConfigInterface;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_SOCIAL_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function getSocialProfiles()
+    public function getSocialProfiles(): array
     {
         return $this->scopeConfig->getValue(self::XML_PATH_SOCIAL_PROFILES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? [];
     }

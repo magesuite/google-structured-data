@@ -16,7 +16,7 @@ class TypeResolverPool
         $this->defaultResolver = $defaultResolver;
     }
 
-    public function getProductTypeResolver($productTypeId)
+    public function getProductTypeResolver($productTypeId): \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
     {
         foreach ($this->productTypeResolvers as $productTypeResolver) {
             if (!$productTypeResolver->isApplicable($productTypeId)) {

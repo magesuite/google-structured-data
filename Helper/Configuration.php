@@ -15,17 +15,17 @@ class Configuration
         $this->scopeConfig = $scopeConfigInterface;
     }
 
-    public function isBreadcrumbsEnabled()
+    public function isBreadcrumbsEnabled(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_BREADCRUMB_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isSearchBoxEnabled()
+    public function isSearchBoxEnabled(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_SEARCH_BOX_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isCategoryPageIncludeProducts()
+    public function isCategoryPageIncludeProducts(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_INCLUDE_PRODUCTS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }

@@ -37,7 +37,7 @@ class Organization
         $this->configuration = $configuration;
     }
 
-    public function getOrganizationData()
+    public function getOrganizationData(): array
     {
         $store = $this->storeManager->getStore();
         $logoUrl = empty($this->configuration->getLogo()) ? $this->logo->getLogoSrc() : $this->configuration->getLogo();
