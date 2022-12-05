@@ -10,4 +10,7 @@
         <observer name="add_search_box_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
         <observer name="add_social_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSocialData"/>
     </event>
+    <event name="cms_page_render">
+        <observer name="add_faq_page_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddFaqPageData"/>
+    </event>
 </config>
