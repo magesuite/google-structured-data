@@ -11,6 +11,9 @@
             <search_box>
                 <is_enabled>1</is_enabled>
             </search_box>
+            <faq_page>
+                <is_enabled>1</is_enabled>
+            </faq_page>
             <category_page>
                 <include_products>1</include_products>
             </category_page>
