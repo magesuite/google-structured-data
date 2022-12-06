@@ -9,8 +9,9 @@
         <observer name="add_organization_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddOrganizationData"/>
         <observer name="add_search_box_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
         <observer name="add_social_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSocialData"/>
+        <observer name="add_faq_page_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddFaqPageData"/>
     </event>
     <event name="cms_page_render">
-        <observer name="add_faq_page_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddFaqPageData"/>
+        <observer name="add_accordion_component_to_faq_page" instance="MageSuite\GoogleStructuredData\Observer\AddAccordionComponentToFaqPage"/>
     </event>
 </config>

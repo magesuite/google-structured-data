@@ -5,16 +5,16 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class FaqPage
 {
-    protected \Magento\Framework\Serialize\SerializerInterface $serializer;
+    protected \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface $questionList;
 
-    public function __construct(\Magento\Framework\Serialize\SerializerInterface $serializer)
+    public function __construct(\MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface $questionList)
     {
-        $this->serializer = $serializer;
+        $this->questionList = $questionList;
     }
 
-    public function getFaqPageData(\Magento\Cms\Api\Data\PageInterface $page): array
+    public function getFaqPageData(): array
     {
-        $questions = $this->getQuestions($page);
+        $questions = $this->getQuestions();
 
         if (empty($questions)) {
             return [];
@@ -27,35 +27,19 @@ class FaqPage
         ];
     }
 
-    public function getQuestions(\Magento\Cms\Api\Data\PageInterface $page): array
+    protected function getQuestions(): array
     {
-        $contentConstructorContent = $page->getContentConstructorContent();
-
-        try {
-            $components = $this->serializer->unserialize($contentConstructorContent);
-        } catch (\InvalidArgumentException $e) {
-            return [];
-        }
-
         $questions = [];
 
-        foreach ($components as $component) {
-            if (!isset($component['type']) || $component['type'] !== 'accordion') {
-                continue;
-            }
-
-            foreach ($component['data']['groups'] as $group) {
-                foreach ($group['items'] as $question) {
-                    $questions[] = [
-                        '@type' => 'Question',
-                        'name' => $question['headline'],
-                        'acceptedAnswer' => [
-                            '@type' => 'Answer',
-                            'text' => strip_tags($question['content'])
-                        ]
-                    ];
-                }
-            }
+        foreach ($this->questionList->getList() as $question) {
+            $questions[] = [
+                '@type' => 'Question',
+                'name' => $question->getQuestion(),
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => $question->getAnswer()
+                ]
+            ];
         }
 
         return $questions;
