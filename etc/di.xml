@@ -50,4 +50,7 @@
     <type name="Magento\Catalog\Block\Product\ListProduct">
         <plugin name="add_products_data_to_category" type="MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduct\AddProductsDataToCategoryPage" sortOrder="10" />
     </type>
+
+    <preference for="MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface"
+                type="MageSuite\GoogleStructuredData\Provider\Data\FaqPage\AccordionComponentQuestionList" />
 </config>

@@ -6,12 +6,14 @@ class FaqPageTest extends \PHPUnit\Framework\TestCase
 {
     protected ?\Magento\Cms\Api\PageRepositoryInterface $pageRepository;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\FaqPage $faqPageDataProvider;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\FaqPage\AccordionComponentQuestionList $accordionComponentQuestionList;
 
     protected function setUp(): void
     {
         $objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->pageRepository = $objectManager->get(\Magento\Cms\Api\PageRepositoryInterface::class);
         $this->faqPageDataProvider = $objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\FaqPage::class);
+        $this->accordionComponentQuestionList = $objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\FaqPage\AccordionComponentQuestionList::class);
     }
 
     /**
@@ -22,7 +24,8 @@ class FaqPageTest extends \PHPUnit\Framework\TestCase
     public function testItReturnFaqPageDataCorrectly(): void
     {
         $page = $this->pageRepository->getById('page-with-accordion-component');
-        $faqPageData = $this->faqPageDataProvider->getFaqPageData($page);
+        $this->accordionComponentQuestionList->addQuestions($page);
+        $faqPageData = $this->faqPageDataProvider->getFaqPageData();
         $expectedQuestions = [
             [
                 '@type' => 'Question',
@@ -46,7 +49,8 @@ class FaqPageTest extends \PHPUnit\Framework\TestCase
     public function testItSkipFaqPageDataIfQuestionsDoNotExist(): void
     {
         $page = $this->pageRepository->getById('page100');
-        $faqPageData = $this->faqPageDataProvider->getFaqPageData($page);
+        $this->accordionComponentQuestionList->addQuestions($page);
+        $faqPageData = $this->faqPageDataProvider->getFaqPageData();
         $this->assertEmpty($faqPageData);
     }
 }
