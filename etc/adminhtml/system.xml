@@ -143,6 +143,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines whether category page contains product data.</comment>
                 </field>
+                <field id="show_rating" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Rating</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines if rating should be included for products in structured data on category page. Will work only if Show Rating is enabled also for Product.</comment>
+                </field>
             </group>
             <group id="faq_page" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>FAQ Page</label>
