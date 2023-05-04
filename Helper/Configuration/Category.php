@@ -14,12 +14,12 @@ class Category
         $this->scopeConfig = $scopeConfigInterface;
     }
 
-    public function isCategoryPageIncludeProducts(): bool
+    public function doesCategoryPageIncludeProducts(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_INCLUDE_PRODUCTS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isShowRating(): bool
+    public function shouldShowRating(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_SHOW_RATING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }

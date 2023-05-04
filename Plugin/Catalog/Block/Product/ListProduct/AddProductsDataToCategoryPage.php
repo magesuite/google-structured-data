@@ -26,7 +26,7 @@ class AddProductsDataToCategoryPage
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result)
     {
-        if (!$this->configuration->isCategoryPageIncludeProducts()) {
+        if (!$this->configuration->doesCategoryPageIncludeProducts()) {
             return $result;
         }
 
@@ -42,11 +42,11 @@ class AddProductsDataToCategoryPage
         }
 
         $i = 0;
-        $isShowRating = $this->configuration->isShowRating();
+        $shouldShowRating = $this->configuration->shouldShowRating();
 
         $result->addMediaGalleryData();
         foreach ($result as $product) {
-            $productData = $this->productDataProvider->execute($product, $isShowRating);
+            $productData = $this->productDataProvider->execute($product, $shouldShowRating);
 
             $productDataObject = $this->dataObjectFactory->create();
             $productDataObject->setData($productData);
