@@ -107,7 +107,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        if (!$this->configuration->isShowRating()) {
+        if (!$this->configuration->shouldShowRating()) {
             return [];
         }
 

@@ -5,14 +5,14 @@ namespace MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduc
 class AddProductsDataToCategoryPage
 {
     protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $configuration;
     protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
     protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
     protected \Magento\Framework\Registry $registry;
 
     public function __construct(
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
-        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Category $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         \Magento\Framework\Registry $registry
@@ -26,7 +26,7 @@ class AddProductsDataToCategoryPage
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result)
     {
-        if (!$this->configuration->isCategoryPageIncludeProducts()) {
+        if (!$this->configuration->doesCategoryPageIncludeProducts()) {
             return $result;
         }
 
@@ -42,10 +42,11 @@ class AddProductsDataToCategoryPage
         }
 
         $i = 0;
+        $shouldShowRating = $this->configuration->shouldShowRating();
 
         $result->addMediaGalleryData();
         foreach ($result as $product) {
-            $productData = $this->productDataProvider->execute($product, false);
+            $productData = $this->productDataProvider->execute($product, $shouldShowRating);
 
             $productDataObject = $this->dataObjectFactory->create();
             $productDataObject->setData($productData);

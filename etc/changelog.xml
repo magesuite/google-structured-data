@@ -27,6 +27,20 @@
                     <ticket_id>IPET-1612</ticket_id>
                 </entry>
             </tag>
+            <tag version="2.1.0" date="2022-12-05">
+                <entry>
+                    <type>FEATURE</type>
+                    <overview>Add provider for FAQ</overview>
+                    <ticket_id>IPET-487</ticket_id>
+                </entry>
+            </tag>
+            <tag version="2.1.3" date="2023-05-02">
+                <entry>
+                    <type>FEATURE</type>
+                    <overview>Add configuration for displaying reviews on POP</overview>
+                    <ticket_id>IPET-1998</ticket_id>
+                </entry>
+            </tag>
         </changelog>
     </module>
 </config>

@@ -23,7 +23,7 @@ class Product
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function isShowRating(): bool
+    public function shouldShowRating(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_SHOW_SATING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
