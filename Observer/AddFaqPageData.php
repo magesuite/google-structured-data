@@ -20,7 +20,7 @@ class AddFaqPageData implements \Magento\Framework\Event\ObserverInterface
         $this->faqPageDataProvider = $faqPageDataProvider;
         $this->configuration = $configuration;
     }
-    
+
     public function execute(\Magento\Framework\Event\Observer $observer): void
     {
         if (!$this->configuration->isEnabled()) {
@@ -28,7 +28,7 @@ class AddFaqPageData implements \Magento\Framework\Event\ObserverInterface
         }
 
         $faqPageData = $this->faqPageDataProvider->getFaqPageData();
-        
+
         if (empty($faqPageData)) {
             return;
         }

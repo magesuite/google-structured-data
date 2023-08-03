@@ -16,7 +16,7 @@
             </argument>
         </arguments>
     </type>
-    
+
     <type name="MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute">
         <arguments>
             <argument name="attributeDataProviders" xsi:type="array">

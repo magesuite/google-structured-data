@@ -20,6 +20,10 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         foreach ($associatedProducts as $associatedProduct) {
             $associatedProductData = $this->getProductStructuredData($associatedProduct, $store, $withReviews);
 
+            if (empty($associatedProductData)) {
+                continue;
+            }
+
             if ($this->configuration->isUseParentProductUrlForGrouped()) {
                 $associatedProductData['url'] = $this->getParentProduct()->getProductUrl();
             }

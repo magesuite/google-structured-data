@@ -36,7 +36,7 @@ class AccordionComponentQuestionList implements QuestionListInterface
         } catch (\InvalidArgumentException $e) {
             return;
         }
-        
+
         foreach ($components as $component) {
             if (!isset($component['type']) || $component['type'] !== 'accordion') {
                 continue;
