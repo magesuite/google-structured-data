@@ -24,10 +24,10 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
                 continue;
             }
 
-            if ($this->configuration->isUseParentProductUrlForGrouped()) {
+            if ($this->productConfiguration->isUseParentProductUrlForGrouped()) {
                 $associatedProductData['url'] = $this->getParentProduct()->getProductUrl();
             }
-            if ($this->configuration->isUseParentProductImagesForGrouped()) {
+            if ($this->productConfiguration->isUseParentProductImagesForGrouped()) {
                 $associatedProductData['image'] = $this->getProductImages($this->getParentProduct());
             }
 
@@ -41,7 +41,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
     {
         $offerData = parent::getOfferData($product, $store, $currency);
 
-        if ($this->configuration->isUseParentProductUrlForGrouped()) {
+        if ($this->productConfiguration->isUseParentProductUrlForGrouped()) {
             $offerData['url'] = $this->getParentProduct()->getProductUrl();
         }
 
@@ -50,7 +50,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
 
     public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        $reviewProduct = $this->configuration->isUseParentProductReviewsForGrouped() ? $this->getParentProduct() : $product;
+        $reviewProduct = $this->productConfiguration->isUseParentProductReviewsForGrouped() ? $this->getParentProduct() : $product;
 
         return parent::getReviewsData($reviewProduct, $store);
     }

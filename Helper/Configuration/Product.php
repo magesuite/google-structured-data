@@ -4,12 +4,19 @@ namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
 class Product
 {
-    const XML_CONFIG_PATH_IS_ENABLED = 'structured_data/product_page/is_enabled';
-    const XML_CONFIG_PATH_SHOW_SATING = 'structured_data/product_page/show_rating';
-    const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
-    const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/grouped/use_parent_product_url';
-    const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
-    const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS = 'structured_data/product_page/grouped/use_parent_product_reviews';
+    public const XML_CONFIG_PATH_IS_ENABLED = 'structured_data/product_page/is_enabled';
+    public const XML_CONFIG_PATH_SHOW_RATING = 'structured_data/product_page/show_rating';
+    public const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_ENABLED = 'structured_data/product_page/delivery_data/is_enabled';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS = 'structured_data/product_page/delivery_data/business_days';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_HANDLING_TIME_VALUE = 'structured_data/product_page/delivery_data/handling_time_value';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_CUTOFF_TIME_VALUE = 'structured_data/product_page/delivery_data/cutoff_time';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_HANDLING_TIME_UNIT_CODE = 'structured_data/product_page/delivery_data/handling_time_unit_code';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_VALUE = 'structured_data/product_page/delivery_data/transit_time_value';
+    public const XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_UNIT_CODE = 'structured_data/product_page/delivery_data/transit_time_unit_code';
+    public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/grouped/use_parent_product_url';
+    public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
+    public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS = 'structured_data/product_page/grouped/use_parent_product_reviews';
 
     protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
 
@@ -20,12 +27,54 @@ class Product
 
     public function isEnabled(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function shouldShowRating(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_SHOW_SATING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_SHOW_RATING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isDeliveryDataEnabled(int $storeId): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_DELIVERY_DATA_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getBusinessDays(int $storeId): array
+    {
+        $days = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+
+        $businessDays = preg_split('/,/', $days);
+        if ($businessDays === false) {
+            $businessDays = [];
+        }
+
+        return $businessDays;
+    }
+
+    public function getCutoffTime(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_CUTOFF_TIME_VALUE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getHandlingTime(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_HANDLING_TIME_VALUE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getHandlingTimeUnit(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_HANDLING_TIME_UNIT_CODE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getTransitTime(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_VALUE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getTransitTimeUnit(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_UNIT_CODE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function getConfiguredAttribute($attributeCode): ?string
@@ -37,16 +86,16 @@ class Product
 
     public function isUseParentProductUrlForGrouped(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function isUseParentProductImagesForGrouped(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function isUseParentProductReviewsForGrouped(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 }

@@ -183,4 +183,67 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             $this->assertEquals($data, $productData[$virtualProductKey][$key]);
         }
     }
+
+    /**
+     * @magentoDbIsolation enabled
+     * @magentoAppIsolation enabled
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/is_enabled 1
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/business_days 0,1,2,3,4,5,6
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/cutoff_time 23:45:00
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/handling_time_value 5-8
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/handling_time_unit_code d
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/transit_time_value 3
+     * @magentoConfigFixture default_store structured_data/product_page/delivery_data/transit_time_unit_code d
+     */
+    public function testProductShippingDetails()
+    {
+        $expectedShippingDetails = [
+            '@type' => 'OfferShippingDetails',
+            "deliveryTime" =>  [
+                "@type" => "ShippingDeliveryTime",
+                "businessDays" => [
+                    "@type" => "OpeningHoursSpecification",
+                    "dayOfWeek" => [
+                        "https://schema.org/Monday",
+                        "https://schema.org/Tuesday",
+                        "https://schema.org/Wednesday",
+                        "https://schema.org/Thursday",
+                        "https://schema.org/Friday",
+                        "https://schema.org/Saturday",
+                        "https://schema.org/Sunday"
+                    ]
+                ],
+                "cutoffTime" => "23:45:00-08:00",
+                "handlingTime" => [
+                    "@type" => "QuantitativeValue",
+                    "minValue" => "5",
+                    "maxValue" => "8",
+                    "unitCode" => "d"
+                ],
+                "transitTime" => [
+                    "@type" => "QuantitativeValue",
+                    "value" => "3",
+                    "unitCode" => "d"
+                ]
+            ],
+            "shippingRate" => [
+                "@type" => "MonetaryAmount",
+                "value" => 5.00,
+                "currency" => "USD"
+            ],
+            "shippingDestination" => [
+                "@type" => "DefinedRegion",
+                "addressCountry" => "US"
+            ]
+        ];
+
+        $product = $this->productRepository->get('simple_special_price');
+        $productData = $this->productDataProvider->execute($product);
+
+        $shippingDetails = array_shift($productData['offers']['shippingDetails']);
+        foreach ($expectedShippingDetails as $key => $data) {
+            $this->assertEquals($data, $shippingDetails[$key]);
+        }
+    }
 }

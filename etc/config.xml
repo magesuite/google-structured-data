@@ -29,6 +29,9 @@
                     <use_parent_product_images>1</use_parent_product_images>
                     <use_parent_product_reviews>1</use_parent_product_reviews>
                 </grouped>
+                <delivery_data>
+                    <is_enabled>0</is_enabled>
+                </delivery_data>
             </product_page>
             <social>
                 <is_enabled>1</is_enabled>
