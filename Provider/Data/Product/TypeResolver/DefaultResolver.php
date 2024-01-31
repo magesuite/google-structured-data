@@ -17,7 +17,21 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary;
 
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
+
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
+
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays;
+
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\CutoffTime $cutoffTime;
+
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime;
+
+    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime;
+
+    protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
+
+    protected \Magento\Framework\Stdlib\ArrayManager $arrayManager;
 
     public function __construct(
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
@@ -25,14 +39,28 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
         \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
         \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
+        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays,
+        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\CutoffTime $cutoffTime,
+        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime,
+        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime,
+        \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        \Magento\Framework\Stdlib\ArrayManager $arrayManager
     ) {
         $this->timezone = $timezone;
         $this->escaper = $escaper;
         $this->compositeAttributeDataProvider = $compositeAttributeDataProvider;
         $this->getProductReviews = $getProductReviews;
         $this->getProductRattingSummary = $getProductRattingSummary;
+        $this->productConfiguration = $productConfiguration;
         $this->configuration = $configuration;
+        $this->businessDays = $businessDays;
+        $this->cutoffTime = $cutoffTime;
+        $this->handlingTime = $handlingTime;
+        $this->transitTime = $transitTime;
+        $this->dataObjectFactory = $dataObjectFactory;
+        $this->arrayManager = $arrayManager;
     }
 
     public function isApplicable($productTypeId): bool
@@ -102,12 +130,22 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             $data['priceValidUntil'] = date('Y-m-d', strtotime($specialToDate));
         }
 
+        $dataObject = $this->dataObjectFactory->create();
+        $dataObject->setData('store', $store);
+        $dataObject->setData('product', $product);
+        $dataObject->setData('currency', $currency);
+        $deliveryData = $this->getDeliveryData($dataObject);
+
+        if ($deliveryData) {
+            $data['shippingDetails'] = $deliveryData;
+        }
+
         return $data;
     }
 
     public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        if (!$this->configuration->shouldShowRating()) {
+        if (!$this->productConfiguration->shouldShowRating()) {
             return [];
         }
 
@@ -166,5 +204,129 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         return $images;
+    }
+
+    public function getDeliveryData(\Magento\Framework\DataObject $dataObject): array
+    {
+        $store = $dataObject->getStore();
+        $storeId = $store->getId();
+
+        if (!$this->productConfiguration->isDeliveryDataEnabled($storeId)) {
+            return [];
+        }
+
+        $availableCarriers = $this->getAvailableCarriers($store);
+
+        if (!$availableCarriers) {
+            return [];
+        }
+
+        $businessDaysData = $this->businessDays->getBusinessDaysData($dataObject);
+        $handlingTimeData = $this->handlingTime->getHandlingTimeData($dataObject);
+        $transitTimeData = $this->transitTime->getTransitTimeData($dataObject);
+        $cutoffTimeData = $this->cutoffTime->getCutoffTimeData($dataObject);
+
+        $deliveryTimeData = ["@type" => "ShippingDeliveryTime"];
+        $deliveryTimeData = array_merge($deliveryTimeData, $businessDaysData);
+        $deliveryTimeData = array_merge($deliveryTimeData, $cutoffTimeData);
+        $deliveryTimeData = array_merge($deliveryTimeData, $handlingTimeData);
+        $deliveryTimeData = array_merge($deliveryTimeData, $transitTimeData);
+
+        $shippingDestination = [
+            "@type" => "DefinedRegion",
+            "addressCountry" => $this->configuration->getCountryByWebsite($store->getWebsite())
+        ];
+
+        $data = [];
+        foreach ($availableCarriers as $carrier) {
+            $shippingRateData = [
+                "@type" => "MonetaryAmount",
+                "value" => $carrier['price'],
+                "currency" => $dataObject->getData('currency')
+            ];
+
+            $offerShippingDetails = [
+                '@type' => 'OfferShippingDetails',
+                'deliveryTime' => $deliveryTimeData,
+                'shippingRate' => $shippingRateData,
+                'shippingDestination' => $shippingDestination
+            ];
+
+            $data[] = $offerShippingDetails;
+        }
+
+        return $data;
+    }
+
+    public function getAvailableCarriers(\Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        $allCarriers =  $this->configuration->getCarriers($store);
+
+        $availableCarriers = [];
+        foreach ($allCarriers as $carrierCode => $carrier) {
+            $isActive = $this->arrayManager->get('active', $carrier);
+            if (!(bool) $isActive) {
+                continue;
+            }
+
+            if (!$this->isShippingMethodAvailable($carrier, $store)) {
+                continue;
+            }
+
+            $price = $this->arrayManager->get('price', $carrier);
+            if ($price === null) {
+                continue;
+            }
+
+            $availableCarriers[$carrierCode] = [
+                'name' => $carrier['name'],
+                'price' => $price
+            ];
+        }
+
+        return $availableCarriers;
+    }
+
+    public function isShippingMethodAvailable(array $carrier, \Magento\Store\Api\Data\StoreInterface $store): bool
+    {
+        $allowSpecificCountries = $this->arrayManager->get('sallowspecific', $carrier);
+        if ((bool) $allowSpecificCountries) {
+            if ($this->isShippingMethodAvailableForWebsite($carrier, $store)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isShippingMethodAvailableForWebsite(array $carrier, \Magento\Store\Api\Data\StoreInterface $store): bool
+    {
+        $websiteCountry = $this->configuration->getCountryByWebsite($store->getWebsite());
+        if (!$websiteCountry) {
+            return false;
+        }
+
+        $specificCountries = $this->getSpecificCountries($carrier);
+        foreach ($specificCountries as $countryCode) {
+            if ($countryCode == $websiteCountry) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getSpecificCountries(array $carrier): array
+    {
+        $allowedCountries = $this->arrayManager->get('specificcountry', $carrier);
+
+        $specificCountries = [];
+        if ($allowedCountries) {
+            $specificCountries = explode(',', $allowedCountries);
+        }
+
+        return $specificCountries;
     }
 }

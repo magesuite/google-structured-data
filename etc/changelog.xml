@@ -41,6 +41,13 @@
                     <ticket_id>IPET-1998</ticket_id>
                 </entry>
             </tag>
+            <tag version="2.2.0" date="2024-01-29">
+                <entry>
+                    <type>FEATURE</type>
+                    <overview>Add configuration for displaying shipping details on POP</overview>
+                    <ticket_id>LP-2077</ticket_id>
+                </entry>
+            </tag>
         </changelog>
     </module>
 </config>
