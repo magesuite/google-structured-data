@@ -6,19 +6,19 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
 {
     protected \Magento\Catalog\Api\Data\ProductInterface $parentProduct;
 
-    public function isApplicable($productTypeId): bool
+    public function isApplicable(string $productTypeId): bool
     {
         return $productTypeId == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
     }
 
-    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, bool $withReviews = true): array
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $productData = [];
 
         $this->setParentProduct($product);
         $associatedProducts = $product->getTypeInstance()->getAssociatedProducts($product);
         foreach ($associatedProducts as $associatedProduct) {
-            $associatedProductData = $this->getProductStructuredData($associatedProduct, $store, $withReviews);
+            $associatedProductData = $this->getProductStructuredData($associatedProduct, $store);
 
             if (empty($associatedProductData)) {
                 continue;
@@ -37,7 +37,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         return $productData;
     }
 
-    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, $currency): array
+    public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, string $currency): array
     {
         $offerData = parent::getOfferData($product, $store, $currency);
 

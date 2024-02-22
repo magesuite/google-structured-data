@@ -20,6 +20,7 @@
             </category_page>
             <product_page>
                 <is_enabled>1</is_enabled>
+                <is_indexing_enabled>1</is_indexing_enabled>
                 <show_rating>1</show_rating>
                 <attributes>
                     <description>description</description>

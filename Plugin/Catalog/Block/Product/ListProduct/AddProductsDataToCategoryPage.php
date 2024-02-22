@@ -4,24 +4,30 @@ namespace MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduc
 
 class AddProductsDataToCategoryPage
 {
+    protected \Magento\Framework\Registry $registry;
     protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $configuration;
+    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
+    protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository;
     protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
     protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
-    protected \Magento\Framework\Registry $registry;
+    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $configuration;
 
     public function __construct(
+        \Magento\Framework\Registry $registry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository,
         \MageSuite\GoogleStructuredData\Helper\Configuration\Category $configuration,
         \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        \Magento\Framework\Registry $registry
+        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider
     ) {
+        $this->registry = $registry;
+        $this->dataObjectFactory = $dataObjectFactory;
+        $this->storeManager = $storeManager;
+        $this->productStructuredDataIndexRepository = $productStructuredDataIndexRepository;
         $this->configuration = $configuration;
         $this->structuredDataContainer = $structuredDataContainer;
         $this->productDataProvider = $productDataProvider;
-        $this->dataObjectFactory = $dataObjectFactory;
-        $this->registry = $registry;
     }
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result)
@@ -44,9 +50,16 @@ class AddProductsDataToCategoryPage
         $i = 0;
         $shouldShowRating = $this->configuration->shouldShowRating();
 
+        $productIds = $result->getColumnValues('entity_id');
+        $store = $this->storeManager->getStore();
+        $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, $store->getId());
+
         $result->addMediaGalleryData();
         foreach ($result as $product) {
-            $productData = $this->productDataProvider->execute($product, $shouldShowRating);
+            $productData = $this->productDataProvider->getProductData($product, $store);
+            if (!$shouldShowRating) {
+                unset($productData['review']);
+            }
 
             $productDataObject = $this->dataObjectFactory->create();
             $productDataObject->setData($productData);

@@ -164,12 +164,17 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
-                <field id="show_rating" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="is_indexing_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Is Indexing Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines if pregenerated structured data should be stored in index.</comment>
+                </field>
+                <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Rating</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if rating should be included in structured data.</comment>
                 </field>
-                <group id="attributes" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="attributes" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <field id="description" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Description</label>
@@ -187,39 +192,39 @@
                         <comment>Defines which attribute will be used to describe product manufacturer.</comment>
                     </field>
                 </group>
-                <group id="delivery_data" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="delivery_data" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Delivery Data</label>
                     <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <comment>Defines if delivery data should be displayed in the structured data</comment>
                     </field>
-                    <field id="business_days" translate="label" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="business_days" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Business Days</label>
                         <source_model>Magento\Config\Model\Config\Source\Locale\Weekdays</source_model>
                     </field>
-                    <field id="cutoff_time" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="cutoff_time" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Cutoff Time</label>
                         <comment>Defines the time after which they will no longer process orders received on that day</comment>
                     </field>
-                    <field id="handling_time_value" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="handling_time_value" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Handling Time</label>
                         <comment>Defines the time that is needed to pricess the order and ship the order. Accepted values are numbers or ranges e.g. 3 or 3-5</comment>
                     </field>
-                    <field id="handling_time_unit_code" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="handling_time_unit_code" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Handling Time Unit Code</label>
                         <comment>Defines the unit of handling time (d - days, h - hours, min - minutes, s - seconds)</comment>
                     </field>
-                    <field id="transit_time_value" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="transit_time_value" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Transit Time</label>
                         <comment>Defines the time that is needed to pricess the order and ship the order. Accepted values are numbers or ranges e.g. 3 or 3-5</comment>
                     </field>
-                    <field id="transit_time_unit_code" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="transit_time_unit_code" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Transit Time Unit Code</label>
                         <comment>Defines the unit of handling time (d - days, h - hours, min - minutes, s - seconds)</comment>
                     </field>
                 </group>
-                <group id="grouped" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="grouped" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Grouped Products</label>
                     <field id="use_parent_product_url" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Use Parent Product URL</label>

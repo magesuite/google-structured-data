@@ -12,11 +12,11 @@ class TypeResolverPool
         \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver\DefaultResolver $defaultResolver,
         array $productTypeResolvers
     ) {
-        $this->productTypeResolvers = $productTypeResolvers;
         $this->defaultResolver = $defaultResolver;
+        $this->productTypeResolvers = $productTypeResolvers;
     }
 
-    public function getProductTypeResolver($productTypeId): \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
+    public function getProductTypeResolver(string $productTypeId): \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
     {
         foreach ($this->productTypeResolvers as $productTypeResolver) {
             if (!$productTypeResolver->isApplicable($productTypeId)) {

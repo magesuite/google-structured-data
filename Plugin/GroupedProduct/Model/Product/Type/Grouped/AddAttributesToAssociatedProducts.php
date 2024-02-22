@@ -19,7 +19,7 @@ class AddAttributesToAssociatedProducts
     public function afterGetAssociatedProductCollection(\Magento\GroupedProduct\Model\Product\Type\Grouped $subject, $result)
     {
         $attributesToSelect = array_filter(array_values($this->compositeAttributeDataProvider->getEavAttributeCodes()));
-        $attributesToSelect = array_merge($this->attributesToSelect, $attributesToSelect);
+        $attributesToSelect = array_merge(array_values($this->attributesToSelect), $attributesToSelect);
 
         $result->addAttributeToSelect($attributesToSelect);
 

@@ -5,9 +5,7 @@ namespace MageSuite\GoogleStructuredData\Observer;
 class AddSocialData implements \Magento\Framework\Event\ObserverInterface
 {
     protected \MageSuite\GoogleStructuredData\Helper\Configuration\Social $configuration;
-
     protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
-
     protected \MageSuite\GoogleStructuredData\Provider\Data\Social $socialDataProvider;
 
     public function __construct(

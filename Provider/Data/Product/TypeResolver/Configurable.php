@@ -4,12 +4,12 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Configurable extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
-    public function isApplicable($productTypeId): bool
+    public function isApplicable(string $productTypeId): bool
     {
         return $productTypeId == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
     }
 
-    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, $store): array
+    public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $data = [];
         $currency = $store->getCurrentCurrencyCode();
