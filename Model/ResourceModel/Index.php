@@ -4,7 +4,7 @@ namespace MageSuite\GoogleStructuredData\Model\ResourceModel;
 
 class Index
 {
-    public const INDEX_TABLE_NAME = 'products_structured_data_index';
+    public const INDEX_TABLE_NAME = 'product_structured_data_index';
 
     protected ?\Magento\Framework\DB\Adapter\AdapterInterface $connection;
 
