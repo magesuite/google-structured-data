@@ -51,10 +51,14 @@ class AddProductsDataToCategoryPage
         $shouldShowRating = $this->configuration->shouldShowRating();
 
         $productIds = $result->getColumnValues('entity_id');
+        if (empty($productIds)) {
+            return $result;
+        }
+
         $store = $this->storeManager->getStore();
         $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, $store->getId());
-
         $result->addMediaGalleryData();
+
         foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductData($product, $store);
             if (!$shouldShowRating) {

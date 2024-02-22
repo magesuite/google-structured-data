@@ -4,6 +4,8 @@ namespace MageSuite\GoogleStructuredData\Model\ResourceModel;
 
 class Index
 {
+    public const INDEX_TABLE_NAME = 'products_structured_data_index';
+
     protected ?\Magento\Framework\DB\Adapter\AdapterInterface $connection;
 
     public function __construct(\Magento\Framework\App\ResourceConnection $resourceConnection)
@@ -29,7 +31,7 @@ class Index
     public function insert(array $data): int
     {
         return $this->connection->insertMultiple(
-            $this->connection->getTableName('products_structured_data_index'),
+            $this->connection->getTableName(self::INDEX_TABLE_NAME),
             $data
         );
     }
@@ -37,22 +39,25 @@ class Index
     public function deleteByProductId(array $toDeleteProductIds): void
     {
         $this->connection->delete(
-            $this->connection->getTableName('products_structured_data_index'),
+            $this->connection->getTableName(self::INDEX_TABLE_NAME),
             $this->connection->quoteInto('product_id IN (?)', $toDeleteProductIds)
         );
     }
 
     public function getByProductIdsAndStoreId(array $productIds, int $storeId): ?array
     {
-        $select = $this->connection->select();
-        $select->from($this->connection->getTableName('products_structured_data_index'));
-        $select->where('product_id IN (?)', $productIds);
-        $select->where('store_id = ?', $storeId);
+        $select = $this->connection
+            ->select()
+            ->from($this->connection->getTableName(self::INDEX_TABLE_NAME), ['product_id', 'data'])
+            ->where('product_id IN (?)', $productIds)
+            ->where('store_id = ?', $storeId);
 
         $result = [];
 
-        foreach ($this->connection->fetchAll($select) as $row) {
-            $result[$row['product_id']] = $row['data'];
+        $data = $this->connection->fetchPairs($select);
+
+        foreach ($productIds as $productId) {
+            $result[$productId] = $data[$productId] ?? '';
         }
 
         return $result;

@@ -44,10 +44,12 @@ class Product
             $productData = $this->generateProductData($product, $store);
         }
 
-        foreach ($this->modifiersPool->getModifiers() as $modifier) {
-            /** @var \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifierInterface $modifier */
-            $modifier = $modifier['modifier'];
-            $productData = $modifier->execute($productData, $product, $store);
+        if (!empty($productData)) {
+            foreach ($this->modifiersPool->getModifiers() as $modifier) {
+                /** @var \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifierInterface $modifier */
+                $modifier = $modifier['modifier'];
+                $productData = $modifier->execute($productData, $product, $store);
+            }
         }
 
         $identities = $this->getIdentities($product);
