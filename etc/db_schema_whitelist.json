@@ -6,8 +6,8 @@
             "data": true,
             "updated_at": true
         },
-        "index": {
-            "PRODUCT_STRUCTURED_DATA_INDEX_PRODUCT_ID_STORE_ID": true
+        "constraint": {
+            "PRIMARY": true
         }
     }
 }

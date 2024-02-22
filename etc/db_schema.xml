@@ -5,9 +5,9 @@
         <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" comment="Entity ID"/>
         <column xsi:type="mediumtext" name="data" nullable="true" comment="Structure Data"/>
         <column xsi:type="datetime" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"/>
-        <index referenceId="PRODUCT_STRUCTURED_DATA_INDEX_PRODUCT_ID_STORE_ID" indexType="btree">
+        <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="product_id"/>
             <column name="store_id"/>
-        </index>
+        </constraint>
     </table>
 </schema>
