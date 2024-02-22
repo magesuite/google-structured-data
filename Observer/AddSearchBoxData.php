@@ -5,9 +5,7 @@ namespace MageSuite\GoogleStructuredData\Observer;
 class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
 {
     protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
-
     protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
-
     protected \MageSuite\GoogleStructuredData\Provider\Data\SearchBox $searchBoxDataProvider;
 
     public function __construct(

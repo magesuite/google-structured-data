@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="product_structured_data" view_id="product_structured_data" class="MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData">
+        <title translate="true">Product Structured Data</title>
+        <description translate="true">Pregenerated Structured Data for Products</description>
+    </indexer>
+</config>

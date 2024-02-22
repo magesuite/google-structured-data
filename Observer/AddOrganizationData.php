@@ -5,9 +5,7 @@ namespace MageSuite\GoogleStructuredData\Observer;
 class AddOrganizationData implements \Magento\Framework\Event\ObserverInterface
 {
     protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
-
     protected \MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider;
-
     protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $configuration;
 
     public function __construct(

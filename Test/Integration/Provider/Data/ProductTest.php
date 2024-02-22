@@ -9,23 +9,26 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 class ProductTest extends \PHPUnit\Framework\TestCase
 {
     protected ?\Magento\TestFramework\ObjectManager $objectManager;
-
-    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
-
-    protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
-
-    protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
-
     protected ?\Magento\Framework\App\CacheInterface $cache;
+    protected ?\Magento\Store\Model\StoreManagerInterface $storeManager;
+    protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
+    protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
+    protected ?\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData $indexer;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
 
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
 
+        $this->cache = $this->objectManager->get(\Magento\Framework\App\CacheInterface::class);
+        $this->storeManager = $this->objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+        $this->productRepository = $this->objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+        $this->reviewCollectionFactory = $this->objectManager->get(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
+        $this->indexer = $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData::class);
+
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
-        $this->productRepository = $this->objectManager->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
-        $this->reviewCollectionFactory = $this->objectManager->create(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
-        $this->cache = $this->objectManager->create(\Magento\Framework\App\CacheInterface::class);
+
+        $this->indexer->executeFull();
     }
 
     public function tearDown(): void
@@ -58,7 +61,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('simple');
-        $productData = $this->productDataProvider->execute($product);
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         foreach ($expectedData as $key => $data) {
             $this->assertEquals($data, $productData[$key]);
@@ -94,7 +97,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('simple_special_price');
-        $productData = $this->productDataProvider->execute($product);
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         foreach ($expectedData as $key => $data) {
             $this->assertEquals($data, $productData[$key]);
@@ -111,7 +114,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testProductDataWithReviews()
     {
         $product = $this->productRepository->get('simple');
-        $productData = $this->productDataProvider->execute($product);
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $reviewCollection = $this->reviewCollectionFactory->create();
         $reviewCollection->addStoreFilter($product->getStoreId());
@@ -136,7 +139,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $expectedOffersCount = 2;
 
         $product = $this->productRepository->get('configurable');
-        $productData = $this->productDataProvider->execute($product);
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $this->assertEquals($expectedOffersCount, count($productData['offers']));
         foreach ($expectedData as $key => $data) {
@@ -170,7 +173,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('grouped-product');
-        $productData = $this->productDataProvider->execute($product);
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $this->assertEquals($expectedProductCounts, count($productData));
         $simpleProductKey = array_search('simple', array_column($productData, 'sku'));
@@ -239,7 +242,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('simple_special_price');
-        $productData = $this->productDataProvider->execute($product);
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $shippingDetails = array_shift($productData['offers']['shippingDetails']);
         foreach ($expectedShippingDetails as $key => $data) {

@@ -5,11 +5,8 @@ namespace MageSuite\GoogleStructuredData\Plugin\Framework\View\Element\Template;
 class AddBreadcrumbsToDataProvider
 {
     protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
-
     protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
-
     protected \MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbsDataProvider;
-
     protected \Psr\Log\LoggerInterface $logger;
 
     public function __construct(

@@ -5,6 +5,7 @@ namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 class Product
 {
     public const XML_CONFIG_PATH_IS_ENABLED = 'structured_data/product_page/is_enabled';
+    public const XML_CONFIG_PATH_IS_INDEXING_ENABLED = 'structured_data/product_page/is_indexing_enabled';
     public const XML_CONFIG_PATH_SHOW_RATING = 'structured_data/product_page/show_rating';
     public const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
     public const XML_CONFIG_PATH_DELIVERY_DATA_ENABLED = 'structured_data/product_page/delivery_data/is_enabled';
@@ -28,6 +29,11 @@ class Product
     public function isEnabled(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isIndexingEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_IS_INDEXING_ENABLED);
     }
 
     public function shouldShowRating(): bool

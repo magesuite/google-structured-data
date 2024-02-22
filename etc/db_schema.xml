@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="products_structured_data_index" resource="default" engine="innodb">
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Entity ID"/>
+        <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" comment="Entity ID"/>
+        <column xsi:type="mediumtext" name="data" nullable="true" comment="Structure Data"/>
+        <column xsi:type="datetime" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"/>
+        <index referenceId="PRODUCTS_STRUCTURED_DATA_INDEX_PRODUCT_ID_STORE_ID" indexType="btree">
+            <column name="product_id"/>
+            <column name="store_id"/>
+        </index>
+    </table>
+</schema>

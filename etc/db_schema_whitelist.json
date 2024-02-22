@@ -1,0 +1,13 @@
+{
+    "products_structured_data_index": {
+        "column": {
+            "product_id": true,
+            "store_id": true,
+            "data": true,
+            "updated_at": true
+        },
+        "index": {
+            "PRODUCTS_STRUCTURED_DATA_INDEX_PRODUCT_ID_STORE_ID": true
+        }
+    }
+}
