@@ -41,7 +41,10 @@ class TransitTime
         $transitTimeValue = [];
 
         if (count($parts) == 1) {
-            $transitTimeValue = ['value' => $parts[0]];
+            $transitTimeValue = [
+                'minValue' => $parts[0],
+                'maxValue' => $parts[0]
+            ];
         }
 
         if (count($parts) == 2) {
