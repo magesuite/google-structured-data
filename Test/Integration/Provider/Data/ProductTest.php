@@ -226,7 +226,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                 ],
                 "transitTime" => [
                     "@type" => "QuantitativeValue",
-                    "value" => "3",
+                    "minValue" => "3",
+                    "maxValue" => "3",
                     "unitCode" => "d"
                 ]
             ],

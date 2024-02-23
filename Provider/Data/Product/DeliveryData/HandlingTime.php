@@ -41,7 +41,10 @@ class HandlingTime
         $handlingTimeValue = [];
 
         if (count($parts) == 1) {
-            $handlingTimeValue = ['value' => $parts[0]];
+            $handlingTimeValue = [
+                'minValue' => $parts[0],
+                'maxValue' => $parts[0]
+            ];
         }
 
         if (count($parts) == 2) {
