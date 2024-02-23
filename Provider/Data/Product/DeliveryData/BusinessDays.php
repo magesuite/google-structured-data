@@ -40,7 +40,7 @@ class BusinessDays
     {
         $weekDays = [];
         foreach ($days as $dayNumber) {
-            $weekDays[] = jddayofweek($dayNumber - 1, CAL_DOW_LONG);
+            $weekDays[] = \jddayofweek($dayNumber - 1, CAL_DOW_LONG);
         }
 
         if (!empty($weekDays) && ($weekDays[0] == 'Sunday')) {
