@@ -55,6 +55,8 @@ class IndexBuilder
             $collection->addAttributeToSelect('*');
             $collection->addIdFilter($idsChunk);
 
+            $collection->addMediaGalleryData();
+
             yield $collection->getItems();
         }
     }

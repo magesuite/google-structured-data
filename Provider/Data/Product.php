@@ -57,7 +57,8 @@ class Product
         $this->cache->save(
             $this->serializer->serialize($productData),
             $cacheKey,
-            $identities
+            $identities,
+            $this->productConfiguration->getCacheLifetime()
         );
 
         return $productData;

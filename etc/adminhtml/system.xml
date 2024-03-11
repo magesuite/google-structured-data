@@ -169,12 +169,16 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if pregenerated structured data should be stored in index.</comment>
                 </field>
-                <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="cache_lifetime" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Cache Lifetime</label>
+                    <comment>Defines max cache lifetime in seconds.</comment>
+                </field>
+                <field id="show_rating" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Rating</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if rating should be included in structured data.</comment>
                 </field>
-                <group id="attributes" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="attributes" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <field id="description" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Description</label>
@@ -192,7 +196,7 @@
                         <comment>Defines which attribute will be used to describe product manufacturer.</comment>
                     </field>
                 </group>
-                <group id="delivery_data" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="delivery_data" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Delivery Data</label>
                     <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enabled</label>
@@ -224,7 +228,7 @@
                         <comment>Defines the unit of handling time (d - days, h - hours, min - minutes, s - seconds)</comment>
                     </field>
                 </group>
-                <group id="grouped" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="grouped" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Grouped Products</label>
                     <field id="use_parent_product_url" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Use Parent Product URL</label>
