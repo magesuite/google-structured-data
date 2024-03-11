@@ -195,6 +195,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture default_store structured_data/product_page/delivery_data/handling_time_unit_code d
      * @magentoConfigFixture default_store structured_data/product_page/delivery_data/transit_time_value 3
      * @magentoConfigFixture default_store structured_data/product_page/delivery_data/transit_time_unit_code d
+     * @magentoConfigFixture base_website general/locale/timezone UTC
      */
     public function testProductShippingDetails()
     {
@@ -214,7 +215,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         "https://schema.org/Sunday"
                     ]
                 ],
-                "cutoffTime" => "23:45:00-08:00",
+                "cutoffTime" => "23:45:00+00:00",
                 "handlingTime" => [
                     "@type" => "QuantitativeValue",
                     "minValue" => "5",
