@@ -6,8 +6,10 @@ class Product
 {
     public const XML_CONFIG_PATH_IS_ENABLED = 'structured_data/product_page/is_enabled';
     public const XML_CONFIG_PATH_IS_INDEXING_ENABLED = 'structured_data/product_page/is_indexing_enabled';
+    public const XML_CONFIG_PATH_CACHE_LIFETIME = 'structured_data/product_page/cache_lifetime';
     public const XML_CONFIG_PATH_SHOW_RATING = 'structured_data/product_page/show_rating';
     public const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
+
     public const XML_CONFIG_PATH_DELIVERY_DATA_ENABLED = 'structured_data/product_page/delivery_data/is_enabled';
     public const XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS = 'structured_data/product_page/delivery_data/business_days';
     public const XML_CONFIG_PATH_DELIVERY_DATA_HANDLING_TIME_VALUE = 'structured_data/product_page/delivery_data/handling_time_value';
@@ -15,6 +17,7 @@ class Product
     public const XML_CONFIG_PATH_DELIVERY_DATA_HANDLING_TIME_UNIT_CODE = 'structured_data/product_page/delivery_data/handling_time_unit_code';
     public const XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_VALUE = 'structured_data/product_page/delivery_data/transit_time_value';
     public const XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_UNIT_CODE = 'structured_data/product_page/delivery_data/transit_time_unit_code';
+
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/grouped/use_parent_product_url';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS = 'structured_data/product_page/grouped/use_parent_product_reviews';
@@ -34,6 +37,11 @@ class Product
     public function isIndexingEnabled(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_IS_INDEXING_ENABLED);
+    }
+
+    public function getCacheLifetime(): int
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_CACHE_LIFETIME);
     }
 
     public function shouldShowRating(): bool
