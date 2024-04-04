@@ -33,8 +33,9 @@ class Product
     public function getProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $cacheKey = $this->getCacheKey($product, $store);
+        $cacheLifetime = $this->productConfiguration->getCacheLifetime();
 
-        if (($cachedData = $this->cache->load($cacheKey))) {
+        if ($cacheLifetime && $cachedData = $this->cache->load($cacheKey)) {
             return $this->serializer->unserialize($cachedData);
         }
 
@@ -52,13 +53,17 @@ class Product
             }
         }
 
+        if (!$cacheLifetime) {
+            return $productData;
+        }
+
         $identities = $this->getIdentities($product);
 
         $this->cache->save(
             $this->serializer->serialize($productData),
             $cacheKey,
             $identities,
-            $this->productConfiguration->getCacheLifetime()
+            $cacheLifetime
         );
 
         return $productData;

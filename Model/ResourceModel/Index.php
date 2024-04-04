@@ -36,11 +36,16 @@ class Index
         );
     }
 
-    public function deleteByProductId(array $toDeleteProductIds): void
+    public function deleteByProductId(array $productIds, int $storeId): void
     {
+        $where = [
+            'store_id = ?' => $storeId,
+            'product_id IN (?)' => $productIds,
+        ];
+
         $this->connection->delete(
             $this->connection->getTableName(self::INDEX_TABLE_NAME),
-            $this->connection->quoteInto('product_id IN (?)', $toDeleteProductIds)
+            $where
         );
     }
 
