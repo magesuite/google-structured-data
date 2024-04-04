@@ -41,7 +41,7 @@ class Product
 
     public function getCacheLifetime(): int
     {
-        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_CACHE_LIFETIME);
+        return (int)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_CACHE_LIFETIME);
     }
 
     public function shouldShowRating(): bool

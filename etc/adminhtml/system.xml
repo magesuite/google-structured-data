@@ -164,14 +164,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
-                <field id="is_indexing_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="is_indexing_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Is Indexing Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if pregenerated structured data should be stored in index.</comment>
                 </field>
-                <field id="cache_lifetime" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="cache_lifetime" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Cache Lifetime</label>
-                    <comment>Defines max cache lifetime in seconds.</comment>
+                    <comment>Defines max cache lifetime in seconds. Set 0 to disable caching in case your project does not modify heavily the data from the index.</comment>
                 </field>
                 <field id="show_rating" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Rating</label>
