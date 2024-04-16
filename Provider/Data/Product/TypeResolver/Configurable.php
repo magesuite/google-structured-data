@@ -11,7 +11,9 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
     public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        $data = [];
+        $data = [
+            'offers' => []
+        ];
         $currency = $store->getCurrentCurrencyCode();
 
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
