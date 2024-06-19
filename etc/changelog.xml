@@ -55,6 +55,13 @@
                     <ticket_id>IPET-2446</ticket_id>
                 </entry>
             </tag>
+            <tag version="3.0.10" date="2024-06-12">
+                <entry>
+                    <type>FIX</type>
+                    <overview>Fix configurable product shipping details</overview>
+                    <ticket_id>LP-2424</ticket_id>
+                </entry>
+            </tag>
         </changelog>
     </module>
 </config>

@@ -55,7 +55,17 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
     {
         $deliveryData = $this->getDeliveryData($dataObject);
 
-        if ($deliveryData) {
+        if (!$deliveryData) {
+            return $offersData;
+        }
+
+        $product = $dataObject->getProduct();
+
+        if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+            foreach ($offersData as $key => $offerData) {
+                $offersData[$key]['shippingDetails'] = $deliveryData;
+            }
+        } else {
             $offersData['shippingDetails'] = $deliveryData;
         }
 
