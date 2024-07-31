@@ -8,13 +8,13 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
  */
 class ProductTest extends \PHPUnit\Framework\TestCase
 {
-    protected ?\Magento\TestFramework\ObjectManager $objectManager;
-    protected ?\Magento\Framework\App\CacheInterface $cache;
-    protected ?\Magento\Store\Model\StoreManagerInterface $storeManager;
-    protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
-    protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
-    protected ?\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData $indexer;
-    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
+    protected  $objectManager;
+    protected $cache;
+    protected  $storeManager;
+    protected  $productRepository;
+    protected  $reviewCollectionFactory;
+    protected  $indexer;
+    protected  $productDataProvider;
 
     protected function setUp(): void
     {
@@ -127,6 +127,57 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     public function testConfigurableProductData()
     {
+        $product = $this->productRepository->get('configurable');
+        $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+
+        $expectedProductGroupData = [
+            '@context' => 'https://schema.org/',
+            '@type' => 'ProductGroup',
+            'name' => 'Configurable Product',
+            'productGroupID' => 'configurable',
+            'url' => 'http://localhost/index.php/configurable-product.html',
+            'variesBy' => [],
+            'description' => '',
+            'hasVariant' => [
+                [
+                    '@context' => 'http://schema.org/',
+                    '@type' => 'Product',
+                    'name' => 'Configurable OptionOption 1',
+                    'sku' => 'simple_10',
+                    'url' => 'http://localhost/index.php/configurable-product.html',
+                    'itemCondition' => 'NewCondition',
+                    'test_configurable' => 'Option 1',
+                    'image' => [],
+                    'offers' => [
+                        '@type' => 'Offer',
+                        'sku' => 'simple_10',
+                        'price' => '10.00',
+                        'priceCurrency' => 'USD',
+                        'availability' => 'InStock',
+                        'url' => $simpleProducts[0]->getProductUrl()
+                    ],
+                ],
+                [
+                    '@context' => 'http://schema.org/',
+                    '@type' => 'Product',
+                    'name' => 'Configurable OptionOption 2',
+                    'sku' => 'simple_20',
+                    'url' => 'http://localhost/index.php/configurable-product.html',
+                    'itemCondition' => 'NewCondition',
+                    'test_configurable' => 'Option 2',
+                    'image' => [],
+                    'offers' => [
+                        '@type' => 'Offer',
+                        'sku' => 'simple_20',
+                        'price' => '20.00',
+                        'priceCurrency' => 'USD',
+                        'availability' => 'InStock',
+                        'url' => $simpleProducts[1]->getProductUrl()
+                    ],
+                ]
+            ]
+        ];
+
         $expectedData = [
             '@context' => 'http://schema.org/',
             '@type' => 'Product',
@@ -138,12 +189,12 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
         $expectedOffersCount = 2;
 
-        $product = $this->productRepository->get('configurable');
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
-        $this->assertEquals($expectedOffersCount, count($productData['offers']));
+        $this->assertEquals($expectedProductGroupData, $productData[0]);
+        $this->assertEquals($expectedOffersCount, count($productData[1]['offers']));
         foreach ($expectedData as $key => $data) {
-            $this->assertEquals($data, $productData[$key]);
+            $this->assertEquals($data, $productData[1][$key]);
         }
     }
 

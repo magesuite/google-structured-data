@@ -9,5 +9,10 @@
         "constraint": {
             "PRIMARY": true
         }
+    },
+    "catalog_eav_attribute": {
+        "column": {
+            "varies_by": true
+        }
     }
 }
