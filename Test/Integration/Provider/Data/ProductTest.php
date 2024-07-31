@@ -8,13 +8,13 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
  */
 class ProductTest extends \PHPUnit\Framework\TestCase
 {
-    protected  $objectManager;
-    protected $cache;
-    protected  $storeManager;
-    protected  $productRepository;
-    protected  $reviewCollectionFactory;
-    protected  $indexer;
-    protected  $productDataProvider;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
+    protected ?\Magento\Framework\App\CacheInterface $cache;
+    protected ?\Magento\Store\Model\StoreManagerInterface $storeManager;
+    protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
+    protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
+    protected ?\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData $indexer;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
 
     protected function setUp(): void
     {
