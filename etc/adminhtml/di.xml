@@ -4,7 +4,7 @@
         <plugin name="add_google_structured_data" type="\MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edit\Tab\Front\AddGoogleStructuredData" sortOrder="200"/>
     </type>
 
-    <type name="\MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edit\Tab\Front\AddGoogleStructuredData">
+    <type name="\MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions">
         <arguments>
             <argument name="variesByTypes" xsi:type="array">
                 <item name="https://schema.org/color" xsi:type="string">https://schema.org/color</item>

@@ -4,11 +4,11 @@ namespace MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edi
 
 class AddGoogleStructuredData
 {
-    protected array $variesByTypes;
+    protected \MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions $variesByOptions;
 
-    public function __construct(array $variesByTypes)
+    public function __construct(\MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions $variesByOptions)
     {
-        $this->variesByTypes = $variesByTypes;
+        $this->variesByOptions = $variesByOptions;
     }
 
     public function afterSetForm(
@@ -47,8 +47,8 @@ class AddGoogleStructuredData
 
         $config = [
             'name' => 'varies_by',
-            'label' => __('VariesBy'),
-            'values' => $this->getVariesByOptions(),
+            'label' => __('Varies By'),
+            'values' => $this->variesByOptions->toOptionArray(),
             'note' => $description,
         ];
 
@@ -57,15 +57,5 @@ class AddGoogleStructuredData
             'select',
             $config
         );
-    }
-
-    protected function getVariesByOptions(): array
-    {
-        $options = [['value' => '', 'label' => ' ']];
-        foreach ($this->variesByTypes as $type) {
-            $options[] = ['value' => $type, 'label' => $type];
-        }
-
-        return $options;
     }
 }
