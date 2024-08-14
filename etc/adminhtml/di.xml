@@ -7,12 +7,12 @@
     <type name="\MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions">
         <arguments>
             <argument name="variesByTypes" xsi:type="array">
-                <item name="https://schema.org/color" xsi:type="string">https://schema.org/color</item>
-                <item name="https://schema.org/size" xsi:type="string">https://schema.org/size</item>
-                <item name="https://schema.org/suggestedAge" xsi:type="string">https://schema.org/suggestedAge</item>
-                <item name="https://schema.org/suggestedGender" xsi:type="string">https://schema.org/suggestedGender</item>
-                <item name="https://schema.org/material" xsi:type="string">https://schema.org/material</item>
-                <item name="https://schema.org/pattern" xsi:type="string">https://schema.org/pattern</item>
+                <item name="color" xsi:type="string">https://schema.org/color</item>
+                <item name="size" xsi:type="string">https://schema.org/size</item>
+                <item name="suggestedAge" xsi:type="string">https://schema.org/suggestedAge</item>
+                <item name="suggestedGender" xsi:type="string">https://schema.org/suggestedGender</item>
+                <item name="material" xsi:type="string">https://schema.org/material</item>
+                <item name="pattern" xsi:type="string">https://schema.org/pattern</item>
             </argument>
         </arguments>
     </type>
