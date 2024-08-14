@@ -4,14 +4,12 @@ namespace MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edi
 
 class AddGoogleStructuredData
 {
-    public const VARIES_BY_TYPES = [
-        'https://schema.org/color',
-        'https://schema.org/size',
-        'https://schema.org/suggestedAge',
-        'https://schema.org/suggestedGender',
-        'https://schema.org/material',
-        'https://schema.org/pattern',
-    ];
+    protected array $variesByTypes;
+
+    public function __construct(array $variesByTypes)
+    {
+        $this->variesByTypes = $variesByTypes;
+    }
 
     public function afterSetForm(
         \Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front $subject,
@@ -64,7 +62,7 @@ class AddGoogleStructuredData
     protected function getVariesByOptions(): array
     {
         $options = [['value' => '', 'label' => ' ']];
-        foreach (self::VARIES_BY_TYPES as $type) {
+        foreach ($this->variesByTypes as $type) {
             $options[] = ['value' => $type, 'label' => $type];
         }
 

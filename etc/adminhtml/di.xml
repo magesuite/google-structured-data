@@ -3,4 +3,17 @@
     <type name="\Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front">
         <plugin name="add_google_structured_data" type="\MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edit\Tab\Front\AddGoogleStructuredData" sortOrder="200"/>
     </type>
+
+    <type name="\MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edit\Tab\Front\AddGoogleStructuredData">
+        <arguments>
+            <argument name="variesByTypes" xsi:type="array">
+                <item name="https://schema.org/color" xsi:type="string">https://schema.org/color</item>
+                <item name="https://schema.org/size" xsi:type="string">https://schema.org/size</item>
+                <item name="https://schema.org/suggestedAge" xsi:type="string">https://schema.org/suggestedAge</item>
+                <item name="https://schema.org/suggestedGender" xsi:type="string">https://schema.org/suggestedGender</item>
+                <item name="https://schema.org/material" xsi:type="string">https://schema.org/material</item>
+                <item name="https://schema.org/pattern" xsi:type="string">https://schema.org/pattern</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

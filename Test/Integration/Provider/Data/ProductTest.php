@@ -123,7 +123,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_products.php
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_attribute.php
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_products.php
      */
     public function testConfigurableProductData()
     {
@@ -136,7 +137,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'name' => 'Configurable Product',
             'productGroupID' => 'configurable',
             'url' => 'http://localhost/index.php/configurable-product.html',
-            'variesBy' => [],
+            'variesBy' => ['https://schema.org/color'],
             'description' => '',
             'hasVariant' => [
                 [
