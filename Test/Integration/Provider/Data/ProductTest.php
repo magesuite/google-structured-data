@@ -123,10 +123,62 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_products.php
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_attribute.php
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_products.php
      */
     public function testConfigurableProductData()
     {
+        $product = $this->productRepository->get('configurable');
+        $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+
+        $expectedProductGroupData = [
+            '@context' => 'https://schema.org/',
+            '@type' => 'ProductGroup',
+            'name' => 'Configurable Product',
+            'productGroupID' => 'configurable',
+            'url' => 'http://localhost/index.php/configurable-product.html',
+            'variesBy' => ['https://schema.org/color'],
+            'description' => '',
+            'hasVariant' => [
+                [
+                    '@context' => 'http://schema.org/',
+                    '@type' => 'Product',
+                    'name' => 'Configurable OptionOption 1',
+                    'sku' => 'simple_10',
+                    'url' => 'http://localhost/index.php/configurable-product.html',
+                    'itemCondition' => 'NewCondition',
+                    'test_configurable' => 'Option 1',
+                    'image' => [],
+                    'offers' => [
+                        '@type' => 'Offer',
+                        'sku' => 'simple_10',
+                        'price' => '10.00',
+                        'priceCurrency' => 'USD',
+                        'availability' => 'InStock',
+                        'url' => $simpleProducts[0]->getProductUrl()
+                    ],
+                ],
+                [
+                    '@context' => 'http://schema.org/',
+                    '@type' => 'Product',
+                    'name' => 'Configurable OptionOption 2',
+                    'sku' => 'simple_20',
+                    'url' => 'http://localhost/index.php/configurable-product.html',
+                    'itemCondition' => 'NewCondition',
+                    'test_configurable' => 'Option 2',
+                    'image' => [],
+                    'offers' => [
+                        '@type' => 'Offer',
+                        'sku' => 'simple_20',
+                        'price' => '20.00',
+                        'priceCurrency' => 'USD',
+                        'availability' => 'InStock',
+                        'url' => $simpleProducts[1]->getProductUrl()
+                    ],
+                ]
+            ]
+        ];
+
         $expectedData = [
             '@context' => 'http://schema.org/',
             '@type' => 'Product',
@@ -138,12 +190,12 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
         $expectedOffersCount = 2;
 
-        $product = $this->productRepository->get('configurable');
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
-        $this->assertEquals($expectedOffersCount, count($productData['offers']));
+        $this->assertEquals($expectedProductGroupData, $productData[0]);
+        $this->assertEquals($expectedOffersCount, count($productData[1]['offers']));
         foreach ($expectedData as $key => $data) {
-            $this->assertEquals($data, $productData[$key]);
+            $this->assertEquals($data, $productData[1][$key]);
         }
     }
 

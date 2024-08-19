@@ -10,4 +10,7 @@
             <column name="store_id"/>
         </constraint>
     </table>
+    <table name="catalog_eav_attribute" resource="default" engine="innodb">
+        <column name="varies_by" xsi:type="varchar" length="255" nullable="true" comment="Google Structured Data Varies By Attribute"/>
+    </table>
 </schema>

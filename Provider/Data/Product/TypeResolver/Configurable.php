@@ -4,6 +4,17 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Configurable extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
+    protected array $productSuperAttributes = [];
+
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        $productData = $this->getProductStructuredData($product, $store);
+        $productGroupData = $this->getProductGroupData($product, $store);
+        $reviewsData = $this->getReviewsData($product, $store);
+
+        return [array_merge($productGroupData, $reviewsData), $productData];
+    }
+
     public function isApplicable(string $productTypeId): bool
     {
         return $productTypeId == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
@@ -27,5 +38,77 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         }
 
         return $data;
+    }
+
+    protected function getProductGroupData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        return [
+            '@context' => 'https://schema.org/',
+            '@type' => 'ProductGroup',
+            'name' => $this->escaper->escapeHtml($product->getName()),
+            'description' => $this->escaper->escapeHtml($product->getDescription()),
+            'hasVariant' => $this->getVariants($product, $store),
+            'productGroupID' => $product->getSku(),
+            'url' => $product->getProductUrl(),
+            'variesBy' => $this->getVariesBy($product)
+        ];
+    }
+
+    protected function getVariesBy(\Magento\Catalog\Api\Data\ProductInterface $product): array
+    {
+        if ($product->getTypeId() != \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+            return [];
+        }
+
+        $result = [];
+        $superAttributes = $this->getProductSuperAttributes($product);
+        foreach ($superAttributes as $attribute) {
+            if (!$attribute->getVariesBy()) {
+                continue;
+            }
+
+            $result[] = $attribute->getVariesBy();
+        }
+
+        return $result;
+    }
+
+    protected function getVariants(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        $superAttributes = $this->getProductSuperAttributes($product);
+        $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+        $productUrl = $product->getProductUrl();
+
+        $result = [];
+        foreach ($simpleProducts as $simpleProduct) {
+            $variant = $this->getBaseProductData($simpleProduct, $store);
+            $variant['offers'] = $this->getOfferData($simpleProduct, $store, $store->getCurrentCurrencyCode());
+            $variant['url'] = $productUrl;
+
+            foreach ($superAttributes as $attribute) {
+                $variant[$attribute->getAttributeCode()] = $simpleProduct->getAttributeText($attribute->getAttributeCode());
+            }
+
+            $result[] = $variant;
+        }
+
+        return $result;
+    }
+
+    protected function getProductSuperAttributes(\Magento\Catalog\Api\Data\ProductInterface $product): array
+    {
+        if (isset($this->productSuperAttributes[$product->getId()])) {
+            return $this->productSuperAttributes[$product->getId()];
+        }
+
+        $productTypeInstance = $product->getTypeInstance();
+        $productTypeInstance->setStoreFilter($product->getStoreId(), $product);
+        $superAttributes = $productTypeInstance->getConfigurableAttributes($product);
+
+        foreach($superAttributes as $attribute) {
+            $this->productSuperAttributes[$product->getId()][$attribute->getAttributeId()] = $attribute->getProductAttribute();
+        }
+
+        return $this->productSuperAttributes[$product->getId()];
     }
 }
