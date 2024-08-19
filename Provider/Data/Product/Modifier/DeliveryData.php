@@ -45,9 +45,13 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
                 $productData[$index]['offers'] = $this->addDeliveryDataToOffersData($associatedProductData['offers'], $dataObject);
             }
         } elseif ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-            $productTypeData = array_pop($productData);
-            $productTypeData['offers'] = $this->addDeliveryDataToOffersData($productTypeData['offers'], $dataObject);
-            $productData[] = $productTypeData;
+            if (count($productData) > 2) {
+                $productData['offers'] = $this->addDeliveryDataToOffersData($productData['offers'], $dataObject);
+            } else {
+                $productTypeData = array_pop($productData);
+                $productTypeData['offers'] = $this->addDeliveryDataToOffersData($productTypeData['offers'], $dataObject);
+                $productData[] = $productTypeData;
+            }
         } else {
             $productData['offers'] = $this->addDeliveryDataToOffersData($productData['offers'], $dataObject);
         }
