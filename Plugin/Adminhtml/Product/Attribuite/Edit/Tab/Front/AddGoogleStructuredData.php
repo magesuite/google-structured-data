@@ -15,9 +15,10 @@ class AddGoogleStructuredData
         \Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front $subject,
         \Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front $result,
         \Magento\Framework\Data\Form $form
-    ) {
+    ): \Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front {
         $fieldset = $this->createGoogleStructuredDataFieldset($form, $subject);
         $this->addVariesByField($fieldset);
+        return $result;
     }
 
     protected function createGoogleStructuredDataFieldset(
