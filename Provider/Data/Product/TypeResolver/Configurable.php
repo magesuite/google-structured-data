@@ -105,10 +105,10 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $productTypeInstance->setStoreFilter($product->getStoreId(), $product);
         $superAttributes = $productTypeInstance->getConfigurableAttributes($product);
 
-        foreach($superAttributes as $attribute) {
+        foreach ($superAttributes as $attribute) {
             $this->productSuperAttributes[$product->getId()][$attribute->getAttributeId()] = $attribute->getProductAttribute();
         }
 
-        return $this->productSuperAttributes[$product->getId()];
+        return $this->productSuperAttributes[$product->getId()] ?? [];
     }
 }
