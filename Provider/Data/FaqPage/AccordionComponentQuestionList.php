@@ -1,15 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MageSuite\GoogleStructuredData\Provider\Data\FaqPage;
 
 class AccordionComponentQuestionList implements QuestionListInterface
 {
-    protected $questionList = [];
-
     protected \Magento\Framework\Serialize\SerializerInterface $serializer;
-
     protected \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionFactory $questionFactory;
+
+    protected array $questionList = [];
 
     public function __construct(
         \Magento\Framework\Serialize\SerializerInterface $serializer,
