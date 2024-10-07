@@ -79,11 +79,26 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
         $productUrl = $product->getProductUrl();
 
+        $isUseParentProductUrl = $this->productConfiguration->isUseParentProductUrlForConfigurable();
+        $isUseParentImages = $this->productConfiguration->isUseParentProductImagesForConfigurable();
+
         $result = [];
         foreach ($simpleProducts as $simpleProduct) {
             $variant = $this->getBaseProductData($simpleProduct, $store);
             $variant['offers'] = $this->getOfferData($simpleProduct, $store, $store->getCurrentCurrencyCode());
             $variant['url'] = $productUrl;
+
+            if ($isUseParentProductUrl) {
+                $variant['offers']['url'] = $productUrl;
+            }
+
+            if (!$isUseParentProductUrl) {
+                $variant['offers']['url'] = sprintf('%s%s', $store->getBaseUrl(), $simpleProduct->getUrlKey());
+            }
+
+            if ($isUseParentImages || is_empty($variant['image'])) {
+                $variant['image'] = $this->getProductImages($product);
+            }
 
             foreach ($superAttributes as $attribute) {
                 $variant[$attribute->getAttributeCode()] = $simpleProduct->getAttributeText($attribute->getAttributeCode());

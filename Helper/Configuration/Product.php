@@ -22,6 +22,9 @@ class Product
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS = 'structured_data/product_page/grouped/use_parent_product_reviews';
 
+    public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/configurable/use_parent_product_url';
+    public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_IMAGE = 'structured_data/product_page/configurable/use_parent_product_images';
+
     protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
 
     public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface)
@@ -111,5 +114,15 @@ class Product
     public function isUseParentProductReviewsForGrouped(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isUseParentProductUrlForConfigurable(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isUseParentProductImagesForConfigurable(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_IMAGE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 }
