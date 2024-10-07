@@ -125,6 +125,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_attribute.php
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_products.php
+     * @magentoConfigFixture default_store structured_data/product_page/configurable/use_parent_product_url 0
      */
     public function testConfigurableProductData()
     {
@@ -155,7 +156,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'price' => '10.00',
                         'priceCurrency' => 'USD',
                         'availability' => 'InStock',
-                        'url' => $simpleProducts[0]->getProductUrl()
+                        'url' => 'http://localhost/index.php/' . $simpleProducts[0]->getUrlKey()
                     ],
                 ],
                 [
@@ -173,7 +174,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'price' => '20.00',
                         'priceCurrency' => 'USD',
                         'availability' => 'InStock',
-                        'url' => $simpleProducts[1]->getProductUrl()
+                        'url' => 'http://localhost/index.php/' . $simpleProducts[1]->getUrlKey()
                     ],
                 ]
             ]

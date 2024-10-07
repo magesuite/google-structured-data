@@ -96,7 +96,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
                 $variant['offers']['url'] = sprintf('%s%s', $store->getBaseUrl(), $simpleProduct->getUrlKey());
             }
 
-            if ($isUseParentImages || is_empty($variant['image'])) {
+            if ($isUseParentImages || empty($variant['image'])) {
                 $variant['image'] = $this->getProductImages($product);
             }
 
