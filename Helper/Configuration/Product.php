@@ -24,6 +24,8 @@ class Product
 
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/configurable/use_parent_product_url';
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_IMAGE = 'structured_data/product_page/configurable/use_parent_product_images';
+    public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_NAME = 'structured_data/product_page/configurable/use_parent_product_name';
+    public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_DESCRIPTION = 'structured_data/product_page/configurable/use_parent_product_description';
 
     protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
 
@@ -124,5 +126,15 @@ class Product
     public function isUseParentProductImagesForConfigurable(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_IMAGE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isUseParentProductNameForConfigurable(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isUseParentProductDescriptionForConfigurable(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_DESCRIPTION, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 }
