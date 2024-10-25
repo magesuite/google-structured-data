@@ -245,6 +245,14 @@
                         <label>Use Parent Product Images</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
+                    <field id="use_parent_product_name" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Use Parent Product Name</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="use_parent_product_description" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Use Parent Product Description</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
                 </group>
             </group>
             <group id="faq_page" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">

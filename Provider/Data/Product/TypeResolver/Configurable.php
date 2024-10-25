@@ -81,6 +81,8 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
         $isUseParentProductUrl = $this->productConfiguration->isUseParentProductUrlForConfigurable();
         $isUseParentImages = $this->productConfiguration->isUseParentProductImagesForConfigurable();
+        $isUseParentName = $this->productConfiguration->isUseParentProductNameForConfigurable();
+        $isUseParentDescription = $this->productConfiguration->isUseParentProductDescriptionForConfigurable();
 
         $result = [];
         foreach ($simpleProducts as $simpleProduct) {
@@ -99,6 +101,16 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             if ($isUseParentImages || empty($variant['image'])) {
                 $variant['image'] = $this->getProductImages($product);
             }
+
+            if ($isUseParentName || empty($variant['name'])) {
+                $variant['name'] = $product->getName();
+            }
+
+            if ($isUseParentDescription || empty($variant['description'])) {
+                $variant['description'] = $product->getDescription();
+            }
+
+
 
             foreach ($superAttributes as $attribute) {
                 $variant[$attribute->getAttributeCode()] = $simpleProduct->getAttributeText($attribute->getAttributeCode());
