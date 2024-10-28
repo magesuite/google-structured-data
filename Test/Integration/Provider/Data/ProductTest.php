@@ -158,6 +158,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'availability' => 'InStock',
                         'url' => 'http://localhost/index.php/' . $simpleProducts[0]->getUrlKey()
                     ],
+                    'description' => null
                 ],
                 [
                     '@context' => 'http://schema.org/',
@@ -176,6 +177,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'availability' => 'InStock',
                         'url' => 'http://localhost/index.php/' . $simpleProducts[1]->getUrlKey()
                     ],
+                    'description' => null
                 ]
             ]
         ];
