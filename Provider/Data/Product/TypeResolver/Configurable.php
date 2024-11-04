@@ -73,7 +73,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         return $result;
     }
 
-    protected function getVariants(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    public function getVariants(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $superAttributes = $this->getProductSuperAttributes($product);
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
@@ -109,8 +109,6 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             if ($isUseParentDescription || empty($variant['description'])) {
                 $variant['description'] = $product->getDescription();
             }
-
-
 
             foreach ($superAttributes as $attribute) {
                 $variant[$attribute->getAttributeCode()] = $simpleProduct->getAttributeText($attribute->getAttributeCode());
