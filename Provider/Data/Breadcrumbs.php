@@ -33,7 +33,7 @@ class Breadcrumbs
             }
 
             if (!$breadcrumb['link']) {
-                $breadcrumb['link'] = $this->url->getCurrentUrl();
+                $breadcrumb['link'] = $this->url->escape($this->url->getCurrentUrl());
             }
 
             $name = is_object($breadcrumb['label']) ? $breadcrumb['label']->getText() : $breadcrumb['label'];
