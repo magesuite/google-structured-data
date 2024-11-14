@@ -66,5 +66,6 @@
 
     <type name="Magento\Catalog\Block\Product\ListProduct">
         <plugin name="add_products_data_to_category" type="MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduct\AddProductsDataToCategoryPage" sortOrder="10" />
+        <plugin name="add_list_items_data_to_category" type="MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduct\AddListItemsDataToCategoryPage" sortOrder="20" />
     </type>
 </config>

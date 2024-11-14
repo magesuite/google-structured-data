@@ -5,6 +5,7 @@ namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 class Category
 {
     const XML_PATH_CATEGORY_PAGE_INCLUDE_PRODUCTS_ENABLED = 'structured_data/category_page/include_products';
+    const XML_PATH_CATEGORY_PAGE_INCLUDE_LIST_ITEM_ENABLED = 'structured_data/category_page/include_list_item';
     const XML_PATH_CATEGORY_PAGE_SHOW_RATING = 'structured_data/category_page/show_rating';
 
     protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
@@ -17,6 +18,11 @@ class Category
     public function doesCategoryPageIncludeProducts(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_INCLUDE_PRODUCTS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function doesCategoryPageIncludeListItem(): bool
+    {
+        return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_INCLUDE_LIST_ITEM_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function shouldShowRating(): bool

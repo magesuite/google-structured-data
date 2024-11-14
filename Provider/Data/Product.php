@@ -99,4 +99,17 @@ class Product
 
         return $identities;
     }
+
+    public function getListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, int $position): array
+    {
+        $productData = array_filter($this->getProductData($product, $store), function ($item) {
+            return isset($item['@type']) && $item['@type'] === 'Product';
+        });
+
+        return [
+            "@type" => "ListItem",
+            "position" => $position,
+            "item" => $productData,
+        ];
+    }
 }
