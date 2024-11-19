@@ -6,11 +6,11 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class FaqPage
 {
-    protected \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface $questionList;
+    protected array $questionLists;
 
-    public function __construct(\MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface $questionList)
+    public function __construct(array $questionLists = [])
     {
-        $this->questionList = $questionList;
+        $this->questionLists = $questionLists;
     }
 
     public function getFaqPageData(): array
@@ -32,15 +32,21 @@ class FaqPage
     {
         $questions = [];
 
-        foreach ($this->questionList->getList() as $question) {
-            $questions[] = [
-                '@type' => 'Question',
-                'name' => $question->getQuestion(),
-                'acceptedAnswer' => [
-                    '@type' => 'Answer',
-                    'text' => $question->getAnswer()
-                ]
-            ];
+        foreach ($this->questionLists as $questionList) {
+            if (!$questionList instanceof \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface) {
+                continue;
+            }
+
+            foreach ($questionList->getList() as $question) {
+                $questions[] = [
+                    '@type' => 'Question',
+                    'name' => $question->getQuestion(),
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => $question->getAnswer()
+                    ]
+                ];
+            }
         }
 
         return $questions;

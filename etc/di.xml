@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionListInterface" type="MageSuite\GoogleStructuredData\Provider\Data\FaqPage\AccordionComponentQuestionList" />
-
     <type name="MageSuite\GoogleStructuredData\Plugin\GroupedProduct\Model\Product\Type\Grouped\AddAttributesToAssociatedProducts">
         <arguments>
             <argument name="attributesToSelect" xsi:type="array">
@@ -51,6 +49,14 @@
                     <item name="type" xsi:type="string">configured_eav</item>
                     <item name="disabled" xsi:type="boolean">false</item>
                 </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="MageSuite\GoogleStructuredData\Provider\Data\FaqPage">
+        <arguments>
+            <argument name="questionLists" xsi:type="array">
+                <item name="accordion_component" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\FaqPage\AccordionComponentQuestionList</item>
             </argument>
         </arguments>
     </type>
