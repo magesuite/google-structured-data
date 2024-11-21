@@ -16,6 +16,7 @@
             </faq_page>
             <category_page>
                 <include_products>1</include_products>
+                <include_list_item>1</include_list_item>
                 <show_rating>0</show_rating>
             </category_page>
             <product_page>
