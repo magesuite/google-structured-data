@@ -20,7 +20,7 @@ class Category
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_INCLUDE_PRODUCTS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function doesCategoryPageIncludeListItem(): bool
+    public function isCategoryPageIncludeListItem(): bool
     {
         return (bool)$this->scopeConfig->getValue(self::XML_PATH_CATEGORY_PAGE_INCLUDE_LIST_ITEM_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }

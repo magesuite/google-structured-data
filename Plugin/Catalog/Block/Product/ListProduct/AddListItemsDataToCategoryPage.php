@@ -26,7 +26,7 @@ class AddListItemsDataToCategoryPage
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result): \Magento\Eav\Model\Entity\Collection\AbstractCollection
     {
-        if (!$this->categoryConfiguration->doesCategoryPageIncludeListItem()) {
+        if (!$this->categoryConfiguration->isCategoryPageIncludeListItem()) {
             return $result;
         }
 
@@ -41,10 +41,15 @@ class AddListItemsDataToCategoryPage
             "@type" => "ItemList",
             "itemListElement" => []
         ];
-
         $position = 1;
+
         foreach ($result as $product) {
             $listItemData = $this->productDataProvider->getListItemData($product, $store, $position);
+
+            if (!empty($listItemData['item'])) {
+                $listItemData['item'] = reset($listItemData['item']);
+            }
+
             $itemList['itemListElement'][] = $listItemData;
             $position++;
         }
