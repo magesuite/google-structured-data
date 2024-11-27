@@ -105,7 +105,11 @@ class Product
         $productData = $this->getProductData($product, $store);
 
         if (isset($productData['@type']) && $productData['@type'] === 'Product') {
-            return [$productData];
+            return [
+                "@type" => "ListItem",
+                "position" => $position,
+                "item" => [$productData],
+            ];
         }
 
         $productData = array_filter($productData, function ($item) {
