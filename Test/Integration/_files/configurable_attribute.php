@@ -58,6 +58,7 @@ $attributeModel->setData(
         'frontend_label' => ['Test Configurable'],
         'backend_type' => 'int',
         'varies_by' => 'https://schema.org/color',
+        'vary_attribute_code' => 'color',
         'option' => [
             'value' => ['option_0' => ['Option 1'], 'option_1' => ['Option 2']],
             'order' => ['option_0' => 1, 'option_1' => 2],

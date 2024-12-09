@@ -18,6 +18,7 @@ class AddGoogleStructuredData
     ): \Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front {
         $fieldset = $this->createGoogleStructuredDataFieldset($form, $subject);
         $this->addVariesByField($fieldset);
+        $this->addVaryAttributeCodeField($fieldset);
         return $result;
     }
 
@@ -56,6 +57,26 @@ class AddGoogleStructuredData
         $fieldset->addField(
             'varies_by',
             'select',
+            $config
+        );
+    }
+
+    protected function addVaryAttributeCodeField(\Magento\Framework\Data\Form\Element\Fieldset $fieldset): void
+    {
+        $description = __(
+            'This field is used to map the variation attribute of the product with Google Structure supported schema types (ex. size, color).'
+            . 'This field is optional. If you leave it empty, the original attribute code will be used.'
+        );
+
+        $config = [
+            'name' => 'vary_attribute_code',
+            'label' => __('Vary Attribute Code'),
+            'note' => $description,
+        ];
+
+        $fieldset->addField(
+            'vary_attribute_code',
+            'text',
             $config
         );
     }
