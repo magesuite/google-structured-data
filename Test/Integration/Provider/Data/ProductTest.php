@@ -148,7 +148,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                     'sku' => 'simple_10',
                     'url' => 'http://localhost/index.php/configurable-product.html',
                     'itemCondition' => 'NewCondition',
-                    'test_configurable' => 'Option 1',
+                    'color' => 'Option 1',
                     'image' => [],
                     'offers' => [
                         '@type' => 'Offer',
@@ -167,7 +167,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                     'sku' => 'simple_20',
                     'url' => 'http://localhost/index.php/configurable-product.html',
                     'itemCondition' => 'NewCondition',
-                    'test_configurable' => 'Option 2',
+                    'color' => 'Option 2',
                     'image' => [],
                     'offers' => [
                         '@type' => 'Offer',

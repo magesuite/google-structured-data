@@ -111,7 +111,8 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             }
 
             foreach ($superAttributes as $attribute) {
-                $variant[$attribute->getAttributeCode()] = $simpleProduct->getAttributeText($attribute->getAttributeCode());
+                $varyAttributeCode = $attribute->getVaryAttributeCode() ?? $attribute->getAttributeCode();
+                $variant[$varyAttributeCode] = $simpleProduct->getAttributeText($attribute->getAttributeCode());
             }
 
             $result[] = $variant;
