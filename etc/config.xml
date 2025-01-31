@@ -37,6 +37,7 @@
                     <use_parent_product_images>0</use_parent_product_images>
                     <use_parent_product_name>0</use_parent_product_name>
                     <use_parent_product_description>0</use_parent_product_description>
+                    <display_product_group_element>1</display_product_group_element>
                 </configurable>
                 <delivery_data>
                     <is_enabled>0</is_enabled>

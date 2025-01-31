@@ -26,6 +26,7 @@ class Product
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_IMAGE = 'structured_data/product_page/configurable/use_parent_product_images';
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_NAME = 'structured_data/product_page/configurable/use_parent_product_name';
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_DESCRIPTION = 'structured_data/product_page/configurable/use_parent_product_description';
+    public const XML_CONFIG_PATH_CONFIGURABLE_DISPLAY_PRODUCT_GROUP_ELEMENT = 'structured_data/product_page/configurable/display_product_group_element';
 
     protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
 
@@ -136,5 +137,10 @@ class Product
     public function isUseParentProductDescriptionForConfigurable(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_DESCRIPTION, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isProductGroupElementDisplayedForConfigurable(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_CONFIGURABLE_DISPLAY_PRODUCT_GROUP_ELEMENT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 }
