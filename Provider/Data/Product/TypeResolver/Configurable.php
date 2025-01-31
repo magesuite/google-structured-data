@@ -12,7 +12,12 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $productGroupData = $this->getProductGroupData($product, $store);
         $reviewsData = $this->getReviewsData($product, $store);
 
-        return [array_merge($productGroupData, $reviewsData), $productData];
+        $groupDataAndReviews = array_merge($productGroupData, $reviewsData);
+        if (empty($groupDataAndReviews)) {
+            return [$productData];
+        }
+
+        return [$groupDataAndReviews, $productData];
     }
 
     public function isApplicable(string $productTypeId): bool
@@ -42,6 +47,10 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
     protected function getProductGroupData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
+        if (!$this->productConfiguration->isProductGroupElementDisplayedForConfigurable()) {
+            return [];
+        }
+
         return [
             '@context' => 'https://schema.org/',
             '@type' => 'ProductGroup',
