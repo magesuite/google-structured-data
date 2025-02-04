@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Config;
 
-class Attributes implements \Magento\Framework\Option\ArrayInterface
+class Attributes implements \Magento\Framework\Data\OptionSourceInterface
 {
     protected array $options = [];
 
@@ -13,7 +15,7 @@ class Attributes implements \Magento\Framework\Option\ArrayInterface
         $this->collectionFactory = $collectionFactory;
     }
 
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         if (!empty($this->options)) {
             return $this->options;

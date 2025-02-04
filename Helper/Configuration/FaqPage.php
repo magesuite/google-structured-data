@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MageSuite\GoogleStructuredData\Helper\Configuration;
@@ -14,12 +15,8 @@ class FaqPage
         $this->scopeConfig = $scopeConfig;
     }
 
-    public function isEnabled($storeId = null): bool
+    public function isEnabled(?int $storeId = null): bool
     {
-        return $this->scopeConfig->isSetFlag(
-            self::XML_PATH_FAQ_PAGE_IS_ENABLED,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
+        return $this->scopeConfig->isSetFlag(self::XML_PATH_FAQ_PAGE_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 }

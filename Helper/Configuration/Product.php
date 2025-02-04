@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
 class Product
@@ -97,7 +99,7 @@ class Product
         return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_UNIT_CODE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function getConfiguredAttribute($attributeCode): ?string
+    public function getConfiguredAttribute(string $attributeCode): ?string
     {
         $attributesConfig = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_ATTRIBUTES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 

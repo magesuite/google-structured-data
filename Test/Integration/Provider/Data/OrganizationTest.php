@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 
 /**
@@ -9,7 +11,6 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 class OrganizationTest extends \PHPUnit\Framework\TestCase
 {
     protected ?\Magento\TestFramework\ObjectManager $objectManager;
-
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Organization $organizationDataProvider;
 
     protected function setUp(): void
@@ -28,8 +29,11 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture current_store structured_data/organization/address/country DE
      * @magentoConfigFixture current_store structured_data/organization/contact/sales_telephone 111222333
      * @magentoConfigFixture current_store structured_data/organization/contact/sales_email test@example.com
+     * @magentoConfigFixture current_store structured_data/organization/return_policy/is_enabled 1
+     * @magentoConfigFixture current_store structured_data/organization/return_policy/return_policy_category MerchantReturnFiniteReturnWindow
+     * @magentoConfigFixture current_store structured_data/organization/return_policy/return_days 7
      */
-    public function testItReturnOrganizationDataCorrectly()
+    public function testItReturnOrganizationDataCorrectly(): void
     {
         $expectedData = [
             '@context' => 'http://schema.org',
@@ -51,6 +55,12 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
                     'telephone' => '111222333',
                     'email' => 'test@example.com',
                 ]
+            ],
+            'hasMerchantReturnPolicy' => [
+                '@type' => 'MerchantReturnPolicy',
+                'applicableCountry' => 'US',
+                'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                'merchantReturnDays' => 7
             ]
         ];
 

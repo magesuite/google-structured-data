@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Helper;
 
 class Configuration
@@ -28,28 +30,16 @@ class Configuration
 
     public function getCountryByWebsite(\Magento\Store\Api\Data\WebsiteInterface $website): string
     {
-        return $this->scopeConfig->getValue(
-            self::COUNTRY_CODE_PATH,
-            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
-            $website
-        ) ?? '';
+        return $this->scopeConfig->getValue(self::COUNTRY_CODE_PATH, \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES, $website) ?? '';
     }
 
     public function getTimezone(\Magento\Store\Api\Data\WebsiteInterface $website): string
     {
-        return $this->scopeConfig->getValue(
-            self::TIMEZONE_PATH,
-            \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
-            $website
-        ) ?? '';
+        return $this->scopeConfig->getValue(self::TIMEZONE_PATH, \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES, $website) ?? '';
     }
 
     public function getCarriers(\Magento\Store\Api\Data\StoreInterface $store): array
     {
-        return $this->scopeConfig->getValue(
-            'carriers',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $store
-        ) ?: [];
+        return $this->scopeConfig->getValue('carriers', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store) ?: [];
     }
 }

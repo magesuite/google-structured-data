@@ -7,6 +7,10 @@
             </breadcrumbs>
             <organization>
                 <is_enabled>1</is_enabled>
+                <return_policy>
+                    <is_enabled>0</is_enabled>
+                    <return_policy_category>MerchantReturnUnspecified</return_policy_category>
+                </return_policy>
             </organization>
             <search_box>
                 <is_enabled>1</is_enabled>
@@ -27,6 +31,10 @@
                 <attributes>
                     <description>description</description>
                 </attributes>
+                <delivery_data>
+                    <is_enabled>0</is_enabled>
+                </delivery_data>
+
                 <grouped>
                     <use_parent_product_url>1</use_parent_product_url>
                     <use_parent_product_images>1</use_parent_product_images>
@@ -39,9 +47,6 @@
                     <use_parent_product_description>0</use_parent_product_description>
                     <display_product_group_element>1</display_product_group_element>
                 </configurable>
-                <delivery_data>
-                    <is_enabled>0</is_enabled>
-                </delivery_data>
             </product_page>
             <social>
                 <is_enabled>1</is_enabled>
