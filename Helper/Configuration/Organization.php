@@ -1,15 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Helper\Configuration;
 
 class Organization
 {
-    const XML_PATH_ORGANIZATION_IS_ENABLED = 'structured_data/organization/is_enabled';
-    const XML_PATH_ORGANIZATION_NAME = 'structured_data/organization/name';
-    const XML_PATH_ORGANIZATION_LOGO = 'structured_data/organization/logo';
-    const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
-    const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
-    const XML_PATH_ORGANIZATION_CONTACT = 'structured_data/organization/contact';
+    public const XML_PATH_ORGANIZATION_IS_ENABLED = 'structured_data/organization/is_enabled';
+    public const XML_PATH_ORGANIZATION_NAME = 'structured_data/organization/name';
+    public const XML_PATH_ORGANIZATION_LOGO = 'structured_data/organization/logo';
+    public const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
+    public const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
+    public const XML_PATH_ORGANIZATION_CONTACT = 'structured_data/organization/contact';
+
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_ENABLED = 'structured_data/organization/return_policy/is_enabled';
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_CATEGORY = 'structured_data/organization/return_policy/return_policy_category';
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_DAYS = 'structured_data/organization/return_policy/return_days';
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_LINK = 'structured_data/organization/return_policy/return_policy_link';
 
     protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
 
@@ -46,5 +53,25 @@ class Organization
     public function getContactData(): array
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_CONTACT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? [];
+    }
+
+    public function isReturnPolicyEnabled(int $storeId): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_PATH_ORGANIZATION_RETURN_POLICY_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getReturnPolicyCategory(int $storeId): string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_CATEGORY, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getReturnDays(int $storeId): int
+    {
+        return (int)$this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_DAYS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getReturnPolicyLink(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_LINK, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 }

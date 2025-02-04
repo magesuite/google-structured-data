@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Config\Source;
 
-class VariesByOptions implements \Magento\Framework\Option\ArrayInterface
+class VariesByOptions implements \Magento\Framework\Data\OptionSourceInterface
 {
-    protected array $variesByTypes;
+    protected array $variesByTypes = [];
 
     public function __construct(array $variesByTypes = [])
     {

@@ -73,6 +73,30 @@
                         <label>Customer Service Email</label>
                     </field>
                 </group>
+                <group id="return_policy" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Return Policy</label>
+                    <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Defines if return policy data should be displayed in the structured data</comment>
+                    </field>
+                    <field id="return_policy_category" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Return Policy Category</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnPolicyCategory</source_model>
+                    </field>
+                    <field id="return_days" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <depends>
+                            <field id="structured_data/organization/return_policy/return_policy_category">MerchantReturnFiniteReturnWindow</field>
+                        </depends>
+                        <label>Return Days</label>
+                        <comment>This field is only applicable for "Merchant Return Finite Return Window".</comment>
+                        <validate>required-entry validate-digits validate-greater-than-zero</validate>
+                    </field>
+                    <field id="return_policy_link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Return Policy Link</label>
+                        <comment>When defined it will replace other return policy data.</comment>
+                    </field>
+                </group>
             </group>
             <group id="search_box" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Search Box</label>
