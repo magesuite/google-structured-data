@@ -15,6 +15,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
     protected ?\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData $indexer;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData $deliveryDaraModifier;
 
     protected function setUp(): void
     {
@@ -25,6 +26,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->productRepository = $this->objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
         $this->reviewCollectionFactory = $this->objectManager->get(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
         $this->indexer = $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData::class);
+        $this->deliveryDaraModifier = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData::class);
 
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
 
@@ -39,7 +41,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      */
-    public function testSimpleProductData()
+    public function testSimpleProductData(): void
     {
         $expectedData = [
             '@context' => 'http://schema.org/',
@@ -74,7 +76,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      */
-    public function testProductDataWithSpecialPrice()
+    public function testProductDataWithSpecialPrice(): void
     {
         $expectedData = [
             '@context' => 'http://schema.org/',
@@ -111,7 +113,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      * @magentoAppArea frontend
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/reviews_multistore.php
      */
-    public function testProductDataWithReviews()
+    public function testProductDataWithReviews(): void
     {
         $product = $this->productRepository->get('simple');
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
@@ -127,7 +129,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/configurable_products.php
      * @magentoConfigFixture default_store structured_data/product_page/configurable/use_parent_product_url 0
      */
-    public function testConfigurableProductData()
+    public function testConfigurableProductData(): void
     {
         $product = $this->productRepository->get('configurable');
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
@@ -205,7 +207,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDataFixture Magento/GroupedProduct/_files/product_grouped.php
      */
-    public function testGroupedProductData()
+    public function testGroupedProductData(): void
     {
         $expectedProductCounts = 2;
         $expectedSimpleProductData = [
@@ -255,11 +257,15 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture default_store structured_data/product_page/delivery_data/transit_time_unit_code d
      * @magentoConfigFixture base_website general/locale/timezone UTC
      */
-    public function testProductShippingDetails()
+    public function testProductShippingDetails(): void
     {
+        if (!$this->deliveryDaraModifier->isEnabled()) {
+            $this->markTestSkipped('Modifier is disabled.');
+        }
+
         $expectedShippingDetails = [
             '@type' => 'OfferShippingDetails',
-            "deliveryTime" =>  [
+            "deliveryTime" => [
                 "@type" => "ShippingDeliveryTime",
                 "businessDays" => [
                     "@type" => "OpeningHoursSpecification",

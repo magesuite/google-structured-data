@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier;
 
 class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifierInterface
 {
+    protected bool $isEnabled;
+
     protected \Magento\Framework\Stdlib\ArrayManager $arrayManager;
     protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
     protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays;
@@ -21,7 +25,8 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime,
         \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime,
         \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration
+        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
+        bool $isEnabled = true
     ) {
         $this->arrayManager = $arrayManager;
         $this->dataObjectFactory = $dataObjectFactory;
@@ -31,10 +36,20 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         $this->transitTime = $transitTime;
         $this->productConfiguration = $productConfiguration;
         $this->configuration = $configuration;
+        $this->isEnabled = $isEnabled;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->isEnabled;
     }
 
     public function execute(array $productData, \Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
+        if (!$this->isEnabled()) {
+            return $productData;
+        }
+
         $dataObject = $this->dataObjectFactory->create();
         $dataObject->setData('store', $store);
         $dataObject->setData('product', $product);
@@ -84,7 +99,7 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
     {
         $store = $dataObject->getStore();
 
-        if (!$this->productConfiguration->isDeliveryDataEnabled($store->getId())) {
+        if (!$this->productConfiguration->isDeliveryDataEnabled((int)$store->getId())) {
             return [];
         }
 

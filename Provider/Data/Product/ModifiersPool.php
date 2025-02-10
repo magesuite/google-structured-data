@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product;
 
 class ModifiersPool
 {
-    protected array $modifiers;
+    protected array $modifiers = [];
 
     public function __construct(array $modifiers = [])
     {

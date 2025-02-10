@@ -1,19 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product;
 
 class CompositeAttribute
 {
-    const ATTRIBUTE_EAV = 'eav';
-    const ATTRIBUTE_CONFIGURED_EAV = 'configured_eav';
-    const ATTRIBUTE_CUSTOM = 'custom';
+    public const ATTRIBUTE_EAV = 'eav';
+    public const ATTRIBUTE_CONFIGURED_EAV = 'configured_eav';
+    public const ATTRIBUTE_CUSTOM = 'custom';
 
     protected \Magento\Framework\Escaper $escaper;
-
     protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
 
-    protected array $attributeDataProviders;
-
+    protected array $attributeDataProviders = [];
     protected array $eavAttributeCodes = [];
 
     public function __construct(
