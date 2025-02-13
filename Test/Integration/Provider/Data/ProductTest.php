@@ -15,7 +15,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
     protected ?\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData $indexer;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
-    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData $deliveryDaraModifier;
+    protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData $deliveryDataModifier;
 
     protected function setUp(): void
     {
@@ -26,7 +26,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->productRepository = $this->objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
         $this->reviewCollectionFactory = $this->objectManager->get(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
         $this->indexer = $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData::class);
-        $this->deliveryDaraModifier = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData::class);
+        $this->deliveryDataModifier = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData::class);
 
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
 
@@ -259,7 +259,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     public function testProductShippingDetails(): void
     {
-        if (!$this->deliveryDaraModifier->isEnabled()) {
+        if (!$this->deliveryDataModifier->isEnabled()) {
             $this->markTestSkipped('Modifier is disabled.');
         }
 
