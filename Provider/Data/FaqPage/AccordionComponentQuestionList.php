@@ -27,9 +27,11 @@ class AccordionComponentQuestionList implements QuestionListInterface
         return $this->questionList;
     }
 
-    public function addQuestions(\Magento\Cms\Api\Data\PageInterface $page): void
+    public function addQuestions(?string $contentConstructorContent): void
     {
-        $contentConstructorContent = $page->getContentConstructorContent();
+        if (empty($contentConstructorContent)) {
+            return;
+        }
 
         try {
             $components = $this->serializer->unserialize($contentConstructorContent);

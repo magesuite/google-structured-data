@@ -24,7 +24,7 @@ class FaqPageTest extends \PHPUnit\Framework\TestCase
     public function testItReturnFaqPageDataCorrectly(): void
     {
         $page = $this->pageRepository->getById('page-with-accordion-component');
-        $this->accordionComponentQuestionList->addQuestions($page);
+        $this->accordionComponentQuestionList->addQuestions($page->getContentConstructorContent());
         $faqPageData = $this->faqPageDataProvider->getFaqPageData();
         $expectedQuestions = [
             [
@@ -49,7 +49,7 @@ class FaqPageTest extends \PHPUnit\Framework\TestCase
     public function testItSkipFaqPageDataIfQuestionsDoNotExist(): void
     {
         $page = $this->pageRepository->getById('page100');
-        $this->accordionComponentQuestionList->addQuestions($page);
+        $this->accordionComponentQuestionList->addQuestions($page->getContentConstructorContent());
         $faqPageData = $this->faqPageDataProvider->getFaqPageData();
         $this->assertEmpty($faqPageData);
     }
