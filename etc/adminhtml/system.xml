@@ -295,6 +295,21 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
+                <field id="is_enabled_on_cms_page" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Is Enabled On CMS Page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled Accordion component from Content Constructor will be parsed as a FAQ data in structured data.</comment>
+                </field>
+                <field id="is_enabled_on_category" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Is Enabled On Category</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled Accordion component from Content Constructor will be parsed as a FAQ data in structured data.</comment>
+                </field>
+                <field id="is_enabled_on_product" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Is Enabled On Product</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled Accordion component from Content Constructor will be parsed as a FAQ data in structured data.</comment>
+                </field>
             </group>
         </section>
     </system>

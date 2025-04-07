@@ -1,4 +1,13 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_controller_category_init_after">
+        <observer name="add_accordion_component_to_faq_page" instance="MageSuite\GoogleStructuredData\Observer\Category\AddAccordionComponentToFaqPage"/>
+    </event>
+    <event name="catalog_controller_product_init_after">
+        <observer name="add_accordion_component_to_faq_page" instance="MageSuite\GoogleStructuredData\Observer\Product\AddAccordionComponentToFaqPage"/>
+    </event>
+    <event name="cms_page_render">
+        <observer name="add_accordion_component_to_faq_page" instance="MageSuite\GoogleStructuredData\Observer\Cms\AddAccordionComponentToFaqPage"/>
+    </event>
     <event name="controller_front_send_response_before">
         <observer name="add_structured_data_to_rendered_page" instance="MageSuite\GoogleStructuredData\Observer\AddStructuredDataToRenderedPage"/>
     </event>
@@ -10,8 +19,5 @@
         <observer name="add_search_box_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
         <observer name="add_social_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSocialData"/>
         <observer name="add_faq_page_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddFaqPageData"/>
-    </event>
-    <event name="cms_page_render">
-        <observer name="add_accordion_component_to_faq_page" instance="MageSuite\GoogleStructuredData\Observer\AddAccordionComponentToFaqPage"/>
     </event>
 </config>

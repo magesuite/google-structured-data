@@ -15,9 +15,9 @@
             <search_box>
                 <is_enabled>1</is_enabled>
             </search_box>
-            <faq_page>
+            <social>
                 <is_enabled>1</is_enabled>
-            </faq_page>
+            </social>
             <category_page>
                 <include_products>1</include_products>
                 <include_list_item>0</include_list_item>
@@ -34,7 +34,6 @@
                 <delivery_data>
                     <is_enabled>0</is_enabled>
                 </delivery_data>
-
                 <grouped>
                     <use_parent_product_url>1</use_parent_product_url>
                     <use_parent_product_images>1</use_parent_product_images>
@@ -48,9 +47,12 @@
                     <display_product_group_element>1</display_product_group_element>
                 </configurable>
             </product_page>
-            <social>
+            <faq_page>
                 <is_enabled>1</is_enabled>
-            </social>
+                <is_enabled_on_cms_page>1</is_enabled_on_cms_page>
+                <is_enabled_on_category>1</is_enabled_on_category>
+                <is_enabled_on_product>1</is_enabled_on_product>
+            </faq_page>
         </structured_data>
     </default>
 </config>
