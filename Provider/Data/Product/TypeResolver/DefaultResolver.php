@@ -121,24 +121,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         $reviewData = [];
 
         foreach ($reviews as $review) {
-            $row = [
-                '@type' => 'Review',
-                'author' => ['@type' => 'Person', 'name' => $this->escaper->escapeHtml($review->getNickname())],
-                'datePublished' => $review->getCreatedAt(),
-                'description' => $this->escaper->escapeHtml($review->getDetail()),
-                'name' => $this->escaper->escapeHtml($review->getTitle())
-            ];
-
-            if ($percent = $review->getData('percent')) {
-                $row['reviewRating'] = [
-                    '@type' => 'Rating',
-                    'bestRating' => 5,
-                    'ratingValue' => ($percent / 20),
-                    'worstRating' => 1
-                ];
-            }
-
-            $reviewData[] = $row;
+            $reviewData[] = $this->buildReviewData($review);
         }
 
         if (!empty($reviewData)) {
@@ -161,5 +144,29 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         return $images;
+    }
+
+    public function buildReviewData(\Magento\Review\Model\Review $review): array
+    {
+        $row = [
+            '@type' => 'Review',
+            'author' => ['@type' => 'Person', 'name' => $this->escaper->escapeHtml($review->getNickname())],
+            'datePublished' => $review->getCreatedAt(),
+            'description' => $this->escaper->escapeHtml($review->getDetail()),
+            'name' => $this->escaper->escapeHtml($review->getTitle())
+        ];
+
+        $percent = $review->getData('percent');
+
+        if ($percent) {
+            $row['reviewRating'] = [
+                '@type' => 'Rating',
+                'bestRating' => 5,
+                'ratingValue' => ($percent / 20),
+                'worstRating' => 1
+            ];
+        }
+
+        return $row;
     }
 }
