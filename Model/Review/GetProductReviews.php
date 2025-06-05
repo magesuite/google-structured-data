@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Review;
 
 class GetProductReviews
@@ -11,7 +13,7 @@ class GetProductReviews
         $this->reviewCollectionFactory = $reviewCollectionFactory;
     }
 
-    public function excute($product, $storeId)
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, int $storeId): \Magento\Review\Model\ResourceModel\Review\Collection
     {
         $reviewsCollection = $this->reviewCollectionFactory->create();
 
