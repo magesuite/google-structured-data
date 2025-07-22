@@ -4,24 +4,20 @@ namespace MageSuite\GoogleStructuredData\Model\Review;
 
 class GetProductRattingSummary
 {
-    const RATING_STARS = 5;
+    public const RATING_STARS = 5;
 
-    protected \Magento\Review\Model\ReviewFactory $reviewFactory;
+    public function __construct(
+        protected \Magento\Review\Model\AppendSummaryData $appendSummaryData,
+    ) {}
 
-    public function __construct(\Magento\Review\Model\ReviewFactory $reviewFactory)
+    public function execute($product, $storeId): array
     {
-        $this->reviewFactory = $reviewFactory;
-    }
-
-    public function excute($product, $storeId)
-    {
-        $reviews = $this->reviewFactory->create();
-
-        $reviews->getEntitySummary($product, $storeId);
+        $this->appendSummaryData->execute($product, $storeId, \Magento\Review\Model\Review::ENTITY_PRODUCT_CODE);
         $ratingSummary = $product->getRatingSummary();
+        $reviewsCount = $product->getReviewsCount();
 
-        $ratingValue = $ratingSummary->getRatingSummary() ? ($ratingSummary->getRatingSummary() / (100 / self::RATING_STARS)) : 0;
-        $reviewCount = $ratingSummary->getReviewsCount() ? $ratingSummary->getReviewsCount() : 0;
+        $ratingValue = $ratingSummary ? ($ratingSummary / (100 / self::RATING_STARS)) : 0;
+        $reviewCount = $reviewsCount ?: 0;
 
         return [
             'rating_value' => $ratingValue,
