@@ -107,7 +107,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         $data = [];
-        $ratingSummary = $this->getProductRattingSummary->excute($product, $store->getId());
+        $ratingSummary = $this->getProductRattingSummary->execute($product, $store->getId());
 
         if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
             $data['aggregateRating'] = [
