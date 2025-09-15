@@ -203,6 +203,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if rating should be included in structured data.</comment>
                 </field>
+                <field id="attribute_list" translate="label" type="multiselect" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Attribute List</label>
+                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                    <comment>Defines which attributes will be added to product collection. If the field is empty, then attributes marked as “use in product listing” will be added</comment>
+                </field>
                 <group id="attributes" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <field id="description" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
