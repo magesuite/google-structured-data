@@ -18,12 +18,9 @@ class Organization
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_DAYS = 'structured_data/organization/return_policy/return_days';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_LINK = 'structured_data/organization/return_policy/return_policy_link';
 
-    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
-
-    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface)
-    {
-        $this->scopeConfig = $scopeConfigInterface;
-    }
+    public function __construct(
+        protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+    ) {}
 
     public function isEnabled(): bool
     {

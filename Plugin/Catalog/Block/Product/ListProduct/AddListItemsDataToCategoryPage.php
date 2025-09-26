@@ -1,28 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Plugin\Catalog\Block\Product\ListProduct;
 
 class AddListItemsDataToCategoryPage
 {
-    protected \Magento\Framework\Registry $registry;
-    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
-    protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration;
-
     public function __construct(
-        \Magento\Framework\Registry $registry,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration
-    ) {
-        $this->registry = $registry;
-        $this->storeManager = $storeManager;
-        $this->structuredDataContainer = $structuredDataContainer;
-        $this->productDataProvider = $productDataProvider;
-        $this->categoryConfiguration = $categoryConfiguration;
-    }
+        protected \Magento\Framework\Registry $registry,
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
+        protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration
+    ) {}
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result): \Magento\Eav\Model\Entity\Collection\AbstractCollection
     {

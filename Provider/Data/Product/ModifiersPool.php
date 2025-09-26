@@ -8,8 +8,7 @@ class ModifiersPool
 {
     protected array $modifiers = [];
 
-    public function __construct(array $modifiers = [])
-    {
+    public function __construct(array $modifiers = []) {
         $this->modifiers = $modifiers;
     }
 
@@ -20,8 +19,8 @@ class ModifiersPool
 
     protected function sortResolvers(array $modifiers): array
     {
-        usort($modifiers, function (array $modifierLeft, array $modifierRight) {
-            if ($modifierLeft['sort_order'] == $modifierRight['sort_order']) {
+        usort($modifiers, function (array $modifierLeft, array $modifierRight): int {
+            if ($modifierLeft['sort_order'] === $modifierRight['sort_order']) {
                 return 0;
             }
 

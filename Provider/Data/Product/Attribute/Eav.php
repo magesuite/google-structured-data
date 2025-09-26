@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute;
 
 class Eav implements \MageSuite\GoogleStructuredData\Provider\Data\Product\AttributeInterface
 {
-    protected \MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue $getAttributeValue;
+    public function __construct(
+        protected \MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue $getAttributeValue
+    ) {}
 
-    public function __construct(\MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue $getAttributeValue)
-    {
-        $this->getAttributeValue = $getAttributeValue;
-    }
-
-    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode)
+    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode) // phpcs:ignore
     {
         if (!$attributeCode) {
             return null;

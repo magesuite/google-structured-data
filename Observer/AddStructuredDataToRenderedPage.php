@@ -1,23 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Observer;
 
 class AddStructuredDataToRenderedPage implements \Magento\Framework\Event\ObserverInterface
 {
-    protected \MageSuite\GoogleStructuredData\Service\JsonLdCreator $jsonLdCreator;
+    public function __construct(
+        protected \MageSuite\GoogleStructuredData\Service\JsonLdCreator $jsonLdCreator
+    ) {}
 
-    public function __construct(\MageSuite\GoogleStructuredData\Service\JsonLdCreator $jsonLdCreator)
-    {
-        $this->jsonLdCreator = $jsonLdCreator;
-    }
-
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
         $response = $observer->getResponse();
 
         $html = $response->getBody();
 
-        if ($html == '') {
+        if ($html === '') {
             return;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Configurable extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
@@ -22,7 +24,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
     public function isApplicable(string $productTypeId): bool
     {
-        return $productTypeId == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
+        return $productTypeId === \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
     }
 
     public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -65,7 +67,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
     protected function getVariesBy(\Magento\Catalog\Api\Data\ProductInterface $product): array
     {
-        if ($product->getTypeId() != \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+        if ($product->getTypeId() !== \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
             return [];
         }
 

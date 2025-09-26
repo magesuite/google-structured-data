@@ -6,12 +6,9 @@ namespace MageSuite\GoogleStructuredData\Model\Review;
 
 class GetProductReviews
 {
-    protected \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
-
-    public function __construct(\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory)
-    {
-        $this->reviewCollectionFactory = $reviewCollectionFactory;
-    }
+    public function __construct(
+        protected \Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory
+    ) {}
 
     public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, int $storeId): \Magento\Review\Model\ResourceModel\Review\Collection
     {

@@ -1,46 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData;
 
 class IndexBuilder
 {
     public const DEFAULT_BUNCH_SIZE = 500;
 
-    protected int $bunchSize;
-
-    protected \Magento\Framework\Indexer\CacheContext $cacheContext;
-    protected \Magento\Framework\Serialize\SerializerInterface $serializer;
-    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
-    protected \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory;
-    protected \Magento\Catalog\Model\Config $catalogConfig;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeProvider;
-    protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
-    protected \Psr\Log\LoggerInterface $logger;
-
     public function __construct(
-        \Magento\Framework\Indexer\CacheContext $cacheContext,
-        \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
-        \Magento\Catalog\Model\Config $catalogConfig,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeProvider,
-        \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        \Psr\Log\LoggerInterface $logger,
-        $bunchSize = self::DEFAULT_BUNCH_SIZE
-    ) {
-        $this->cacheContext = $cacheContext;
-        $this->storeManager = $storeManager;
-        $this->productCollectionFactory = $productCollectionFactory;
-        $this->catalogConfig = $catalogConfig;
-        $this->compositeAttributeProvider = $compositeAttributeProvider;
-        $this->indexResourceModel = $indexResourceModel;
-        $this->productDataProvider = $productDataProvider;
-        $this->logger = $logger;
-        $this->bunchSize = $bunchSize;
-        $this->serializer = $serializer;
-    }
+        protected \Magento\Framework\Indexer\CacheContext $cacheContext,
+        protected \Magento\Framework\Serialize\SerializerInterface $serializer,
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
+        protected \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
+        protected \Magento\Catalog\Model\Config $catalogConfig,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeProvider,
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
+        protected \Psr\Log\LoggerInterface $logger,
+        protected int $bunchSize = self::DEFAULT_BUNCH_SIZE
+    ) {}
 
     public function reindexList(array $productIds): void
     {

@@ -6,12 +6,9 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class FaqPage
 {
-    protected array $questionLists;
-
-    public function __construct(array $questionLists = [])
-    {
-        $this->questionLists = $questionLists;
-    }
+    public function __construct(
+        protected array $questionLists = []
+    ) {}
 
     public function getFaqPageData(): array
     {

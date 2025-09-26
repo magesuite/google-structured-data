@@ -1,33 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Observer;
 
 class AddStructuredDataToProductView implements \Magento\Framework\Event\ObserverInterface
 {
-    protected \Magento\Framework\Registry $registry;
-    protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
-    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
-    protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
-
     public function __construct(
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\DataObjectFactory $dataObjectFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
-        \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider
-    ) {
-        $this->registry = $registry;
-        $this->dataObjectFactory = $dataObjectFactory;
-        $this->storeManager = $storeManager;
-        $this->configuration = $configuration;
-        $this->structuredDataContainer = $structuredDataContainer;
-        $this->productDataProvider = $productDataProvider;
-    }
+        protected \Magento\Framework\Registry $registry,
+        protected \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
+        protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider
+    ) {}
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
         $product = $this->getProduct();
 
@@ -44,7 +32,7 @@ class AddStructuredDataToProductView implements \Magento\Framework\Event\Observe
         $this->structuredDataContainer->add($productDataObject->getData(), 'product');
     }
 
-    public function getProduct()
+    public function getProduct(): ?\Magento\Catalog\Model\Product
     {
         return $this->registry->registry('current_product');
     }

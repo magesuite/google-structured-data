@@ -158,6 +158,10 @@
                         <label>Tumblr</label>
                         <comment>Full url to tumblr profile.</comment>
                     </field>
+                    <field id="tiktok" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Tiktok</label>
+                        <comment>Full url to tiktok profile.</comment>
+                    </field>
                 </group>
             </group>
             <group id="category_page" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">

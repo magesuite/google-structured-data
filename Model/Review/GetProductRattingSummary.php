@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Review;
 
 class GetProductRattingSummary
@@ -7,10 +9,10 @@ class GetProductRattingSummary
     public const RATING_STARS = 5;
 
     public function __construct(
-        protected \Magento\Review\Model\AppendSummaryData $appendSummaryData,
+        protected \Magento\Review\Model\AppendSummaryData $appendSummaryData
     ) {}
 
-    public function execute($product, $storeId): array
+    public function execute(\Magento\Catalog\Model\Product $product, int $storeId): array
     {
         $this->appendSummaryData->execute($product, $storeId, \Magento\Review\Model\Review::ENTITY_PRODUCT_CODE);
         $ratingSummary = $product->getRatingSummary();
@@ -21,7 +23,7 @@ class GetProductRattingSummary
 
         return [
             'rating_value' => $ratingValue,
-            'review_count' => $reviewCount
+            'review_count' => $reviewCount,
         ];
     }
 }

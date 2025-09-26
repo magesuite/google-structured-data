@@ -23,22 +23,12 @@ class Organization
         'customer_service_email' => 'customer service'
     ];
 
-    protected \Magento\Theme\Block\Html\Header\Logo $logo;
-    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $organizationConfiguration;
-
     public function __construct(
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Theme\Block\Html\Header\Logo $logo,
-        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $organizationConfiguration
-    ) {
-        $this->storeManager = $storeManager;
-        $this->logo = $logo;
-        $this->configuration = $configuration;
-        $this->organizationConfiguration = $organizationConfiguration;
-    }
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
+        protected \Magento\Theme\Block\Html\Header\Logo $logo,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $organizationConfiguration
+    ) {}
 
     public function getOrganizationData(): array
     {
@@ -66,7 +56,7 @@ class Organization
         $address = ['@type' => 'PostalAddress'];
         $addressData = $this->organizationConfiguration->getAddressData();
         foreach ($addressData as $key => $value) {
-            if (!isset($this->addressFieldsMapping, $key)) {
+            if (!isset($this->addressFieldsMapping[$key])) {
                 continue;
             }
             $address[$this->addressFieldsMapping[$key]] = $value;
@@ -135,7 +125,7 @@ class Organization
         $returnPolicyData['applicableCountry'] = $country;
         $returnPolicyData['returnPolicyCategory'] = sprintf('https://schema.org/%s', $returnPolicyCategory);
 
-        if ($returnPolicyCategory == \MageSuite\GoogleStructuredData\Model\Config\Source\ReturnPolicyCategory::FINITE_RETURN_WINDOW) {
+        if ($returnPolicyCategory === \MageSuite\GoogleStructuredData\Model\Config\Source\ReturnPolicyCategory::FINITE_RETURN_WINDOW) {
             $returnPolicyData['merchantReturnDays'] = $this->organizationConfiguration->getReturnDays((int)$store->getId());
         }
 

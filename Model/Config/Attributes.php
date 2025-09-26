@@ -8,12 +8,9 @@ class Attributes implements \Magento\Framework\Data\OptionSourceInterface
 {
     protected array $options = [];
 
-    protected \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory;
-
-    public function __construct(\Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory)
-    {
-        $this->collectionFactory = $collectionFactory;
-    }
+    public function __construct(
+        protected \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $collectionFactory
+    ) {}
 
     public function toOptionArray(): array
     {

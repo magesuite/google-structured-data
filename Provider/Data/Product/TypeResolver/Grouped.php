@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
@@ -8,7 +10,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
 
     public function isApplicable(string $productTypeId): bool
     {
-        return $productTypeId == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
+        return $productTypeId === \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE;
     }
 
     public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -55,12 +57,12 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         return parent::getReviewsData($reviewProduct, $store);
     }
 
-    public function setParentProduct(\Magento\Catalog\Api\Data\ProductInterface $product)
+    public function setParentProduct(\Magento\Catalog\Api\Data\ProductInterface $product): void
     {
         $this->parentProduct = $product;
     }
 
-    public function getParentProduct()
+    public function getParentProduct(): \Magento\Catalog\Api\Data\ProductInterface
     {
         return $this->parentProduct;
     }

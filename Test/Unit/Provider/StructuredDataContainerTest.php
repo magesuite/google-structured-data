@@ -1,20 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
 
 class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
 {
-    protected ?\Magento\TestFramework\ObjectManager $objectManager;
-
-    protected ?\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer;
+    protected ?\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer = null;
 
     protected function setUp(): void
     {
-        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
-        $this->structuredDataContainer = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get('\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer');
+        $objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+
+        $this->structuredDataContainer = $objectManager->get(\MageSuite\GoogleStructuredData\Provider\StructuredDataContainer::class);
     }
 
-    public function testItAddDataCorrectly()
+    public function testItAddDataCorrectly(): void
     {
         $structuredDataContainer = $this->structuredDataContainer;
 
@@ -35,7 +36,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(count($expectedData['breadcrumbs']['itemListElement']), 4);
     }
 
-    public function testItAddKeyCorrectly()
+    public function testItAddKeyCorrectly(): void
     {
         $structuredDataContainer = $this->structuredDataContainer;
 
@@ -47,7 +48,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test value', $data['product']['additional_key']);
     }
 
-    public function testItRemoveKeyCorrectly()
+    public function testItRemoveKeyCorrectly(): void
     {
         $structuredDataContainer = $this->structuredDataContainer;
 
@@ -58,11 +59,11 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayNotHasKey('additional_key', $data['product']);
     }
 
-    protected function getStructuredData()
+    protected function getStructuredData(): array
     {
         return [
             'product' => [
-                "@context" => "http://schema.org/",
+                "@context" => "https://schema.org/",
                 "@type" => "Product",
                 "name" => "Test Structured Product",
                 "image" => [

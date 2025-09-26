@@ -6,12 +6,9 @@ namespace MageSuite\GoogleStructuredData\Model\Config\Source;
 
 class VariesByOptions implements \Magento\Framework\Data\OptionSourceInterface
 {
-    protected array $variesByTypes = [];
-
-    public function __construct(array $variesByTypes = [])
-    {
-        $this->variesByTypes = $variesByTypes;
-    }
+    public function __construct(
+        protected array $variesByTypes = []
+    ) {}
 
     public function toOptionArray(): array
     {

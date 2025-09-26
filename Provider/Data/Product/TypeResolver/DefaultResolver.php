@@ -1,34 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
-    const IN_STOCK = 'InStock';
-    const OUT_OF_STOCK = 'OutOfStock';
-
-    protected \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone;
-    protected \Magento\Framework\Escaper $escaper;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider;
-    protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews;
-    protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
+    public const IN_STOCK = 'InStock';
+    public const OUT_OF_STOCK = 'OutOfStock';
 
     public function __construct(
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
-        \Magento\Framework\Escaper $escaper,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
-        \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
-        \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-    ) {
-        $this->timezone = $timezone;
-        $this->escaper = $escaper;
-        $this->compositeAttributeDataProvider = $compositeAttributeDataProvider;
-        $this->getProductReviews = $getProductReviews;
-        $this->getProductRattingSummary = $getProductRattingSummary;
-        $this->productConfiguration = $productConfiguration;
-    }
+        protected \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
+        protected \Magento\Framework\Escaper $escaper,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
+        protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
+        protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration
+    ) {}
 
     public function isApplicable(string $productTypeId): bool
     {
@@ -53,7 +41,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     public function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $structuredData = [
-            '@context' => 'http://schema.org/',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => $this->escaper->escapeHtml($product->getName()),
             'image' => $this->getProductImages($product),
@@ -107,7 +95,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         $data = [];
-        $ratingSummary = $this->getProductRattingSummary->execute($product, $store->getId());
+        $ratingSummary = $this->getProductRattingSummary->execute($product, (int)$store->getId());
 
         if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
             $data['aggregateRating'] = [

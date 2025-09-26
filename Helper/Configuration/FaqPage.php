@@ -11,12 +11,9 @@ class FaqPage
     public const XML_PATH_FAQ_PAGE_IS_ENABLED_ON_CATEGORY = 'structured_data/faq_page/is_enabled_on_category';
     public const XML_PATH_FAQ_PAGE_IS_ENABLED_ON_PRODUCT = 'structured_data/faq_page/is_enabled_on_product';
 
-    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
-
-    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
-    {
-        $this->scopeConfig = $scopeConfig;
-    }
+    public function __construct(
+        protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+    ) {}
 
     public function isEnabled(?int $storeId = null): bool
     {

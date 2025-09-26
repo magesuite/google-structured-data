@@ -6,14 +6,10 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\FaqPage;
 
 class Question
 {
-    protected string $question;
-    protected string $answer;
-
-    public function __construct(string $question, string $answer)
-    {
-        $this->question = $question;
-        $this->answer = $answer;
-    }
+    public function __construct(
+        protected string $question,
+        protected string $answer
+    ) {}
 
     public function getQuestion(): string
     {

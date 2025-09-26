@@ -1,21 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class SearchBox
 {
-    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
-
-    protected \Magento\Framework\UrlInterface $urlBuilder;
-
     public function __construct(
-        \Magento\Framework\UrlInterface $urlBuilder,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
-    ) {
-
-        $this->urlBuilder = $urlBuilder;
-        $this->storeManager = $storeManager;
-    }
+        protected \Magento\Framework\UrlInterface $urlBuilder,
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager
+    ) {}
 
     public function getSearchBoxData(): array
     {

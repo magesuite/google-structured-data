@@ -1,21 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Eav;
 
 class GetAttributeValue
 {
-    protected \Magento\Eav\Model\Entity\Attribute $attribute;
-
     protected array $attributeTextTypes = ['select', 'multiselect'];
-
     protected array $attributesCache = [];
 
-    public function __construct(\Magento\Eav\Model\Entity\Attribute $attribute)
-    {
-        $this->attribute = $attribute;
-    }
+    public function __construct(
+        protected \Magento\Eav\Model\Entity\Attribute $attribute
+    ) {}
 
-    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, $attributeCode)
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, string $attributeCode) // phpcs:ignore
     {
         $attribute = $this->getAttribute($attributeCode);
 
@@ -26,7 +24,7 @@ class GetAttributeValue
         return $product->getData($attributeCode);
     }
 
-    protected function getAttribute($attributeCode)
+    protected function getAttribute(string $attributeCode): \Magento\Eav\Model\Entity\Attribute
     {
         if (!isset($this->attributesCache[$attributeCode])) {
             $attribute = $this->attribute->loadByCode(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);

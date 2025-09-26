@@ -1,20 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData;
 
 class BusinessDays
 {
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
-
     public function __construct(
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
-    ) {
-        $this->configuration = $configuration;
-    }
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
+    ) {}
 
     public function getBusinessDaysData(\Magento\Framework\DataObject $data): array
     {
-        $storeId = $data->getStore() ? $data->getStore()->getId() : 0;
+        $storeId = $data->getStore() ? (int)$data->getStore()->getId() : \Magento\Store\Model\Store::DEFAULT_STORE_ID;
         $businessDays = $this->configuration->getBusinessDays($storeId);
 
         $mappedWeekDays = $this->getMappedWeekDays($businessDays);
@@ -43,7 +41,7 @@ class BusinessDays
             $weekDays[] = \jddayofweek($dayNumber - 1, CAL_DOW_LONG);
         }
 
-        if (!empty($weekDays) && ($weekDays[0] == 'Sunday')) {
+        if (!empty($weekDays) && ($weekDays[0] === 'Sunday')) {
             array_push($weekDays, $weekDays[0]);
             unset($weekDays[0]);
         }

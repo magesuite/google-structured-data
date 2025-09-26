@@ -44,7 +44,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testSimpleProductData(): void
     {
         $expectedData = [
-            '@context' => 'http://schema.org/',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Simple Product',
             'image' => [],
@@ -79,7 +79,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testProductDataWithSpecialPrice(): void
     {
         $expectedData = [
-            '@context' => 'http://schema.org/',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Simple Product with Special Price',
             'image' => [],
@@ -144,7 +144,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'description' => '',
             'hasVariant' => [
                 [
-                    '@context' => 'http://schema.org/',
+                    '@context' => 'https://schema.org/',
                     '@type' => 'Product',
                     'name' => 'Configurable OptionOption 1',
                     'sku' => 'simple_10',
@@ -163,7 +163,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                     'description' => null
                 ],
                 [
-                    '@context' => 'http://schema.org/',
+                    '@context' => 'https://schema.org/',
                     '@type' => 'Product',
                     'name' => 'Configurable OptionOption 2',
                     'sku' => 'simple_20',
@@ -185,7 +185,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $expectedData = [
-            '@context' => 'http://schema.org/',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Configurable Product',
             'image' => [],
@@ -211,7 +211,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     {
         $expectedProductCounts = 2;
         $expectedSimpleProductData = [
-            '@context' => 'http://schema.org/',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Simple Product',
             'image' => [],
@@ -220,7 +220,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'itemCondition' => 'NewCondition',
         ];
         $expectedVirtualProductData = [
-            '@context' => 'http://schema.org/',
+            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Virtual Product',
             'image' => [],
