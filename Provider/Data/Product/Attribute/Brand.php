@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute;
 
 class Brand extends \MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Eav
 {
-    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode)
+    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode) // phpcs:ignore
     {
         $value = parent::getAttributeData($product, $attributeCode);
 

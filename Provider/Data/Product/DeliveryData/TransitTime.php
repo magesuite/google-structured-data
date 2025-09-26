@@ -1,20 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData;
 
 class TransitTime
 {
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
-
     public function __construct(
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
-    ) {
-        $this->configuration = $configuration;
-    }
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
+    ) {}
 
     public function getTransitTimeData(\Magento\Framework\DataObject $data): array
     {
-        $storeId = $data->getStore() ? $data->getStore()->getId() : 0;
+        $storeId = $data->getStore() ? (int)$data->getStore()->getId() : \Magento\Store\Model\Store::DEFAULT_STORE_ID;
         $transitTimeValue = $this->configuration->getTransitTime($storeId);
         $transitTimeUnit = $this->configuration->getTransitTimeUnit($storeId);
 
@@ -40,14 +38,14 @@ class TransitTime
 
         $transitTimeValue = [];
 
-        if (count($parts) == 1) {
+        if (count($parts) === 1) {
             $transitTimeValue = [
                 'minValue' => $parts[0],
                 'maxValue' => $parts[0]
             ];
         }
 
-        if (count($parts) == 2) {
+        if (count($parts) === 2) {
             $transitTimeValue = [
                 'minValue' => $parts[0],
                 'maxValue' => $parts[1]

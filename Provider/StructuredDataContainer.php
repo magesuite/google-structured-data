@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider;
 
 class StructuredDataContainer
 {
-    protected $data = [];
+    protected array $data = [];
 
-    public function getStructuredData()
+    public function getStructuredData(): array
     {
         return $this->data;
     }
 
-    public function add($data, $node)
+    public function add(array $data, string $node): array
     {
         foreach ($data as $key => $value) {
             $this->addKey($node, $key, $value);
@@ -20,18 +22,20 @@ class StructuredDataContainer
         return $this->data;
     }
 
-    public function addKey($node, $key, $value)
+    public function addKey(string $node, string|int $key, $value) // phpcs:ignore
     {
         $this->data[$node][$key] = $value;
 
         return $this->data[$node][$key];
     }
 
-    public function removeKey($node, $key)
+    public function removeKey(string $node, string|int $key): void
     {
-        if (isset($this->data[$node]) && isset($this->data[$node][$key])) {
-            unset($this->data[$node][$key]);
+        if (!isset($this->data[$node]) || !isset($this->data[$node][$key])) {
+            return;
         }
+
+        unset($this->data[$node][$key]);
     }
 
     public function __destruct()

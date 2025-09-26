@@ -10,23 +10,17 @@ class CompositeAttribute
     public const ATTRIBUTE_CONFIGURED_EAV = 'configured_eav';
     public const ATTRIBUTE_CUSTOM = 'custom';
 
-    protected \Magento\Framework\Escaper $escaper;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
-
     protected array $attributeDataProviders = [];
     protected array $eavAttributeCodes = [];
 
     public function __construct(
-        \Magento\Framework\Escaper $escaper,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \Magento\Framework\Escaper $escaper,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         array $attributeDataProviders = []
     ) {
-        $this->escaper = $escaper;
-        $this->productConfiguration = $productConfiguration;
-
         $this->attributeDataProviders = array_filter(
             $attributeDataProviders,
-            function ($item) {
+            function ($item): bool {
                 return (!isset($item['disabled']) || !$item['disabled']) && $item['class'] && $item['type'];
             }
         );
@@ -44,7 +38,7 @@ class CompositeAttribute
 
             $attribute = $attributeDataProvider['attribute_name'] ?? null;
             $eavAttributeCodes = $this->getEavAttributeCodes();
-            if ($attributeDataProvider['type'] != self::ATTRIBUTE_CUSTOM) {
+            if ($attributeDataProvider['type'] !== self::ATTRIBUTE_CUSTOM) {
                 $attribute = $eavAttributeCodes[$attributeKey];
             }
 
@@ -78,9 +72,9 @@ class CompositeAttribute
 
         $eavAttributeCodes = [];
         foreach ($this->attributeDataProviders as $attributeKey => $attributeDataProvider) {
-            if ($attributeDataProvider['type'] == self::ATTRIBUTE_EAV) {
+            if ($attributeDataProvider['type'] === self::ATTRIBUTE_EAV) {
                 $eavAttributeCodes[$attributeKey] = $attributeDataProvider['attribute_name'];
-            } elseif ($attributeDataProvider['type'] == self::ATTRIBUTE_CONFIGURED_EAV) {
+            } elseif ($attributeDataProvider['type'] === self::ATTRIBUTE_CONFIGURED_EAV) {
                 $eavAttributeCodes[$attributeKey] = $this->productConfiguration->getConfiguredAttribute($attributeDataProvider['attribute_name']);
             }
         }

@@ -6,38 +6,17 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier;
 
 class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifierInterface
 {
-    protected bool $isEnabled;
-
-    protected \Magento\Framework\Stdlib\ArrayManager $arrayManager;
-    protected \Magento\Framework\DataObjectFactory $dataObjectFactory;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\CutoffTime $cutoffTime;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
-
     public function __construct(
-        \Magento\Framework\Stdlib\ArrayManager $arrayManager,
-        \Magento\Framework\DataObjectFactory $dataObjectFactory,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\CutoffTime $cutoffTime,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime,
-        \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
-        bool $isEnabled = true
-    ) {
-        $this->arrayManager = $arrayManager;
-        $this->dataObjectFactory = $dataObjectFactory;
-        $this->businessDays = $businessDays;
-        $this->cutoffTime = $cutoffTime;
-        $this->handlingTime = $handlingTime;
-        $this->transitTime = $transitTime;
-        $this->productConfiguration = $productConfiguration;
-        $this->configuration = $configuration;
-        $this->isEnabled = $isEnabled;
-    }
+        protected \Magento\Framework\Stdlib\ArrayManager $arrayManager,
+        protected \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\CutoffTime $cutoffTime,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
+        protected bool $isEnabled = true
+    ) {}
 
     public function isEnabled(): bool
     {
@@ -55,25 +34,18 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         $dataObject->setData('product', $product);
         $dataObject->setData('currency_code', $store->getCurrentCurrencyCode());
 
-        if ($product->getTypeId() == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE) {
-            foreach ($productData as $index => $associatedProductData) {
-                $productData[$index]['offers'] = $this->addDeliveryDataToOffersData($associatedProductData['offers'], $dataObject);
-            }
-        } elseif ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-            if (count($productData) > 2) {
-                $productData['offers'] = $this->addDeliveryDataToOffersData($productData['offers'], $dataObject);
-            } else {
-                $productTypeData = array_pop($productData);
-                $productTypeData['offers'] = $this->addDeliveryDataToOffersData($productTypeData['offers'], $dataObject);
-                $productData[] = $productTypeData;
-            }
-        } else {
-            $productData['offers'] = $this->addDeliveryDataToOffersData($productData['offers'], $dataObject);
-        }
+        $typeId = $product->getTypeId();
 
-        return $productData;
+        return match ($typeId) {
+            \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE => $this->processGrouped($productData, $dataObject),
+            \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE => $this->processConfigurable($productData, $dataObject),
+            default => $this->processAny($productData, $dataObject),
+        };
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function addDeliveryDataToOffersData(array $offersData, \Magento\Framework\DataObject $dataObject): array
     {
         $deliveryData = $this->getDeliveryData($dataObject);
@@ -84,13 +56,15 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
 
         $product = $dataObject->getProduct();
 
-        if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+        if ($product->getTypeId() === \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
             foreach ($offersData as $key => $offerData) {
                 $offersData[$key]['shippingDetails'] = $deliveryData;
             }
-        } else {
-            $offersData['shippingDetails'] = $deliveryData;
+
+            return $offersData;
         }
+
+        $offersData['shippingDetails'] = $deliveryData;
 
         return $offersData;
     }
@@ -122,7 +96,7 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
 
         $shippingDestination = [
             '@type' => 'DefinedRegion',
-            'addressCountry' => $this->configuration->getCountryByWebsite($store->getWebsite())
+            'addressCountry' => $this->configuration->getCountryByWebsite($store->getWebsite()),
         ];
 
         $data = [];
@@ -130,14 +104,14 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
             $shippingRateData = [
                 '@type' => 'MonetaryAmount',
                 'value' => $carrier['price'],
-                'currency' => $dataObject->getCurrencyCode()
+                'currency' => $dataObject->getCurrencyCode(),
             ];
 
             $offerShippingDetails = [
                 '@type' => 'OfferShippingDetails',
                 'deliveryTime' => $deliveryTimeData,
                 'shippingRate' => $shippingRateData,
-                'shippingDestination' => $shippingDestination
+                'shippingDestination' => $shippingDestination,
             ];
 
             $data[] = $offerShippingDetails;
@@ -153,6 +127,7 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         $availableCarriers = [];
         foreach ($allCarriers as $carrierCode => $carrier) {
             $isActive = $this->arrayManager->get('active', $carrier);
+
             if (!(bool)$isActive) {
                 continue;
             }
@@ -162,13 +137,14 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
             }
 
             $price = $this->arrayManager->get('price', $carrier);
+
             if ($price === null) {
                 continue;
             }
 
             $availableCarriers[$carrierCode] = [
                 'name' => $carrier['name'],
-                'price' => $price
+                'price' => $price,
             ];
         }
 
@@ -207,12 +183,41 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
     public function getSpecificCountries(array $carrier): array
     {
         $allowedCountries = $this->arrayManager->get('specificcountry', $carrier);
-
         $specificCountries = [];
+
         if ($allowedCountries) {
             $specificCountries = explode(',', $allowedCountries);
         }
 
         return $specificCountries;
+    }
+
+    public function processGrouped(array $productData, \Magento\Framework\DataObject $dataObject): array
+    {
+        foreach ($productData as $index => $associatedProductData) {
+            $productData[$index]['offers'] = $this->addDeliveryDataToOffersData($associatedProductData['offers'], $dataObject);
+        }
+
+        return $productData;
+    }
+
+    public function processConfigurable(array $productData, \Magento\Framework\DataObject $dataObject): array
+    {
+        if (count($productData) > 2) {
+            return $this->processAny($productData, $dataObject);
+        }
+
+        $productTypeData = array_pop($productData);
+        $productTypeData = $this->processAny($productTypeData, $dataObject);
+        $productData[] = $productTypeData;
+
+        return $productData;
+    }
+
+    public function processAny(array $productData, \Magento\Framework\DataObject $dataObject): array
+    {
+        $productData['offers'] = $this->addDeliveryDataToOffersData($productData['offers'], $dataObject);
+
+        return $productData;
     }
 }

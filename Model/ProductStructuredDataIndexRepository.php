@@ -1,24 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model;
 
 class ProductStructuredDataIndexRepository
 {
     protected array $productsStructuredData = [];
 
-    protected \Magento\Framework\Serialize\SerializerInterface $serializer;
-    protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel;
-    protected \Psr\Log\LoggerInterface $logger;
-
     public function __construct(
-        \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel,
-        \Psr\Log\LoggerInterface $logger
-    ) {
-        $this->serializer = $serializer;
-        $this->indexResourceModel = $indexResourceModel;
-        $this->logger = $logger;
-    }
+        protected \Magento\Framework\Serialize\SerializerInterface $serializer,
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel,
+        protected \Psr\Log\LoggerInterface $logger
+    ) {}
 
     public function loadDataFromIndex(array $productIds, int $storeId): void
     {

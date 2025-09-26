@@ -1,26 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData;
 
 class CutoffTime
 {
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration;
-
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration;
-
     public function __construct(
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        \MageSuite\GoogleStructuredData\Helper\Configuration $configuration
-    ) {
-        $this->productConfiguration = $productConfiguration;
-        $this->configuration = $configuration;
-    }
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration
+    ) {}
 
     public function getCutoffTimeData(\Magento\Framework\DataObject $data): array
     {
         $store = $data->getStore();
-        $storeId = $store ? $store->getId() : 0;
-        $website = $store ? $store->getWebsite() : 0;
+        $storeId = $store ? (int)$store->getId() : \Magento\Store\Model\Store::DEFAULT_STORE_ID;
+        $website = $store ? $store->getWebsite() : null;
 
         $cutoffTimeValue = $this->productConfiguration->getCutoffTime($storeId);
 
@@ -34,8 +29,6 @@ class CutoffTime
         $cutoffDateTimeFormatted = $cutoffDateTime->format('c');
         $cutoffTime = substr($cutoffDateTimeFormatted, strpos($cutoffDateTimeFormatted, 'T') + 1);
 
-        $data = ['cutoffTime' => $cutoffTime];
-
-        return $data;
+        return ['cutoffTime' => $cutoffTime];
     }
 }

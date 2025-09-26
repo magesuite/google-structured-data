@@ -1,26 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\Indexer;
 
 class ProductStructuredData implements \Magento\Framework\Indexer\ActionInterface, \Magento\Framework\Mview\ActionInterface
 {
     public const INDEXER_ID = 'product_structured_data';
 
-    protected \Magento\Catalog\Model\ResourceModel\Product $productResource;
-    protected \MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData\IndexBuilder $indexBuilder;
-    protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration;
-
     public function __construct(
-        \Magento\Catalog\Model\ResourceModel\Product $productResource,
-        \MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData\IndexBuilder $indexBuilder,
-        \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
-    ) {
-        $this->productResource = $productResource;
-        $this->indexBuilder = $indexBuilder;
-        $this->configuration = $configuration;
-    }
+        protected \Magento\Catalog\Model\ResourceModel\Product $productResource,
+        protected \MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData\IndexBuilder $indexBuilder,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration
+    ) {}
 
-    public function execute($ids): void
+    public function execute($ids): void // phpcs:ignore
     {
         $this->executeList($ids);
     }

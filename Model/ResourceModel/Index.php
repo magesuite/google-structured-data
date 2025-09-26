@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Model\ResourceModel;
 
 class Index
 {
     public const INDEX_TABLE_NAME = 'product_structured_data_index';
 
-    protected ?\Magento\Framework\DB\Adapter\AdapterInterface $connection;
-
-    public function __construct(\Magento\Framework\App\ResourceConnection $resourceConnection)
-    {
+    public function __construct(
+        protected \Magento\Framework\App\ResourceConnection $resourceConnection
+    ) {
         $this->connection = $resourceConnection->getConnection();
     }
+
+    protected ?\Magento\Framework\DB\Adapter\AdapterInterface $connection;
 
     public function startTransaction(): void
     {

@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Breadcrumbs
 {
-    protected \Magento\Framework\UrlInterface $url;
+    public function __construct(
+        protected \Magento\Framework\UrlInterface $url
+    ) {}
 
-    public function __construct(\Magento\Framework\UrlInterface $url)
-    {
-        $this->url = $url;
-    }
-
-    public function getBreadcrumbsData($breadcrumbs): array
+    public function getBreadcrumbsData($breadcrumbs): array // phpcs:ignore
     {
         $breadcrumbData = [
             "@context" => "http://schema.org",

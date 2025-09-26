@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edit\Tab\Front;
 
 class AddGoogleStructuredData
 {
-    protected \MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions $variesByOptions;
-
-    public function __construct(\MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions $variesByOptions)
-    {
-        $this->variesByOptions = $variesByOptions;
-    }
+    public function __construct(
+        protected \MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions $variesByOptions
+    ) {}
 
     public function afterSetForm(
         \Magento\Catalog\Block\Adminhtml\Product\Attribute\Edit\Tab\Front $subject,

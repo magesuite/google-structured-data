@@ -6,18 +6,12 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\FaqPage;
 
 class AccordionComponentQuestionList implements QuestionListInterface
 {
-    protected \Magento\Framework\Serialize\SerializerInterface $serializer;
-    protected \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionFactory $questionFactory;
-
     protected array $questionList = [];
 
     public function __construct(
-        \Magento\Framework\Serialize\SerializerInterface $serializer,
-        \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionFactory $questionFactory
-    ) {
-        $this->serializer = $serializer;
-        $this->questionFactory = $questionFactory;
-    }
+        protected \Magento\Framework\Serialize\SerializerInterface $serializer,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\QuestionFactory $questionFactory
+    ) {}
 
     /**
      * @return \MageSuite\GoogleStructuredData\Provider\Data\FaqPage\Question[]

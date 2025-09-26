@@ -30,12 +30,9 @@ class Product
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_DESCRIPTION = 'structured_data/product_page/configurable/use_parent_product_description';
     public const XML_CONFIG_PATH_CONFIGURABLE_DISPLAY_PRODUCT_GROUP_ELEMENT = 'structured_data/product_page/configurable/display_product_group_element';
 
-    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
-
-    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface)
-    {
-        $this->scopeConfig = $scopeConfigInterface;
-    }
+    public function __construct(
+        protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+    ) {}
 
     public function isEnabled(): bool
     {
@@ -66,12 +63,7 @@ class Product
     {
         $days = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
 
-        $businessDays = preg_split('/,/', $days);
-        if ($businessDays === false) {
-            $businessDays = [];
-        }
-
-        return $businessDays;
+        return explode(',', $days);
     }
 
     public function getCutoffTime(int $storeId): ?string
