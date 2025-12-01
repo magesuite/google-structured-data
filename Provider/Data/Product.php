@@ -22,10 +22,13 @@ class Product
     {
         $cacheKey = $this->getCacheKey($product, $store);
         $cacheLifetime = $this->productConfiguration->getCacheLifetime();
-        $cachedData = $this->cache->load($cacheKey);
 
-        if ($cacheLifetime && $cachedData) {
-            return $this->serializer->unserialize($cachedData);
+        if ($cacheLifetime > 0) {
+            $cachedData = $this->cache->load($cacheKey);
+
+            if ($cachedData) {
+                return $this->serializer->unserialize($cachedData);
+            }
         }
 
         $productData = $this->getProductsData($product, $store);
