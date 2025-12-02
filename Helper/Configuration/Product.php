@@ -11,7 +11,6 @@ class Product
     public const XML_CONFIG_PATH_CACHE_LIFETIME = 'structured_data/product_page/cache_lifetime';
     public const XML_CONFIG_PATH_SHOW_RATING = 'structured_data/product_page/show_rating';
     public const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
-    public const XML_CONFIG_PATH_ATTRIBUTE_LIST = 'structured_data/product_page/attribute_list';
 
     public const XML_CONFIG_PATH_DELIVERY_DATA_ENABLED = 'structured_data/product_page/delivery_data/is_enabled';
     public const XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS = 'structured_data/product_page/delivery_data/business_days';
@@ -97,16 +96,6 @@ class Product
         $attributesConfig = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_ATTRIBUTES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
         return $attributesConfig[$attributeCode] ?? null;
-    }
-
-    public function getAttributeList(?int $storeId = null): array
-    {
-        $values = $this->scopeConfig->getValue(
-            self::XML_CONFIG_PATH_ATTRIBUTE_LIST,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-        return trim($values) ? explode(',', $values) : [];
     }
 
     public function isUseParentProductUrlForGrouped(): bool

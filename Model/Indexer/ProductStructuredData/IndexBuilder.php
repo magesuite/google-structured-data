@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class IndexBuilder
 {
     public const DEFAULT_BUNCH_SIZE = 500;
@@ -20,7 +17,6 @@ class IndexBuilder
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeProvider,
         protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Index $indexResourceModel,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
         protected \Psr\Log\LoggerInterface $logger,
         protected int $bunchSize = self::DEFAULT_BUNCH_SIZE
     ) {}
@@ -47,7 +43,7 @@ class IndexBuilder
             $collection = $this->productCollectionFactory->create();
             $collection->addStoreFilter($store);
             $collection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-            $collection->addAttributeToSelect($this->getAttributeList($store));
+            $collection->addAttributeToSelect($this->getAttributeList());
             $collection->addIdFilter($idsChunk);
             $collection->addUrlRewrite();
             $collection->addMediaGalleryData();
@@ -56,13 +52,8 @@ class IndexBuilder
         }
     }
 
-    public function getAttributeList(\Magento\Store\Api\Data\StoreInterface $store): array
+    public function getAttributeList(): array
     {
-        $attributeList = $this->configuration->getAttributeList((int) $store->getId());
-        if ($attributeList) {
-            return $attributeList;
-        }
-
         return array_unique(array_merge(
             $this->compositeAttributeProvider->getEavAttributeCodes(),
             $this->catalogConfig->getProductAttributes()
