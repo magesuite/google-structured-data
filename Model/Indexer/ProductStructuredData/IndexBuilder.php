@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class IndexBuilder
 {
     public const DEFAULT_BUNCH_SIZE = 500;
