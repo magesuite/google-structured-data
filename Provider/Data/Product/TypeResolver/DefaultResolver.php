@@ -15,7 +15,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\ProductPrice $productPrice
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -66,12 +67,12 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, string $currency): array
     {
-        $productPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-
+        $priceData = $this->productPrice->getProductPrice((int) $product->getId(), (int) $store->getWebsiteId());
+        $price = $priceData ? $priceData['final_price'] : $product->getPriceInfo()->getPrice(\Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE)->getAmount()->getValue();
         $data = [
             '@type' => 'Offer',
             'sku' => $this->escaper->escapeHtml($product->getSku()),
-            'price' => number_format($productPrice, 2, '.', ''),
+            'price' => number_format((float) $price, 2, '.', ''),
             'priceCurrency' => $currency,
             'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             'url' => $product->getProductUrl()
