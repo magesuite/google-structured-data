@@ -8,13 +8,18 @@ class Index
 {
     public const INDEX_TABLE_NAME = 'product_structured_data_index';
 
+    protected \Magento\Framework\DB\Adapter\AdapterInterface $connection;
+
     public function __construct(
         protected \Magento\Framework\App\ResourceConnection $resourceConnection
     ) {
         $this->connection = $resourceConnection->getConnection();
     }
 
-    protected ?\Magento\Framework\DB\Adapter\AdapterInterface $connection;
+    public function getMainTable(): string
+    {
+        return $this->connection->getTableName(self::INDEX_TABLE_NAME);
+    }
 
     public function startTransaction(): void
     {
@@ -34,7 +39,7 @@ class Index
     public function insert(array $data): int
     {
         return $this->connection->insertMultiple(
-            $this->connection->getTableName(self::INDEX_TABLE_NAME),
+            $this->getMainTable(),
             $data
         );
     }
@@ -45,23 +50,20 @@ class Index
             'store_id = ?' => $storeId,
             'product_id IN (?)' => $productIds,
         ];
-
         $this->connection->delete(
-            $this->connection->getTableName(self::INDEX_TABLE_NAME),
+            $this->getMainTable(),
             $where
         );
     }
 
-    public function getByProductIdsAndStoreId(array $productIds, int $storeId): ?array
+    public function getByProductIdsAndStoreId(array $productIds, int $storeId): array
     {
         $select = $this->connection
             ->select()
-            ->from($this->connection->getTableName(self::INDEX_TABLE_NAME), ['product_id', 'data'])
+            ->from($this->getMainTable(), ['product_id', 'data'])
             ->where('product_id IN (?)', $productIds)
             ->where('store_id = ?', $storeId);
-
         $result = [];
-
         $data = $this->connection->fetchPairs($select);
 
         foreach ($productIds as $productId) {

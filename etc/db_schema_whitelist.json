@@ -15,5 +15,16 @@
             "varies_by": true,
             "vary_attribute_code": true
         }
+    },
+    "product_structured_data_index_replica": {
+        "column": {
+            "product_id": true,
+            "store_id": true,
+            "data": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="google_structured_data_daily_update" instance="MageSuite\GoogleStructuredData\Cron\DailyCatalogUpdate" method="execute">
+            <config_path>structured_data/product_page/indexer_cron_schedule</config_path>
+        </job>
+    </group>
+</config>

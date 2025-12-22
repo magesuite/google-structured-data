@@ -13,7 +13,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected ?\Magento\Store\Model\StoreManagerInterface $storeManager;
     protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
     protected ?\Magento\Review\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory;
-    protected ?\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData $indexer;
+    protected ?\MageSuite\GoogleStructuredData\Model\Indexer\Product $indexer;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData $deliveryDataModifier;
 
@@ -25,12 +25,10 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->storeManager = $this->objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
         $this->productRepository = $this->objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
         $this->reviewCollectionFactory = $this->objectManager->get(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
-        $this->indexer = $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Indexer\ProductStructuredData::class);
+        $this->indexer = $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Indexer\Product::class);
         $this->deliveryDataModifier = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData::class);
 
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
-
-        $this->indexer->executeFull();
     }
 
     public function tearDown(): void
@@ -63,6 +61,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('simple');
+        $this->indexer->executeRow($product->getId());
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         foreach ($expectedData as $key => $data) {
@@ -99,6 +98,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('simple_special_price');
+        $this->indexer->executeRow($product->getId());
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         foreach ($expectedData as $key => $data) {
@@ -116,6 +116,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testProductDataWithReviews(): void
     {
         $product = $this->productRepository->get('simple');
+        $this->indexer->executeRow($product->getId());
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $reviewCollection = $this->reviewCollectionFactory->create();
@@ -194,7 +195,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'itemCondition' => 'NewCondition'
         ];
         $expectedOffersCount = 2;
-
+        $this->indexer->executeRow($product->getId());
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $this->assertEquals($expectedProductGroupData, $productData[0]);
@@ -230,6 +231,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('grouped-product');
+        $this->indexer->executeRow($product->getId());
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $this->assertEquals($expectedProductCounts, count($productData));
@@ -305,6 +307,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $product = $this->productRepository->get('simple_special_price');
+        $this->indexer->executeRow($product->getId());
         $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
 
         $shippingDetails = array_shift($productData['offers']['shippingDetails']);

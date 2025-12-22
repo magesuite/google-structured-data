@@ -6,7 +6,7 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
 class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
-    protected \Magento\Catalog\Api\Data\ProductInterface $parentProduct;
+    protected ?\Magento\Catalog\Api\Data\ProductInterface $parentProduct = null;
 
     public function isApplicable(string $productTypeId): bool
     {
@@ -16,9 +16,10 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
     public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $productData = [];
-
         $this->setParentProduct($product);
         $associatedProducts = $product->getTypeInstance()->getAssociatedProducts($product);
+        $this->inventoryData->addStockDataToProducts($associatedProducts, (int)$store->getId());
+        
         foreach ($associatedProducts as $associatedProduct) {
             $associatedProductData = $this->getProductStructuredData($associatedProduct, $store);
 
@@ -62,7 +63,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         $this->parentProduct = $product;
     }
 
-    public function getParentProduct(): \Magento\Catalog\Api\Data\ProductInterface
+    public function getParentProduct(): ?\Magento\Catalog\Api\Data\ProductInterface
     {
         return $this->parentProduct;
     }

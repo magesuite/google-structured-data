@@ -61,6 +61,22 @@
         </arguments>
     </type>
 
+    <type name="MageSuite\GoogleStructuredData\Model\Indexer\Product\Action\Full">
+        <arguments>
+            <argument name="dimensionProvider" xsi:type="object" shared="false">
+                Magento\Store\Model\StoreDimensionProvider
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="MageSuite\GoogleStructuredData\Model\Indexer\Product\Action\Rows">
+        <arguments>
+            <argument name="dimensionProvider" xsi:type="object" shared="false">
+                Magento\Store\Model\StoreDimensionProvider
+            </argument>
+        </arguments>
+    </type>
+
     <type name="Magento\GroupedProduct\Model\Product\Type\Grouped">
         <plugin name="google_structured_data_add_attributes_to_associated_products" type="MageSuite\GoogleStructuredData\Plugin\GroupedProduct\Model\Product\Type\Grouped\AddAttributesToAssociatedProducts" sortOrder="10"/>
     </type>

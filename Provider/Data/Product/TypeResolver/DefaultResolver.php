@@ -15,7 +15,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -67,16 +68,14 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, string $currency): array
     {
         $productPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
-
         $data = [
             '@type' => 'Offer',
             'sku' => $this->escaper->escapeHtml($product->getSku()),
             'price' => number_format($productPrice, 2, '.', ''),
             'priceCurrency' => $currency,
-            'availability' => $product->getIsSalable() ? self::IN_STOCK : self::OUT_OF_STOCK,
+            'availability' => $product->isAvailable() ? self::IN_STOCK : self::OUT_OF_STOCK,
             'url' => $product->getProductUrl()
         ];
-
         $specialFromDate = $product->getSpecialFromDate();
         $specialToDate = $product->getSpecialToDate();
         $inRange = $this->timezone->isScopeDateInInterval($store, $specialFromDate, $specialToDate);
@@ -122,11 +121,13 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product): array
     {
         $mediaGallery = $product->getMediaGalleryImages();
+
         if (!is_array($mediaGallery->getItems())) {
             return [];
         }
 
         $images = [];
+        
         foreach ($mediaGallery as $image) {
             $images[] = $image->getUrl();
         }

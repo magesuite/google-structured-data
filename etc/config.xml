@@ -26,6 +26,7 @@
             <product_page>
                 <is_enabled>1</is_enabled>
                 <is_indexing_enabled>1</is_indexing_enabled>
+                <indexer_cron_schedule>0 3 * * *</indexer_cron_schedule>
                 <cache_lifetime>86400</cache_lifetime>
                 <show_rating>1</show_rating>
                 <attributes>
