@@ -10,6 +10,16 @@
             <column name="store_id"/>
         </constraint>
     </table>
+    <table name="product_structured_data_index_replica" resource="default" engine="innodb">
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Entity ID"/>
+        <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" comment="Entity ID"/>
+        <column xsi:type="mediumtext" name="data" nullable="true" comment="Structure Data"/>
+        <column xsi:type="datetime" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+            <column name="store_id"/>
+        </constraint>
+    </table>
     <table name="catalog_eav_attribute" resource="default" engine="innodb">
         <column name="varies_by" xsi:type="varchar" length="255" nullable="true" comment="Google Structured Data Varies By Attribute"/>
         <column name="vary_attribute_code" xsi:type="varchar" length="255" nullable="true" comment="Google Structured Data Vary Attribute Code"/>

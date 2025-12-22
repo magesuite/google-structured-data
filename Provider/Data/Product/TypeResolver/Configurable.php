@@ -35,6 +35,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $currency = $store->getCurrentCurrencyCode();
 
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+        $this->inventoryData->addStockDataToProducts($simpleProducts, (int)$store->getId());
         $productUrl = $product->getProductUrl();
 
         foreach ($simpleProducts as $simpleProduct) {
