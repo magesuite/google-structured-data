@@ -20,6 +20,10 @@ class Product
     public const XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_VALUE = 'structured_data/product_page/delivery_data/transit_time_value';
     public const XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_UNIT_CODE = 'structured_data/product_page/delivery_data/transit_time_unit_code';
 
+    public const XML_CONFIG_PATH_AUDIENCE_IS_ENABLED = 'structured_data/product_page/audience/is_enabled';
+    public const XML_CONFIG_PATH_AUDIENCE_SUGGESTED_GENDER = 'structured_data/product_page/audience/suggested_gender';
+    public const XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE = 'structured_data/product_page/audience/suggested_min_age';
+
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/grouped/use_parent_product_url';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS = 'structured_data/product_page/grouped/use_parent_product_reviews';
@@ -89,6 +93,21 @@ class Product
     public function getTransitTimeUnit(int $storeId): ?string
     {
         return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_TRANSIT_TIME_UNIT_CODE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function isAudienceEnabled(int $storeId): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_AUDIENCE_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getAudienceSuggestedGender(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_GENDER, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getAudienceSuggestedMinAge(int $storeId): int
+    {
+        return (int)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function getConfiguredAttribute(string $attributeCode): ?string

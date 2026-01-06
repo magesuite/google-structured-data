@@ -24,6 +24,10 @@
                     <item name="modifier" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData</item>
                     <item name="sort_order" xsi:type="number">10</item>
                 </item>
+                <item name="audience" xsi:type="array">
+                    <item name="modifier" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\Audience</item>
+                    <item name="sort_order" xsi:type="number">20</item>
+                </item>
             </argument>
         </arguments>
     </type>
