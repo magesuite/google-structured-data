@@ -33,7 +33,7 @@
             <argument name="attributeDataProviders" xsi:type="array">
                 <item name="description" xsi:type="array">
                     <item name="attribute_name" xsi:type="string">description</item>
-                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Eav</item>
+                    <item name="class" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Description</item>
                     <item name="type" xsi:type="string">configured_eav</item>
                     <item name="disabled" xsi:type="boolean">false</item>
                 </item>
