@@ -46,7 +46,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             '@type' => 'Product',
             'name' => 'Simple Product',
             'image' => [],
-            'description' => 'Description with &lt;b&gt;html tag&lt;/b&gt;',
+            'description' => 'Description with html tag',
             'sku' => 'simple',
             'url' => 'http://localhost/index.php/simple-product.html',
             'itemCondition' => 'NewCondition'
@@ -82,7 +82,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             '@type' => 'Product',
             'name' => 'Simple Product with Special Price',
             'image' => [],
-            'description' => 'Description with &lt;b&gt;html tag&lt;/b&gt;',
+            'description' => 'Description with html tag',
             'sku' => 'simple_special_price',
             'url' => 'http://localhost/index.php/simple-product-with-special-price.html',
             'itemCondition' => 'NewCondition'

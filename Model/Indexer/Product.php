@@ -15,12 +15,20 @@ class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Fr
 
     public function execute($ids): void
     {
+        if (!$this->configuration->isIndexingEnabled()) {
+            return;
+        }
+
         $this->rowsAction->execute($ids);
         $this->cacheContext->registerEntities(\Magento\Catalog\Model\Product::CACHE_TAG, $ids);
     }
 
     public function executeFull(): void
     {
+        if (!$this->configuration->isIndexingEnabled()) {
+            return;
+        }
+
         $this->fullAction->execute();
         $this->cacheContext->registerTags(
             [
