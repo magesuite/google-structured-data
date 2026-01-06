@@ -16,6 +16,8 @@ class Organization
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_ENABLED = 'structured_data/organization/return_policy/is_enabled';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_CATEGORY = 'structured_data/organization/return_policy/return_policy_category';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_DAYS = 'structured_data/organization/return_policy/return_days';
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_METHOD = 'structured_data/organization/return_policy/return_method';
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_FEES = 'structured_data/organization/return_policy/return_fees';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_LINK = 'structured_data/organization/return_policy/return_policy_link';
 
     public function __construct(
@@ -65,6 +67,16 @@ class Organization
     public function getReturnDays(int $storeId): int
     {
         return (int)$this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_DAYS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getReturnMethod(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_METHOD, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getReturnFees(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_FEES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function getReturnPolicyLink(int $storeId): ?string

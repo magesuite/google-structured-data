@@ -32,6 +32,8 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture current_store structured_data/organization/return_policy/is_enabled 1
      * @magentoConfigFixture current_store structured_data/organization/return_policy/return_policy_category MerchantReturnFiniteReturnWindow
      * @magentoConfigFixture current_store structured_data/organization/return_policy/return_days 7
+     * @magentoConfigFixture current_store structured_data/organization/return_policy/return_method ReturnByMail
+     * @magentoConfigFixture current_store structured_data/organization/return_policy/return_fees FreeReturn
      */
     public function testItReturnOrganizationDataCorrectly(): void
     {
@@ -60,7 +62,9 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
                 '@type' => 'MerchantReturnPolicy',
                 'applicableCountry' => 'US',
                 'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
-                'merchantReturnDays' => 7
+                'merchantReturnDays' => 7,
+                'returnMethod' => 'https://schema.org/ReturnByMail',
+                'returnFees' => 'https://schema.org/FreeReturn'
             ]
         ];
 

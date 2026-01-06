@@ -111,6 +111,8 @@ class Organization
         $country = $this->configuration->getCountryByWebsite($store->getWebsite());
         $returnPolicyCategory = $this->organizationConfiguration->getReturnPolicyCategory((int)$store->getId());
         $returnPolicyLink = $this->organizationConfiguration->getReturnPolicyLink((int)$store->getId());
+        $returnMethod = $this->organizationConfiguration->getReturnMethod((int)$store->getId());
+        $returnFees = $this->organizationConfiguration->getReturnFees((int)$store->getId());
 
         $returnPolicyData = ['@type' => 'MerchantReturnPolicy'];
 
@@ -127,6 +129,14 @@ class Organization
 
         if ($returnPolicyCategory === \MageSuite\GoogleStructuredData\Model\Config\Source\ReturnPolicyCategory::FINITE_RETURN_WINDOW) {
             $returnPolicyData['merchantReturnDays'] = $this->organizationConfiguration->getReturnDays((int)$store->getId());
+        }
+
+        if ($returnMethod) {
+            $returnPolicyData['returnMethod'] = sprintf('https://schema.org/%s', $returnMethod);
+        }
+
+        if ($returnFees) {
+            $returnPolicyData['returnFees'] = sprintf('https://schema.org/%s', $returnFees);
         }
 
         $organizationData['hasMerchantReturnPolicy'] = $returnPolicyData;
