@@ -127,7 +127,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         $images = [];
-        
+
         foreach ($mediaGallery as $image) {
             $images[] = $image->getUrl();
         }
@@ -140,7 +140,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         $row = [
             '@type' => 'Review',
             'author' => ['@type' => 'Person', 'name' => $this->escaper->escapeHtml($review->getNickname())],
-            'datePublished' => $review->getCreatedAt(),
+            'datePublished' => $this->timezone->date($review->getCreatedAt())->format(\DateTime::ATOM),
             'description' => $this->escaper->escapeHtml($review->getDetail()),
             'name' => $this->escaper->escapeHtml($review->getTitle())
         ];

@@ -96,7 +96,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
                     [
                         "@type" => "Review",
                         "author" => "Test User",
-                        "datePublished" => "2018-10-10 14:30:26",
+                        "datePublished" => "2016-04-09T14:30:00+02:00",
                         "description" => "Review description",
                         "name" => "Review title"
                     ],
