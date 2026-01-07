@@ -92,7 +92,21 @@
                         <comment>This field is only applicable for "Merchant Return Finite Return Window".</comment>
                         <validate>required-entry validate-digits validate-greater-than-zero</validate>
                     </field>
-                    <field id="return_policy_link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="return_method" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <depends>
+                            <field id="structured_data/organization/return_policy/return_policy_category">MerchantReturnFiniteReturnWindow</field>
+                        </depends>
+                        <label>Return Method</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnMethod</source_model>
+                    </field>
+                    <field id="return_fees" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <depends>
+                            <field id="structured_data/organization/return_policy/return_policy_category">MerchantReturnFiniteReturnWindow</field>
+                        </depends>
+                        <label>Return Fees</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnFees</source_model>
+                    </field>
+                    <field id="return_policy_link" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Return Policy Link</label>
                         <comment>When defined it will replace other return policy data.</comment>
                     </field>
