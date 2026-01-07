@@ -35,6 +35,10 @@
                 <delivery_data>
                     <is_enabled>0</is_enabled>
                 </delivery_data>
+                <audience>
+                    <suggested_gender>unisex</suggested_gender>
+                    <suggested_min_age>18</suggested_min_age>
+                </audience>
                 <grouped>
                     <use_parent_product_url>1</use_parent_product_url>
                     <use_parent_product_images>1</use_parent_product_images>

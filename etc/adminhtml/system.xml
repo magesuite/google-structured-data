@@ -257,6 +257,22 @@
                         <comment>Defines the unit of handling time (d - days, h - hours, min - minutes, s - seconds)</comment>
                     </field>
                 </group>
+                <group id="audience" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Audience</label>
+                    <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Defines if audience should be displayed in the structured data</comment>
+                    </field>
+                    <field id="suggested_gender" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Suggested Gender</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\AudienceSuggestedGender</source_model>
+                    </field>
+                    <field id="suggested_min_age" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Suggested Min Age</label>
+                        <validate>validate-digits validate-greater-than-zero</validate>
+                    </field>
+                </group>
                 <group id="grouped" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Grouped Products</label>
                     <field id="use_parent_product_url" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
