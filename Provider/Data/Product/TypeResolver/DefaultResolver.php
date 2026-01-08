@@ -33,10 +33,10 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     {
         $productData = $this->getBaseProductData($product, $store);
         $offerData = $this->getOffers($product, $store);
-
         $reviewsData = $this->getReviewsData($product, $store);
+        $audienceData = $this->getAudienceData($store);
 
-        return array_merge($productData, $offerData, $reviewsData);
+        return array_merge($productData, $offerData, $reviewsData, $audienceData);
     }
 
     public function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -157,5 +157,27 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         return $row;
+    }
+
+    public function getAudienceData(\Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        if (!$this->productConfiguration->isAudienceEnabled((int)$store->getId())) {
+            return [];
+        }
+
+        $suggestedGender = $this->productConfiguration->getAudienceSuggestedGender((int)$store->getId());
+        $suggestedMinAge = $this->productConfiguration->getAudienceSuggestedMinAge((int)$store->getId());
+
+        if (empty($suggestedGender) && empty($suggestedMinAge)) {
+            return [];
+        }
+
+        return [
+            'audience' => [
+                '@type' => 'PeopleAudience',
+                'suggestedGender' => $suggestedGender,
+                'suggestedMinAge' => $suggestedMinAge
+            ]
+        ];
     }
 }
