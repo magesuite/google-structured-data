@@ -58,7 +58,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             '@context' => 'https://schema.org/',
             '@type' => 'ProductGroup',
             'name' => $this->escaper->escapeHtml($product->getName()),
-            'description' => $this->escaper->escapeHtml($product->getDescription()),
+            'description' => strip_tags((string)$product->getDescription()),
             'hasVariant' => $this->getVariants($product, $store),
             'productGroupID' => $product->getSku(),
             'url' => $product->getProductUrl(),
