@@ -12,6 +12,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     public function __construct(
         protected \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         protected \Magento\Framework\Escaper $escaper,
+        protected \Magento\Framework\Filter\StripTags $stripTagsFilter,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
@@ -141,7 +142,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             '@type' => 'Review',
             'author' => ['@type' => 'Person', 'name' => $this->escaper->escapeHtml($review->getNickname())],
             'datePublished' => $this->timezone->date($review->getCreatedAt())->format(\DateTime::ATOM),
-            'description' => $this->escaper->escapeHtml($review->getDetail()),
+            'description' => $this->stripTagsFilter->filter($review->getDetail()),
             'name' => $this->escaper->escapeHtml($review->getTitle())
         ];
 

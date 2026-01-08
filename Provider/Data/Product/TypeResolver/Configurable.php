@@ -58,7 +58,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             '@context' => 'https://schema.org/',
             '@type' => 'ProductGroup',
             'name' => $this->escaper->escapeHtml($product->getName()),
-            'description' => strip_tags((string)$product->getDescription()),
+            'description' => $this->stripTagsFilter->filter($product->getDescription()),
             'hasVariant' => $this->getVariants($product, $store),
             'productGroupID' => $product->getSku(),
             'url' => $product->getProductUrl(),
@@ -119,7 +119,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             }
 
             if ($isUseParentDescription || empty($variant['description'])) {
-                $variant['description'] = $product->getDescription();
+                $variant['description'] = $this->stripTagsFilter->filter($product->getDescription());
             }
 
             foreach ($superAttributes as $attribute) {
