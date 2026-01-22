@@ -93,16 +93,10 @@
                         <validate>required-entry validate-digits validate-greater-than-zero</validate>
                     </field>
                     <field id="return_method" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <depends>
-                            <field id="structured_data/organization/return_policy/return_policy_category">MerchantReturnFiniteReturnWindow</field>
-                        </depends>
                         <label>Return Method</label>
                         <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnMethod</source_model>
                     </field>
                     <field id="return_fees" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <depends>
-                            <field id="structured_data/organization/return_policy/return_policy_category">MerchantReturnFiniteReturnWindow</field>
-                        </depends>
                         <label>Return Fees</label>
                         <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnFees</source_model>
                     </field>

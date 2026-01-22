@@ -118,10 +118,6 @@ class Organization
 
         if ($returnPolicyLink) {
             $returnPolicyData['merchantReturnLink'] = $returnPolicyLink;
-
-            $organizationData['hasMerchantReturnPolicy'] = $returnPolicyData;
-
-            return $organizationData;
         }
 
         $returnPolicyData['applicableCountry'] = $country;
