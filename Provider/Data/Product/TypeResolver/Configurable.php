@@ -54,16 +54,22 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             return [];
         }
 
-        return [
+        $variants = $this->getVariants($product, $store);
+        $groupData = [
             '@context' => 'https://schema.org/',
             '@type' => 'ProductGroup',
             'name' => $this->escaper->escapeHtml($product->getName()),
             'description' => $this->stripTagsFilter->filter($product->getDescription()),
-            'hasVariant' => $this->getVariants($product, $store),
             'productGroupID' => $product->getSku(),
             'url' => $product->getProductUrl(),
             'variesBy' => $this->getVariesBy($product)
         ];
+
+        if (!empty($variants)) {
+            $groupData['hasVariant'] = $variants;
+        }
+
+        return $groupData;
     }
 
     protected function getVariesBy(\Magento\Catalog\Api\Data\ProductInterface $product): array
