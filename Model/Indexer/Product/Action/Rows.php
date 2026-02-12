@@ -45,28 +45,37 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
 
     protected function syncData(array $dimensions, array $entityIds): void
     {
-        $storeId = (int)$dimensions[\Magento\Store\Model\StoreDimensionProvider::DIMENSION_NAME]->getValue();
-        $connection = $this->resourceConnection->getConnection();
-        $connection->delete(
-            $this->tableMaintainer->getMainTable(),
-            [
-                'product_id IN (?)' => $entityIds,
-                'store_id = ?' => $storeId
-            ]
-        );
-        $select = $connection->select()
-            ->from(
-                $this->tableMaintainer->getMainTmpTable($dimensions),
-                ['*']
-            );
-        $connection->query(
-            $connection->insertFromSelect(
-                $select,
+        try {
+            $this->resourceConnection->getConnection()->beginTransaction();
+
+            $storeId = (int)$dimensions[\Magento\Store\Model\StoreDimensionProvider::DIMENSION_NAME]->getValue();
+            $connection = $this->resourceConnection->getConnection();
+            $connection->delete(
                 $this->tableMaintainer->getMainTable(),
-                []
-            )
-        );
-        $this->tableMaintainer->dropTableForDimensions($dimensions);
+                [
+                    'product_id IN (?)' => $entityIds,
+                    'store_id = ?' => $storeId
+                ]
+            );
+            $select = $connection->select()
+                ->from(
+                    $this->tableMaintainer->getMainTmpTable($dimensions),
+                    ['*']
+                );
+            $connection->query(
+                $connection->insertFromSelect(
+                    $select,
+                    $this->tableMaintainer->getMainTable(),
+                    []
+                )
+            );
+            $this->tableMaintainer->dropTableForDimensions($dimensions);
+
+            $this->resourceConnection->getConnection()->commit();
+        } catch (\Exception $e) {
+            $this->resourceConnection->getConnection()->rollBack();
+            throw $e;
+        }
     }
 
     protected function buildIndex(array $dimensions, \Magento\Catalog\Model\ResourceModel\Product\Collection $products): void
