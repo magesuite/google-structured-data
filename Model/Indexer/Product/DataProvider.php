@@ -8,6 +8,8 @@ class DataProvider
 {
     protected const DEPLOYMENT_CONFIG_INDEXER_BATCHES = 'indexer/batch_size/';
 
+    protected ?array $attributeList = null;
+
     public function __construct(
         protected \Magento\Catalog\Model\Config $catalogConfig,
         protected \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
@@ -28,6 +30,7 @@ class DataProvider
         $collection = $this->productCollectionFactory->create();
         $collection->addStoreFilter($storeId);
         $collection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+        $collection->addAttributeToFilter('visibility', ['neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE]);
         $collection->addAttributeToSelect($this->getAttributeList());
         $this->inventoryData->addStockDataToCollection($collection, $storeId);
 
@@ -54,10 +57,16 @@ class DataProvider
 
     public function getAttributeList(): array
     {
-        return array_unique(array_merge(
+        if ($this->attributeList !== null) {
+            return $this->attributeList;
+        }
+
+        $this->attributeList = array_unique(array_merge(
             $this->compositeAttributeProvider->getEavAttributeCodes(),
             $this->catalogConfig->getProductAttributes()
         ));
+
+        return $this->attributeList;
     }
 
     public function getBatchSize(): int
