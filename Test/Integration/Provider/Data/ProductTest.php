@@ -159,7 +159,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'price' => '10.00',
                         'priceCurrency' => 'USD',
                         'availability' => 'InStock',
-                        'url' => 'http://localhost/index.php/' . $simpleProducts[0]->getUrlKey()
+                        'url' => $simpleProducts[0]->getProductUrl()
                     ],
                     'description' => null
                 ],
@@ -178,7 +178,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'price' => '20.00',
                         'priceCurrency' => 'USD',
                         'availability' => 'InStock',
-                        'url' => 'http://localhost/index.php/' . $simpleProducts[1]->getUrlKey()
+                        'url' => $simpleProducts[1]->getProductUrl()
                     ],
                     'description' => null
                 ]
