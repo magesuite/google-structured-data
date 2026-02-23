@@ -9,6 +9,9 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
     public const IN_STOCK = 'InStock';
     public const OUT_OF_STOCK = 'OutOfStock';
 
+    protected array $cachedOfferData = [];
+    protected array $cachedProductData = [];
+
     public function __construct(
         protected \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         protected \Magento\Framework\Escaper $escaper,
@@ -42,6 +45,12 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getBaseProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
+        $cacheKey = sprintf('%d_%d', $product->getId(), $store->getId());
+
+        if (isset($this->cachedProductData[$cacheKey])) {
+            return $this->cachedProductData[$cacheKey];
+        }
+
         $structuredData = [
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
@@ -53,8 +62,9 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         ];
 
         $attributeData = $this->compositeAttributeDataProvider->getAttributeData($product);
+        $this->cachedProductData[$cacheKey] = array_merge($structuredData, $attributeData);
 
-        return array_merge($structuredData, $attributeData);
+        return $this->cachedProductData[$cacheKey];
     }
 
     public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -68,6 +78,12 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, string $currency): array
     {
+        $cacheKey = sprintf('%d_%d_%s', $product->getId(), $store->getId(), $currency);
+
+        if (isset($this->cachedOfferData[$cacheKey])) {
+            return $this->cachedOfferData[$cacheKey];
+        }
+
         $productPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
         $data = [
             '@type' => 'Offer',
@@ -85,7 +101,9 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             $data['priceValidUntil'] = date('Y-m-d', strtotime($specialToDate));
         }
 
-        return $data;
+        $this->cachedOfferData[$cacheKey] = $data;
+
+        return $this->cachedOfferData[$cacheKey];
     }
 
     public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
