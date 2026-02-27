@@ -31,7 +31,7 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
             $collection = $this->dataProvider->getProducts($dimensions, $entityIdsChunk, 0);
             $this->prepareIndexTable($dimensions);
             $this->buildIndex($dimensions, $collection);
-            $this->syncData($dimensions, $entityIds);
+            $this->syncData($dimensions, $entityIdsChunk);
         }
     }
 

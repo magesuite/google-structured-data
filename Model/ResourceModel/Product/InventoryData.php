@@ -15,30 +15,16 @@ class InventoryData
         protected \Magento\Framework\App\ResourceConnection $resourceConnection
     ) {}
 
-    public function addStockDataToCollection(\Magento\Catalog\Model\ResourceModel\Product\Collection $collection, int $storeId): void
-    {
-        $websiteId = $this->getWebsiteId($storeId);
-        $stockId = $this->getStockId($websiteId);
-        $tableName = $this->stockIndexTableNameResolver->execute($stockId);
-        $collection->getSelect()->joinLeft(
-            ['stock_index' => $tableName],
-            'e.sku = stock_index.' . \Magento\InventoryIndexer\Indexer\IndexStructure::SKU,
-            [
-                'is_salable' => 'stock_index.' . \Magento\InventoryIndexer\Indexer\IndexStructure::IS_SALABLE
-            ]
-        );
-    }
-
     public function addStockDataToProducts(array $products, int $storeId): void
     {
         $skus = array_map(function ($product) {
             return $product->getSku();
         }, $products);
 
-        if (empty($skus))  {
+        if (empty($skus)) {
             return;
         }
-        
+
         $websiteId = $this->getWebsiteId($storeId);
         $stockId = $this->getStockId($websiteId);
         $tableName = $this->stockIndexTableNameResolver->execute($stockId);
@@ -60,7 +46,7 @@ class InventoryData
         }
     }
 
-    protected function getWebsiteId($storeId): int
+    protected function getWebsiteId(int $storeId): int
     {
         return (int)$this->storeManager->getStore($storeId)->getWebsiteId();
     }

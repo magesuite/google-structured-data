@@ -18,7 +18,7 @@ class Full implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         protected \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {}
 
-    public function execute(): Full
+    public function execute(): self
     {
         $this->clearReplicaTable();
         $this->reindex();
