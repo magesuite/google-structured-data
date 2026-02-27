@@ -61,6 +61,22 @@
         </arguments>
     </type>
 
+    <type name="MageSuite\GoogleStructuredData\Model\Product\AttributeList">
+        <arguments>
+            <argument name="attributeList" xsi:type="array">
+                <item name="description" xsi:type="string">description</item>
+                <item name="image" xsi:type="string">image</item>
+                <item name="name" xsi:type="string">name</item>
+                <item name="price" xsi:type="string">price</item>
+                <item name="special_from_date" xsi:type="string">special_from_date</item>
+                <item name="special_price" xsi:type="string">special_price</item>
+                <item name="special_to_date" xsi:type="string">special_to_date</item>
+                <item name="status" xsi:type="string">status</item>
+                <item name="url_key" xsi:type="string">url_key</item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="MageSuite\GoogleStructuredData\Model\Indexer\Product\Action\Full">
         <arguments>
             <argument name="dimensionProvider" xsi:type="object" shared="false">
