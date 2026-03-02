@@ -9,15 +9,21 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
     public function __construct(
         protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\DataProvider $dataProvider,
         protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\TableMaintainer $tableMaintainer,
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Indexer\Product\Action\Rows $rowsResourceModel,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         protected \Magento\Framework\Serialize\SerializerInterface $serializer,
         protected \Magento\Framework\App\ResourceConnection $resourceConnection,
         protected \Magento\Framework\Indexer\DimensionProviderInterface $dimensionProvider,
         protected \Magento\Store\Model\StoreManagerInterface $storeManager
-    ) {}
+    ) {
+    }
 
     public function execute(array $entityIds): void
     {
+        if (!empty($entityIds)) {
+            $entityIds = array_unique(array_merge($entityIds, $this->rowsResourceModel->getRelationsByChild($entityIds)));
+        }
+
         foreach ($this->dimensionProvider->getIterator() as $dimension) {
             $this->executeByDimensions($dimension, new \ArrayIterator($entityIds));
         }
@@ -28,7 +34,7 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         $entityIds = iterator_to_array($entityIds);
 
         foreach (array_chunk($entityIds, $this->dataProvider->getBatchSize()) as $entityIdsChunk) {
-            $collection = $this->dataProvider->getProducts($dimensions, $entityIdsChunk, 0);
+            $collection = $this->dataProvider->getProducts($dimensions, $entityIdsChunk);
             $this->prepareIndexTable($dimensions);
             $this->buildIndex($dimensions, $collection);
             $this->syncData($dimensions, $entityIdsChunk);
