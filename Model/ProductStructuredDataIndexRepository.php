@@ -20,7 +20,7 @@ class ProductStructuredDataIndexRepository
 
         foreach ($productsData as $productId => $productData) {
             try {
-                $productData = $this->serializer->unserialize($productData);
+                $productData = !empty($productData) ? $this->serializer->unserialize($productData) : [];
             } catch (\Exception $e) {
                 $this->logger->error('There has been an error during loading structured data from index: ' . $e->getMessage());
                 $productData = [];
