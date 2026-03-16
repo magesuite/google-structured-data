@@ -20,8 +20,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData,
-        protected \Magento\Store\Model\App\Emulation $appEmulation
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -140,10 +139,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product): array
     {
-        $storeId = (int)$product->getStoreId();
-        $this->appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
         $mediaGallery = $product->getMediaGalleryImages();
-        $this->appEmulation->stopEnvironmentEmulation();
 
         if (!is_array($mediaGallery->getItems())) {
             return [];
