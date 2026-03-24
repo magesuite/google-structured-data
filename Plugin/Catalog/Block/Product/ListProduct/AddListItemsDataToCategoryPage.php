@@ -11,7 +11,8 @@ class AddListItemsDataToCategoryPage
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
+        protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository
     ) {}
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result): \Magento\Eav\Model\Entity\Collection\AbstractCollection
@@ -21,11 +22,14 @@ class AddListItemsDataToCategoryPage
         }
 
         $currentCategory = $this->registry->registry('current_category');
-        if (!isset($currentCategory) || !$currentCategory->getId()) {
+
+        if (!$currentCategory?->getId()) {
             return $result;
         }
 
+        $productIds = $result->getColumnValues('entity_id');
         $store = $this->storeManager->getStore();
+        $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, (int)$store->getId());
         $itemList = [
             "@context" => "https://schema.org/",
             "@type" => "ItemList",
