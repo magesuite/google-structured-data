@@ -15,7 +15,8 @@ class Product
         protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverPool $productTypeResolverPool,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifiersPool $modifiersPool,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration
     ) {}
 
     public function getProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -79,8 +80,8 @@ class Product
     {
         $identities = $product->getIdentities();
         $identities[] = self::CACHE_GROUP;
-
         $key = array_search(\Magento\Catalog\Model\Product::CACHE_TAG, $identities);
+
         if (!$key) {
             return $identities;
         }
@@ -93,8 +94,16 @@ class Product
     public function getListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, int $position): array
     {
         $productData = $this->getProductData($product, $store);
+        $shouldShowRating = $this->categoryConfiguration->shouldShowRating();
+        $removeRating = function (&$item) use ($shouldShowRating): void {
+            if (!$shouldShowRating) {
+                unset($item['review'], $item['aggregateRating']);
+            }
+        };
 
         if (isset($productData['@type']) && $productData['@type'] === 'Product') {
+            $removeRating($productData);
+
             return [
                 "@type" => "ListItem",
                 "position" => $position,
@@ -105,11 +114,12 @@ class Product
         $productData = array_filter($productData, function ($item): bool {
             return isset($item['@type']) && $item['@type'] === 'Product';
         });
+        array_walk($productData, $removeRating);
 
         return [
             "@type" => "ListItem",
             "position" => $position,
-            "item" => $productData,
+            "item" => $productData
         ];
     }
 
