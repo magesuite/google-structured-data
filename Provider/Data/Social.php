@@ -8,18 +8,20 @@ class Social
 {
     public function __construct(
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Social $configuration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Social $configuration,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $organizationConfiguration
     ) {}
 
     public function getSocialData(): array
     {
         $store = $this->storeManager->getStore();
+        $name = $this->organizationConfiguration->getName() ?? $store->getName();
         $baseUrl = $store->getBaseUrl();
         $socialData = [
             "@context" => "https://schema.org",
             "@type" => "Person",
-            "name" => $store->getName(),
-            "url" => $baseUrl,
+            "name" => $name,
+            "url" => $baseUrl
         ];
 
         $socialProfiles = $this->configuration->getSocialProfiles();

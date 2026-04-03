@@ -52,7 +52,7 @@ class AddProductsDataToCategoryPage
         foreach ($result as $product) {
             $productData = $this->productDataProvider->getProductData($product, $store);
             if (!$shouldShowRating) {
-                unset($productData['review']);
+                unset($productData['review'], $productData['aggregateRating']);
             }
 
             $productDataObject = $this->dataObjectFactory->create();
