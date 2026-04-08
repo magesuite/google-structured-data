@@ -127,7 +127,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         $reviewData = [];
 
         foreach ($reviews as $review) {
-            $reviewData[] = $this->buildReviewData($review);
+            $reviewData[] = $this->buildReviewData($review, $store);
         }
 
         if (!empty($reviewData)) {
@@ -154,12 +154,12 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $images;
     }
 
-    public function buildReviewData(\Magento\Review\Model\Review $review): array
+    public function buildReviewData(\Magento\Review\Model\Review $review, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $row = [
             '@type' => 'Review',
             'author' => ['@type' => 'Person', 'name' => $this->escaper->escapeHtml($review->getNickname())],
-            'datePublished' => $this->timezone->date($review->getCreatedAt())->format(\DateTime::ATOM),
+            'datePublished' => $this->timezone->scopeDate($store, $review->getCreatedAt(), true)->format(\DateTime::ATOM),
             'description' => $this->stripTagsFilter->filter($review->getDetail()),
             'name' => $this->escaper->escapeHtml($review->getTitle())
         ];
