@@ -34,7 +34,13 @@
                 <field id="description" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Description</label>
                 </field>
-                <group id="address" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="telephone" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Telephone</label>
+                </field>
+                <field id="email" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Email</label>
+                </field>
+                <group id="address" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Address</label>
                     <field id="postal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Postal Code</label>
@@ -52,7 +58,7 @@
                         <label>Country</label>
                     </field>
                 </group>
-                <group id="contact" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="contact" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Contact</label>
                     <field id="sales_telephone" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Sales Telephone</label>
@@ -73,7 +79,7 @@
                         <label>Customer Service Email</label>
                     </field>
                 </group>
-                <group id="return_policy" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="return_policy" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Return Policy</label>
                     <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enabled</label>

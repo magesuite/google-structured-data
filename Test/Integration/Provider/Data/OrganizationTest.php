@@ -22,6 +22,8 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoConfigFixture current_store structured_data/organization/logo testlogo.png
+     * @magentoConfigFixture current_store structured_data/organization/telephone 111222333
+     * @magentoConfigFixture current_store structured_data/organization/email admin@example.com
      * @magentoConfigFixture current_store structured_data/organization/address/postal 00000
      * @magentoConfigFixture current_store structured_data/organization/address/city City
      * @magentoConfigFixture current_store structured_data/organization/address/street Street 1
@@ -38,11 +40,13 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
     public function testItReturnOrganizationDataCorrectly(): void
     {
         $expectedData = [
-            '@context' => 'http://schema.org',
+            '@context' => 'https://schema.org',
             '@type' => 'Organization',
             'name' => 'Default Store View',
             'url' => 'http://localhost/index.php/',
             'logo' => 'testlogo.png',
+            'telephone' => '111222333',
+            'email' => 'admin@example.com',
             'address' => [
                 '@type' => 'PostalAddress',
                 'postalCode' => '00000',
