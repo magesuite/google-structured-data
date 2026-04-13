@@ -37,13 +37,14 @@ class Organization
         $name = $this->organizationConfiguration->getName() ?? $store->getName();
 
         $organizationData = [
-            "@context" => "http://schema.org",
+            "@context" => "https://schema.org",
             "@type" => "Organization",
             "name" => $name,
             "url" => $store->getBaseUrl(),
-            "logo" => $logoUrl
+            "logo" => $logoUrl,
         ];
 
+        $organizationData = $this->addDefaultContactData($organizationData);
         $organizationData = $this->addAddressData($organizationData);
         $organizationData = $this->addContactData($organizationData);
         $organizationData = $this->addReturnPolicy($organizationData);
@@ -103,16 +104,17 @@ class Organization
     public function addReturnPolicy(array $organizationData): array
     {
         $store = $this->storeManager->getStore();
+        $storeId = (int)$store->getId();
 
-        if (!$this->organizationConfiguration->isReturnPolicyEnabled((int)$store->getId())) {
+        if (!$this->organizationConfiguration->isReturnPolicyEnabled($storeId)) {
             return $organizationData;
         }
 
         $country = $this->configuration->getCountryByWebsite($store->getWebsite());
-        $returnPolicyCategory = $this->organizationConfiguration->getReturnPolicyCategory((int)$store->getId());
-        $returnPolicyLink = $this->organizationConfiguration->getReturnPolicyLink((int)$store->getId());
-        $returnMethod = $this->organizationConfiguration->getReturnMethod((int)$store->getId());
-        $returnFees = $this->organizationConfiguration->getReturnFees((int)$store->getId());
+        $returnPolicyCategory = $this->organizationConfiguration->getReturnPolicyCategory($storeId);
+        $returnPolicyLink = $this->organizationConfiguration->getReturnPolicyLink($storeId);
+        $returnMethod = $this->organizationConfiguration->getReturnMethod($storeId);
+        $returnFees = $this->organizationConfiguration->getReturnFees($storeId);
 
         $returnPolicyData = ['@type' => 'MerchantReturnPolicy'];
 
@@ -124,7 +126,7 @@ class Organization
         $returnPolicyData['returnPolicyCategory'] = sprintf('https://schema.org/%s', $returnPolicyCategory);
 
         if ($returnPolicyCategory === \MageSuite\GoogleStructuredData\Model\Config\Source\ReturnPolicyCategory::FINITE_RETURN_WINDOW) {
-            $returnPolicyData['merchantReturnDays'] = $this->organizationConfiguration->getReturnDays((int)$store->getId());
+            $returnPolicyData['merchantReturnDays'] = $this->organizationConfiguration->getReturnDays($storeId);
         }
 
         if ($returnMethod) {
@@ -136,6 +138,25 @@ class Organization
         }
 
         $organizationData['hasMerchantReturnPolicy'] = $returnPolicyData;
+
+        return $organizationData;
+    }
+
+    public function addDefaultContactData(array $organizationData): array
+    {
+        $storeId = (int)$this->storeManager->getStore()->getId();
+
+        $telephone = $this->organizationConfiguration->getTelephone($storeId);
+
+        if ($telephone) {
+            $organizationData['telephone'] = $telephone;
+        }
+
+        $email = $this->organizationConfiguration->getEmail($storeId);
+
+        if ($email) {
+            $organizationData['email'] = $email;
+        }
 
         return $organizationData;
     }

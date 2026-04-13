@@ -12,6 +12,8 @@ class Organization
     public const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
     public const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
     public const XML_PATH_ORGANIZATION_CONTACT = 'structured_data/organization/contact';
+    public const XML_PATH_ORGANIZATION_TELEPHONE = 'structured_data/organization/telephone';
+    public const XML_PATH_ORGANIZATION_EMAIL = 'structured_data/organization/email';
 
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_ENABLED = 'structured_data/organization/return_policy/is_enabled';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_CATEGORY = 'structured_data/organization/return_policy/return_policy_category';
@@ -82,5 +84,15 @@ class Organization
     public function getReturnPolicyLink(int $storeId): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_LINK, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getTelephone(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_TELEPHONE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getEmail(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_EMAIL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 }
