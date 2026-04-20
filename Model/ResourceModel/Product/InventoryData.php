@@ -12,7 +12,8 @@ class InventoryData
         protected \Magento\InventorySalesApi\Api\StockResolverInterface $stockResolver,
         protected \Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
-        protected \Magento\Framework\App\ResourceConnection $resourceConnection
+        protected \Magento\Framework\App\ResourceConnection $resourceConnection,
+        protected int $batchSize = 1000
     ) {}
 
     public function addStockDataToProducts(array $products, int $storeId): void
@@ -28,14 +29,7 @@ class InventoryData
         $websiteId = $this->getWebsiteId($storeId);
         $stockId = $this->getStockId($websiteId);
         $tableName = $this->stockIndexTableNameResolver->execute($stockId);
-        $connection = $this->resourceConnection->getConnection();
-        $select = $connection->select()
-            ->from(['stock_index' => $tableName], [
-                \Magento\InventoryIndexer\Indexer\IndexStructure::SKU,
-                \Magento\InventoryIndexer\Indexer\IndexStructure::IS_SALABLE
-            ])
-            ->where('stock_index.' . \Magento\InventoryIndexer\Indexer\IndexStructure::SKU . ' IN (?)', $skus);
-        $stockData = $connection->fetchAssoc($select);
+        $stockData = $this->fetchStockData($tableName, $skus);
 
         foreach ($products as &$product) {
             if (!isset($stockData[$product['sku']])) {
@@ -44,6 +38,24 @@ class InventoryData
 
             $product->setData('is_salable', $stockData[$product['sku']][\Magento\InventoryIndexer\Indexer\IndexStructure::IS_SALABLE]);
         }
+    }
+
+    protected function fetchStockData(string $tableName, array $skus): array
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $stockData = [];
+
+        foreach (array_chunk($skus, $this->batchSize) as $skuChunk) {
+            $select = $connection->select()
+                ->from(['stock_index' => $tableName], [
+                    \Magento\InventoryIndexer\Indexer\IndexStructure::SKU,
+                    \Magento\InventoryIndexer\Indexer\IndexStructure::IS_SALABLE
+                ])
+                ->where('stock_index.' . \Magento\InventoryIndexer\Indexer\IndexStructure::SKU . ' IN (?)', $skuChunk);
+            $stockData += $connection->fetchAssoc($select);
+        }
+
+        return $stockData;
     }
 
     protected function getWebsiteId(int $storeId): int
