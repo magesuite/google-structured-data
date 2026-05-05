@@ -31,7 +31,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
                 $associatedProductData['url'] = $this->getParentProduct()->getProductUrl();
             }
             if ($this->productConfiguration->isUseParentProductImagesForGrouped()) {
-                $associatedProductData['image'] = $this->getProductImages($this->getParentProduct());
+                $associatedProductData['image'] = $this->getProductImages($this->getParentProduct(), $store);
             }
 
             $productData[] = $associatedProductData;

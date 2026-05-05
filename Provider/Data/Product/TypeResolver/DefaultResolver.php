@@ -55,7 +55,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => $this->escaper->escapeHtml($product->getName()),
-            'image' => $this->getProductImages($product),
+            'image' => $this->getProductImages($product, $store),
             'sku' => $this->escaper->escapeHtml($product->getSku()),
             'url' => $product->getProductUrl(),
             'itemCondition' => 'NewCondition'
@@ -137,18 +137,29 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $data;
     }
 
-    public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product): array
-    {
-        $mediaGallery = $product->getMediaGalleryImages();
-
-        if (!is_array($mediaGallery->getItems())) {
+    public function getProductImages(
+        \Magento\Catalog\Api\Data\ProductInterface $product,
+        \Magento\Store\Api\Data\StoreInterface $store
+    ): array {
+        $mediaGallery = $product->getMediaGallery('images');
+        if (!is_array($mediaGallery) || empty($mediaGallery)) {
             return [];
         }
 
+        $baseMediaUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog/product';
         $images = [];
 
         foreach ($mediaGallery as $image) {
-            $images[] = $image->getUrl();
+            if (!empty($image['disabled'])) {
+                continue;
+            }
+
+            $file = $image['file'] ?? '';
+            if ($file === '') {
+                continue;
+            }
+
+            $images[] = $baseMediaUrl . $file;
         }
 
         return $images;

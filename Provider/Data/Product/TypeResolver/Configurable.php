@@ -117,7 +117,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             }
 
             if ($isUseParentImages || empty($variant['image'])) {
-                $variant['image'] = $this->getProductImages($product);
+                $variant['image'] = $this->getProductImages($product, $store);
             }
 
             if ($isUseParentName || empty($variant['name'])) {
