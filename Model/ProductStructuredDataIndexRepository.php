@@ -38,6 +38,6 @@ class ProductStructuredDataIndexRepository
 
         $this->loadDataFromIndex([$productId], $storeId);
 
-        return $this->productsStructuredData[$storeId][$productId];
+        return $this->productsStructuredData[$storeId][$productId] ?? [];
     }
 }

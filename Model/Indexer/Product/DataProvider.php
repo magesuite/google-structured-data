@@ -30,7 +30,7 @@ class DataProvider
         $collection->addStoreFilter($storeId);
         $collection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
         $collection->addAttributeToFilter('visibility', ['neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE]);
-        $collection->addAttributeToSelect($this->attributeList->getList(), 'left');
+        $collection->addAttributeToSelect($this->attributeList->getList($storeId), 'left');
         $collection->setOrder('entity_id', \Magento\Framework\Data\Collection::SORT_ORDER_ASC);
 
         if (empty($productIds)) {

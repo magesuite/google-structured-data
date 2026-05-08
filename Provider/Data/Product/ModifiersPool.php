@@ -9,7 +9,7 @@ class ModifiersPool
     protected array $modifiers = [];
 
     public function __construct(array $modifiers = []) {
-        $this->modifiers = $modifiers;
+        $this->modifiers = $this->sortResolvers($modifiers);
     }
 
     public function getModifiers(): array

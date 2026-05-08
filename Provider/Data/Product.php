@@ -125,6 +125,8 @@ class Product
 
     public function getProductsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
+        $productData = [];
+
         if ($this->productConfiguration->isIndexingEnabled()) {
             $productData = $this->productStructuredDataIndexRepository->getDataFromIndex(
                 (int)$product->getId(),

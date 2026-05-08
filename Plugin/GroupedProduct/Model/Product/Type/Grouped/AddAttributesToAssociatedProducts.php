@@ -8,6 +8,7 @@ class AddAttributesToAssociatedProducts
 {
     public function __construct(
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
         protected array $attributesToSelect = []
     ) {}
 
@@ -15,8 +16,11 @@ class AddAttributesToAssociatedProducts
         \Magento\GroupedProduct\Model\Product\Type\Grouped $subject,
         \Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection $result
     ): \Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection {
-        $attributesToSelect = array_filter(array_values($this->compositeAttributeDataProvider->getEavAttributeCodes()));
-        $attributesToSelect = array_merge(array_values($this->attributesToSelect), $attributesToSelect);
+        $storeId = (int)($result->getStoreId() ?: $this->storeManager->getStore()->getId());
+        $attributesToSelect = array_merge(
+            $this->attributesToSelect,
+            array_filter($this->compositeAttributeDataProvider->getEavAttributeCodes($storeId))
+        );
 
         $result->addAttributeToSelect($attributesToSelect);
 

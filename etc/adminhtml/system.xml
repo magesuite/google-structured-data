@@ -15,6 +15,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
+                <field id="include_homepage" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Include Homepage</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Defines whether homepage is included as first item in BreadcrumbList.</comment>
+                </field>
             </group>
             <group id="organization" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Organization</label>
@@ -111,6 +116,44 @@
                         <comment>When defined it will replace other return policy data.</comment>
                     </field>
                 </group>
+                <group id="social" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Social Profiles</label>
+                    <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Is Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <group id="profiles" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Profiles</label>
+                        <field id="facebook" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Facebook</label>
+                            <comment>Full url to facebook profile.</comment>
+                        </field>
+                        <field id="twitter" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Twitter</label>
+                            <comment>Full url to twitter profile.</comment>
+                        </field>
+                        <field id="instagram" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Instagram</label>
+                            <comment>Full url to instagram profile.</comment>
+                        </field>
+                        <field id="youtube" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>YouTube</label>
+                            <comment>Full url to youtube profile.</comment>
+                        </field>
+                        <field id="linkedin" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>LinkedIn</label>
+                            <comment>Full url to linkedin profile.</comment>
+                        </field>
+                        <field id="pinterest" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Pinterest</label>
+                            <comment>Full url to pinterest profile.</comment>
+                        </field>
+                        <field id="tiktok" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Tiktok</label>
+                            <comment>Full url to tiktok profile.</comment>
+                        </field>
+                    </group>
+                </group>
             </group>
             <group id="search_box" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Search Box</label>
@@ -120,64 +163,7 @@
                     <comment>Defines whether a section will be added to the page source code or not.</comment>
                 </field>
             </group>
-            <group id="social" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Social Media</label>
-                <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Is Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Defines whether a section will be added to the page source code or not.</comment>
-                </field>
-                <group id="profiles" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Profiles</label>
-                    <depends>
-                        <field id="is_enabled">1</field>
-                    </depends>
-                    <field id="facebook" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Facebook</label>
-                        <comment>Full url to facebook profile.</comment>
-                    </field>
-                    <field id="twitter" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Twitter</label>
-                        <comment>Full url to twitter profile.</comment>
-                    </field>
-                    <field id="google_plus" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Google+</label>
-                        <comment>Full url to google+ profile.</comment>
-                    </field>
-                    <field id="instagram" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Instagram</label>
-                        <comment>Full url to instagram profile.</comment>
-                    </field>
-                    <field id="youtube" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>YouTube</label>
-                        <comment>Full url to youtube profile.</comment>
-                    </field>
-                    <field id="linkedin" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>LinkedIn</label>
-                        <comment>Full url to linkedin profile.</comment>
-                    </field>
-                    <field id="myspace" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Myspace</label>
-                        <comment>Full url to myspace profile.</comment>
-                    </field>
-                    <field id="pinterest" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Pinterest</label>
-                        <comment>Full url to pinterest profile.</comment>
-                    </field>
-                    <field id="soundcloud" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>SoundCloud</label>
-                        <comment>Full url to soundcloud profile.</comment>
-                    </field>
-                    <field id="tumblr" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Tumblr</label>
-                        <comment>Full url to tumblr profile.</comment>
-                    </field>
-                    <field id="tiktok" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Tiktok</label>
-                        <comment>Full url to tiktok profile.</comment>
-                    </field>
-                </group>
-            </group>
+
             <group id="category_page" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Category</label>
                 <field id="include_products" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -282,9 +268,19 @@
                         <label>Suggested Gender</label>
                         <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\AudienceSuggestedGender</source_model>
                     </field>
+                    <field id="suggested_gender_attribute" translate="label" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Gender: Attribute</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                        <comment>If set, reads gender from this product attribute. Expected values: male, female, unisex. Falls back to Suggested Gender if attribute value is empty or unrecognized.</comment>
+                    </field>
                     <field id="suggested_min_age" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Suggested Min Age</label>
                         <validate>validate-digits validate-greater-than-zero</validate>
+                    </field>
+                    <field id="suggested_min_age_attribute" translate="label" type="select" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Min Age: Attribute</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                        <comment>If set, reads minimum age from this product attribute. Expected value is a float (e.g. 3, 2.5). Falls back to Suggested Min Age if attribute value is empty.</comment>
                     </field>
                 </group>
                 <group id="grouped" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">

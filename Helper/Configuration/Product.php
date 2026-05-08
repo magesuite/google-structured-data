@@ -22,7 +22,9 @@ class Product
 
     public const XML_CONFIG_PATH_AUDIENCE_IS_ENABLED = 'structured_data/product_page/audience/is_enabled';
     public const XML_CONFIG_PATH_AUDIENCE_SUGGESTED_GENDER = 'structured_data/product_page/audience/suggested_gender';
+    public const XML_CONFIG_PATH_AUDIENCE_SUGGESTED_GENDER_ATTRIBUTE = 'structured_data/product_page/audience/suggested_gender_attribute';
     public const XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE = 'structured_data/product_page/audience/suggested_min_age';
+    public const XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE_ATTRIBUTE = 'structured_data/product_page/audience/suggested_min_age_attribute';
 
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/grouped/use_parent_product_url';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
@@ -45,7 +47,7 @@ class Product
 
     public function isIndexingEnabled(): bool
     {
-        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_IS_INDEXING_ENABLED);
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_IS_INDEXING_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getCacheLifetime(): int
@@ -105,16 +107,31 @@ class Product
         return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_GENDER, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function getAudienceSuggestedMinAge(int $storeId): int
+    public function getAudienceSuggestedGenderAttribute(int $storeId): ?string
     {
-        return (int)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_GENDER_ATTRIBUTE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function getConfiguredAttribute(string $attributeCode): ?string
+    public function getAudienceSuggestedMinAge(int $storeId): float
     {
-        $attributesConfig = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_ATTRIBUTES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return (float)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getAudienceSuggestedMinAgeAttribute(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_CONFIG_PATH_AUDIENCE_SUGGESTED_MIN_AGE_ATTRIBUTE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getConfiguredAttribute(string $attributeCode, ?int $storeId = null): ?string
+    {
+        $attributesConfig = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_ATTRIBUTES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
 
         return $attributesConfig[$attributeCode] ?? null;
+    }
+
+    public function getAttributeByConfigPath(string $path, ?int $storeId = null): ?string
+    {
+        return $this->scopeConfig->getValue($path, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function isUseParentProductUrlForGrouped(): bool

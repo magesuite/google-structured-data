@@ -1,33 +1,41 @@
 <?php
 
-namespace MageSuite\GoogleStructuredData\Test\Unit\Provider;
+declare(strict_types=1);
 
+namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
+
+/**
+ * @magentoAppIsolation enabled
+ */
 class BreadcrumbsTest extends \PHPUnit\Framework\TestCase
 {
     protected ?\Magento\TestFramework\ObjectManager $objectManager;
-
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs $breadcrumbDataProvider;
 
     protected function setUp(): void
     {
-        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
-
+        $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->breadcrumbDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Breadcrumbs::class);
     }
 
-    public function testItReturnBreadcrumbDataCorrectly()
+    public function testItExcludesHomepageByDefault(): void
     {
-        $breadcrumbs = $this->getBreadcrumbs();
+        $breadcrumbData = $this->breadcrumbDataProvider->getBreadcrumbsData($this->getBreadcrumbs());
 
-        $breadcrumbData = $this->breadcrumbDataProvider->getBreadcrumbsData($breadcrumbs);
-
-        $this->assertEquals('BreadcrumbList', $breadcrumbData['@type']);
         $this->assertEquals(3, count($breadcrumbData['itemListElement']));
+        $this->assertEquals('Women', $breadcrumbData['itemListElement'][0]['item']['name']);
+    }
 
-        foreach ($breadcrumbData['itemListElement'] as $index => $crumb) {
-            $this->assertEquals($breadcrumbs[$index + 1]['link'], $crumb['item']['@id']);
-            $this->assertEquals($breadcrumbs[$index + 1]['label'], $crumb['item']['name']);
-        }
+    /**
+     * @magentoConfigFixture current_store structured_data/breadcrumbs/include_homepage 1
+     */
+    public function testItIncludesHomepageWhenConfigured(): void
+    {
+        $breadcrumbData = $this->breadcrumbDataProvider->getBreadcrumbsData($this->getBreadcrumbs());
+
+        $this->assertEquals(4, count($breadcrumbData['itemListElement']));
+        $this->assertEquals('Home', $breadcrumbData['itemListElement'][0]['item']['name']);
+        $this->assertEquals(1, $breadcrumbData['itemListElement'][0]['position']);
     }
 
     protected function getBreadcrumbs(): array

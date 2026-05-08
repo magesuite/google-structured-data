@@ -10,9 +10,12 @@ class Description implements \MageSuite\GoogleStructuredData\Provider\Data\Produ
         protected \Magento\Framework\Filter\StripTags $stripTags
     ) {}
 
-    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode) // phpcs:ignore
+    public function getAttributeData(
+        \Magento\Catalog\Api\Data\ProductInterface $product,
+        ?string $attributeCode
+    ): string|array|null
     {
-        $description = $product->getDescription();
+        $description = $product->getData($attributeCode) ?: $product->getData('description');
 
         if (empty($description)) {
             return null;
