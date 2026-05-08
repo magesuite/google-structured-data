@@ -7,6 +7,7 @@ namespace MageSuite\GoogleStructuredData\Helper;
 class Configuration
 {
     public const XML_PATH_BREADCRUMB_ENABLED = 'structured_data/breadcrumbs/is_enabled';
+    public const XML_PATH_BREADCRUMB_INCLUDE_HOMEPAGE = 'structured_data/breadcrumbs/include_homepage';
     public const XML_PATH_SEARCH_BOX_ENABLED = 'structured_data/search_box/is_enabled';
     public const COUNTRY_CODE_PATH = 'general/country/default';
     public const TIMEZONE_PATH = 'general/locale/timezone';
@@ -19,6 +20,14 @@ class Configuration
     {
         return (bool)$this->scopeConfig->getValue(
             self::XML_PATH_BREADCRUMB_ENABLED,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isBreadcrumbHomepageIncluded(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_BREADCRUMB_INCLUDE_HOMEPAGE,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }

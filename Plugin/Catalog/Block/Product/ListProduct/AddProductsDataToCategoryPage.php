@@ -14,57 +14,73 @@ class AddProductsDataToCategoryPage
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList
     ) {}
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result) // phpcs:ignore
     {
-        if (!$this->categoryConfiguration->doesCategoryPageIncludeProducts()) {
+        if ($this->shouldSkip($subject)) {
             return $result;
         }
 
-        /** @var \Magento\Catalog\Model\Category|null $currentCategory */
-        $currentCategory = $this->registry->registry('current_category');
+        $store = $this->storeManager->getStore();
+        $storeId = (int)$store->getId();
+        $isIndexingEnabled = $this->productConfiguration->isIndexingEnabled();
 
-        if (!isset($currentCategory) || !$currentCategory->getId()) {
-            return $result;
+        if (!$isIndexingEnabled) {
+            $result->addAttributeToSelect($this->attributeList->getList($storeId));
+            $result->_loadAttributes(); // phpcs:ignore
         }
-
-        if ($subject->getStructuredDataCalculated() === true) {
-            return $result;
-        }
-
-        $i = 0;
-        $shouldShowRating = $this->categoryConfiguration->shouldShowRating();
 
         $productIds = $result->getColumnValues('entity_id');
         if (empty($productIds)) {
             return $result;
         }
 
-        $store = $this->storeManager->getStore();
-        $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, (int)$store->getId());
-
-        if (!$this->productConfiguration->isIndexingEnabled()) {
+        if (!$isIndexingEnabled) {
             $result->addMediaGalleryData();
         }
 
+        $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, $storeId);
+
         foreach ($result as $product) {
-            $productData = $this->productDataProvider->getProductData($product, $store);
-            if (!$shouldShowRating) {
-                unset($productData['review'], $productData['aggregateRating']);
-            }
-
-            $productDataObject = $this->dataObjectFactory->create();
-            $productDataObject->setData($productData);
-
-            $this->structuredDataContainer->add($productDataObject->getData(), 'product_' . $i);
-
-            $i++;
+            $this->addProductStructuredData($product, $store);
         }
 
         $subject->setStructuredDataCalculated(true);
 
         return $result;
+    }
+
+    protected function addProductStructuredData(
+        \Magento\Catalog\Api\Data\ProductInterface $product,
+        \Magento\Store\Api\Data\StoreInterface $store
+    ): void {
+        $shouldShowRating = $this->categoryConfiguration->shouldShowRating();
+        $productData = $this->productDataProvider->getProductData($product, $store);
+
+        if (!$shouldShowRating) {
+            unset($productData['review'], $productData['aggregateRating']);
+        }
+
+        $productDataObject = $this->dataObjectFactory->create();
+        $productDataObject->setData($productData);
+        $this->structuredDataContainer->add($productDataObject->getData(), 'product_' . $product->getId());
+    }
+
+    protected function shouldSkip(\Magento\Catalog\Block\Product\ListProduct $subject): bool
+    {
+        if (!$this->categoryConfiguration->doesCategoryPageIncludeProducts()) {
+            return true;
+        }
+
+        $currentCategory = $this->registry->registry('current_category');
+
+        if (!isset($currentCategory) || !$currentCategory->getId()) {
+            return true;
+        }
+
+        return $subject->getStructuredDataCalculated() === true;
     }
 }

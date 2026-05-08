@@ -4,6 +4,7 @@
         <structured_data>
             <breadcrumbs>
                 <is_enabled>1</is_enabled>
+                <include_homepage>0</include_homepage>
             </breadcrumbs>
             <organization>
                 <is_enabled>1</is_enabled>
@@ -15,9 +16,6 @@
             <search_box>
                 <is_enabled>1</is_enabled>
             </search_box>
-            <social>
-                <is_enabled>1</is_enabled>
-            </social>
             <category_page>
                 <include_products>1</include_products>
                 <include_list_item>0</include_list_item>
@@ -37,7 +35,9 @@
                 </delivery_data>
                 <audience>
                     <suggested_gender>unisex</suggested_gender>
+                    <suggested_gender_use_attribute>0</suggested_gender_use_attribute>
                     <suggested_min_age>18</suggested_min_age>
+                    <suggested_min_age_use_attribute>0</suggested_min_age_use_attribute>
                 </audience>
                 <grouped>
                     <use_parent_product_url>1</use_parent_product_url>

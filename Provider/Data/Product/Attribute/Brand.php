@@ -6,7 +6,10 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute;
 
 class Brand extends \MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute\Eav
 {
-    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode) // phpcs:ignore
+    public function getAttributeData(
+        \Magento\Catalog\Api\Data\ProductInterface $product,
+        ?string $attributeCode
+    ): string|array|null
     {
         $value = parent::getAttributeData($product, $attributeCode);
 

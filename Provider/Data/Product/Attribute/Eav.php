@@ -10,7 +10,10 @@ class Eav implements \MageSuite\GoogleStructuredData\Provider\Data\Product\Attri
         protected \MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue $getAttributeValue
     ) {}
 
-    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode) // phpcs:ignore
+    public function getAttributeData(
+        \Magento\Catalog\Api\Data\ProductInterface $product,
+        ?string $attributeCode
+    ): string|array|null
     {
         if (!$attributeCode) {
             return null;

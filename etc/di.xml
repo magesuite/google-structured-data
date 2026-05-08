@@ -49,6 +49,14 @@
                     <item name="type" xsi:type="string">configured_eav</item>
                     <item name="disabled" xsi:type="boolean">false</item>
                 </item>
+                <item name="suggested_gender_attribute" xsi:type="array">
+                    <item name="type" xsi:type="string">preload_only</item>
+                    <item name="config_path" xsi:type="string">structured_data/product_page/audience/suggested_gender_attribute</item>
+                </item>
+                <item name="suggested_min_age_attribute" xsi:type="array">
+                    <item name="type" xsi:type="string">preload_only</item>
+                    <item name="config_path" xsi:type="string">structured_data/product_page/audience/suggested_min_age_attribute</item>
+                </item>
             </argument>
         </arguments>
     </type>

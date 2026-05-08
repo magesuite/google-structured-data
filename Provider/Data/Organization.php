@@ -27,7 +27,8 @@ class Organization
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
         protected \Magento\Theme\Block\Html\Header\Logo $logo,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $organizationConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Organization $organizationConfiguration,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Social $socialConfiguration
     ) {}
 
     public function getOrganizationData(): array
@@ -48,6 +49,20 @@ class Organization
         $organizationData = $this->addAddressData($organizationData);
         $organizationData = $this->addContactData($organizationData);
         $organizationData = $this->addReturnPolicy($organizationData);
+        $organizationData = $this->addSameAs($organizationData);
+
+        return $organizationData;
+    }
+
+    public function addSameAs(array $organizationData): array
+    {
+        $profiles = array_filter($this->socialConfiguration->getSocialProfiles());
+
+        if (empty($profiles)) {
+            return $organizationData;
+        }
+
+        $organizationData['sameAs'] = array_values($profiles);
 
         return $organizationData;
     }

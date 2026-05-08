@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 
-/**
- * @magentoDbIsolation enabled
- * @magentoAppIsolation enabled
- */
+#[\Magento\TestFramework\Fixture\AppIsolation(true)]
+#[\Magento\TestFramework\Fixture\DbIsolation(true)]
 class OrganizationTest extends \PHPUnit\Framework\TestCase
 {
     protected ?\Magento\TestFramework\ObjectManager $objectManager;
@@ -75,5 +73,30 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 
         $this->assertEquals($expectedData, $organizationData);
+    }
+
+    /**
+     * @magentoConfigFixture current_store structured_data/organization/social/is_enabled 1
+     * @magentoConfigFixture current_store structured_data/organization/social/profiles/facebook https://facebook.com/example
+     * @magentoConfigFixture current_store structured_data/organization/social/profiles/instagram https://instagram.com/example
+     */
+    public function testItIncludesSameAsWhenSocialProfilesConfigured(): void
+    {
+        $organizationData = $this->organizationDataProvider->getOrganizationData();
+
+        $this->assertArrayHasKey('sameAs', $organizationData);
+        $this->assertContains('https://facebook.com/example', $organizationData['sameAs']);
+        $this->assertContains('https://instagram.com/example', $organizationData['sameAs']);
+    }
+
+    /**
+     * @magentoConfigFixture current_store structured_data/organization/social/is_enabled 0
+     * @magentoConfigFixture current_store structured_data/organization/social/profiles/facebook https://facebook.com/example
+     */
+    public function testItExcludesSameAsWhenSocialProfilesDisabled(): void
+    {
+        $organizationData = $this->organizationDataProvider->getOrganizationData();
+
+        $this->assertArrayNotHasKey('sameAs', $organizationData);
     }
 }

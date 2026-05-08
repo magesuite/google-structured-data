@@ -7,7 +7,8 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 class Breadcrumbs
 {
     public function __construct(
-        protected \Magento\Framework\UrlInterface $url
+        protected \Magento\Framework\UrlInterface $url,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration
     ) {}
 
     public function getBreadcrumbsData($breadcrumbs): array // phpcs:ignore
@@ -27,7 +28,7 @@ class Breadcrumbs
         $i = 1;
 
         foreach ($breadcrumbs as $breadcrumb) {
-            if (isset($breadcrumb['first']) && $breadcrumb['first']) {
+            if (isset($breadcrumb['first']) && $breadcrumb['first'] && !$this->configuration->isBreadcrumbHomepageIncluded()) {
                 continue;
             }
 
@@ -35,7 +36,7 @@ class Breadcrumbs
                 $breadcrumb['link'] = $this->url->escape($this->url->getCurrentUrl());
             }
 
-            $name = is_object($breadcrumb['label']) ? $breadcrumb['label']->getText() : $breadcrumb['label'];
+            $name = (string) $breadcrumb['label'];
             $breadcrumbList[] = [
                 '@type' => 'ListItem',
                 'position' => $i,

@@ -20,7 +20,9 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
         protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData
+        protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData,
+        protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedGenderResolver $suggestedGenderResolver,
+        protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedMinAgeResolver $suggestedMinAgeResolver
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -61,7 +63,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             'itemCondition' => 'NewCondition'
         ];
 
-        $attributeData = $this->compositeAttributeDataProvider->getAttributeData($product);
+        $attributeData = $this->compositeAttributeDataProvider->getAttributeData($product, (int)$store->getId());
         $this->cachedProductData[$cacheKey] = array_merge($structuredData, $attributeData);
 
         return $this->cachedProductData[$cacheKey];
@@ -189,6 +191,14 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $row;
     }
 
+    protected function getDescription(\Magento\Catalog\Api\Data\ProductInterface $product, int $storeId): string
+    {
+        $attributeCode = $this->productConfiguration->getConfiguredAttribute('description', $storeId);
+        $description = $product->getData($attributeCode) ?: $product->getData('description');
+
+        return $this->stripTagsFilter->filter((string)$description);
+    }
+
     public function getAudienceData(
         \Magento\Catalog\Api\Data\ProductInterface $product,
         \Magento\Store\Api\Data\StoreInterface $store
@@ -198,8 +208,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             return [];
         }
 
-        $suggestedGender = $this->productConfiguration->getAudienceSuggestedGender((int)$store->getId());
-        $suggestedMinAge = $this->productConfiguration->getAudienceSuggestedMinAge((int)$store->getId());
+        $suggestedGender = $this->suggestedGenderResolver->resolve($product, (int)$store->getId());
+        $suggestedMinAge = $this->suggestedMinAgeResolver->resolve($product, (int)$store->getId());
 
         if (empty($suggestedGender) && empty($suggestedMinAge)) {
             return [];
@@ -213,4 +223,5 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             ]
         ];
     }
+
 }

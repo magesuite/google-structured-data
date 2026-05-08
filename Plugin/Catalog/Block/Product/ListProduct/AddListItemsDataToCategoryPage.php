@@ -12,7 +12,9 @@ class AddListItemsDataToCategoryPage
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository
+        protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList
     ) {}
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result): \Magento\Eav\Model\Entity\Collection\AbstractCollection
@@ -27,9 +29,16 @@ class AddListItemsDataToCategoryPage
             return $result;
         }
 
-        $productIds = $result->getColumnValues('entity_id');
         $store = $this->storeManager->getStore();
+
+        if (!$this->productConfiguration->isIndexingEnabled()) {
+            $result->addAttributeToSelect($this->attributeList->getList((int)$store->getId()));
+            $result->_loadAttributes(); // phpcs:ignore
+        }
+
+        $productIds = $result->getColumnValues('entity_id');
         $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, (int)$store->getId());
+        
         $itemList = [
             "@context" => "https://schema.org/",
             "@type" => "ItemList",
