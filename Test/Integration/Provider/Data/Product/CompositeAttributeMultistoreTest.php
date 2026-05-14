@@ -27,6 +27,7 @@ class CompositeAttributeMultistoreTest extends \PHPUnit\Framework\TestCase
      *
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/test_age_attr.php
      * @magentoDataFixture Magento/Store/_files/core_fixturestore.php
+     * @magentoConfigFixture default_store structured_data/product_page/audience/suggested_min_age_attribute
      * @magentoConfigFixture fixturestore_store structured_data/product_page/audience/suggested_min_age_attribute test_age_attr
      */
     public function testGetEavAttributeCodesRespectsStoreScope(): void
