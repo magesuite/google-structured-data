@@ -106,6 +106,10 @@ class CompositeAttribute
                     : $this->productConfiguration->getConfiguredAttribute($attributeDataProvider['attribute_name'], $storeId);
             }
 
+            if (!$attributeCode) {
+                continue;
+            }
+
             $attribute = $this->eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
             if (!$attribute->getId()) {
                 continue;
