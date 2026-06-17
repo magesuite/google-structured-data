@@ -16,7 +16,8 @@ class AddProductsDataToCategoryPage
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList
-    ) {}
+    ) {
+    }
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result) // phpcs:ignore
     {
@@ -61,7 +62,7 @@ class AddProductsDataToCategoryPage
         $productData = $this->productDataProvider->getProductData($product, $store);
 
         if (!$shouldShowRating) {
-            unset($productData['review'], $productData['aggregateRating']);
+            $productData = $this->removeReviewAndAggregateRating($product->getTypeId(), $productData);
         }
 
         $productDataObject = $this->dataObjectFactory->create();
@@ -82,5 +83,19 @@ class AddProductsDataToCategoryPage
         }
 
         return $subject->getStructuredDataCalculated() === true;
+    }
+
+    protected function removeReviewAndAggregateRating(string $productTypeId, array $productData): array
+    {
+        if ($productTypeId != \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE) {
+            unset($productData['review'], $productData['aggregateRating']);
+            return $productData;
+        }
+
+        foreach ($productData as &$childProductData) {
+            unset($childProductData['review'], $childProductData['aggregateRating']);
+        }
+
+        return $productData;
     }
 }
