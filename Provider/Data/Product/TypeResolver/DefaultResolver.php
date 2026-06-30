@@ -17,8 +17,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \Magento\Framework\Escaper $escaper,
         protected \Magento\Framework\Filter\StripTags $stripTagsFilter,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\CompositeAttribute $compositeAttributeDataProvider,
-        protected \MageSuite\GoogleStructuredData\Model\Review\GetProductReviews $getProductReviews,
-        protected \MageSuite\GoogleStructuredData\Model\Review\GetProductRattingSummary $getProductRattingSummary,
+        protected \MageSuite\GoogleStructuredData\Model\Review\BatchReviewData $batchReviewData,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData,
         protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedGenderResolver $suggestedGenderResolver,
@@ -114,8 +113,11 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             return [];
         }
 
+        $productId = (int)$product->getId();
+        $storeId = (int)$store->getId();
         $data = [];
-        $ratingSummary = $this->getProductRattingSummary->execute($product, (int)$store->getId());
+
+        $ratingSummary = $this->batchReviewData->getRatingSummary($productId, $storeId);
 
         if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
             $data['aggregateRating'] = [
@@ -125,7 +127,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             ];
         }
 
-        $reviews = $this->getProductReviews->execute($product, (int)$store->getId());
+        $reviews =  $this->batchReviewData->getReviews($productId, $storeId);
+
         $reviewData = [];
 
         foreach ($reviews as $review) {

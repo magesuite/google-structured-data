@@ -15,7 +15,8 @@ class Full implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         protected \Magento\Framework\Indexer\DimensionProviderInterface $dimensionProvider,
         protected \Magento\Indexer\Model\ProcessManager $processManager,
         protected \Magento\Catalog\Model\ResourceModel\Indexer\ActiveTableSwitcher $activeTableSwitcher,
-        protected \Magento\Store\Model\StoreManagerInterface $storeManager
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
+        protected \MageSuite\GoogleStructuredData\Model\Review\BatchReviewData $batchReviewData
     ) {}
 
     public function execute(): self
@@ -68,6 +69,8 @@ class Full implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         $store = $this->storeManager->getStore($storeId);
         $generatedData = [];
 
+        $this->batchReviewData->load(array_keys($products->getItems()), $storeId);
+
         foreach ($products as $product) {
             $productData = $this->productDataProvider->generateProductData($product, $store);
 
@@ -82,6 +85,7 @@ class Full implements \Magento\Framework\Indexer\DimensionalIndexerInterface
             ];
         }
 
+        $this->batchReviewData->reset();
         $products->clear();
 
         if (empty($generatedData)) {
