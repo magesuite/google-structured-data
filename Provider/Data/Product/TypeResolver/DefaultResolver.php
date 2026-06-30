@@ -103,6 +103,10 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             $data['priceValidUntil'] = date('Y-m-d', strtotime($specialToDate));
         }
 
+        if (!isset($data['priceValidUntil']) && $this->productConfiguration->isDefaultPriceValidUntilEnabled((int)$store->getId())) {
+            $data['priceValidUntil'] = $this->timezone->scopeDate($store)->modify('+1 year')->format('Y-m-d');
+        }
+
         $this->cachedOfferData[$cacheKey] = $data;
 
         return $this->cachedOfferData[$cacheKey];

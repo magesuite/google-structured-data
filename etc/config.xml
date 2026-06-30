@@ -27,6 +27,7 @@
                 <indexer_cron_schedule>0 3 * * *</indexer_cron_schedule>
                 <cache_lifetime>86400</cache_lifetime>
                 <show_rating>1</show_rating>
+                <default_price_valid_until_enabled>0</default_price_valid_until_enabled>
                 <attributes>
                     <description>description</description>
                 </attributes>
