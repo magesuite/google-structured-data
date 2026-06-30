@@ -10,6 +10,7 @@ class Product
     public const XML_CONFIG_PATH_IS_INDEXING_ENABLED = 'structured_data/product_page/is_indexing_enabled';
     public const XML_CONFIG_PATH_CACHE_LIFETIME = 'structured_data/product_page/cache_lifetime';
     public const XML_CONFIG_PATH_SHOW_RATING = 'structured_data/product_page/show_rating';
+    public const XML_CONFIG_PATH_DEFAULT_PRICE_VALID_UNTIL_ENABLED = 'structured_data/product_page/default_price_valid_until_enabled';
     public const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
 
     public const XML_CONFIG_PATH_DELIVERY_DATA_ENABLED = 'structured_data/product_page/delivery_data/is_enabled';
@@ -58,6 +59,11 @@ class Product
     public function shouldShowRating(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_SHOW_RATING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isDefaultPriceValidUntilEnabled(int $storeId): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_DEFAULT_PRICE_VALID_UNTIL_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function isDeliveryDataEnabled(int $storeId): bool

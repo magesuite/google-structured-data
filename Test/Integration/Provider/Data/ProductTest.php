@@ -110,6 +110,38 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @magentoDbIsolation enabled
+     * @magentoAppIsolation enabled
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
+     * @magentoConfigFixture default_store structured_data/product_page/default_price_valid_until_enabled 1
+     * @magentoConfigFixture base_website general/locale/timezone UTC
+     */
+    public function testDefaultPriceValidUntilIsAppliedWhenEnabled(): void
+    {
+        $product = $this->productRepository->get('simple');
+        $this->indexer->executeRow($product->getId());
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
+
+        $this->assertEquals(date('Y-m-d', strtotime('+1 year')), $productData['offers']['priceValidUntil']);
+    }
+
+    /**
+     * @magentoDbIsolation enabled
+     * @magentoAppIsolation enabled
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
+     * @magentoConfigFixture default_store structured_data/product_page/default_price_valid_until_enabled 1
+     * @magentoConfigFixture base_website general/locale/timezone UTC
+     */
+    public function testDefaultPriceValidUntilDoesNotOverrideSpecialToDate(): void
+    {
+        $product = $this->productRepository->get('simple_special_price');
+        $this->indexer->executeRow($product->getId());
+        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
+
+        $this->assertEquals(date('Y-m-d', strtotime('+1 day')), $productData['offers']['priceValidUntil']);
+    }
+
+    /**
      * @magentoAppArea frontend
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/reviews_multistore.php
      */

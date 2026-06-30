@@ -207,6 +207,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if rating should be included in structured data.</comment>
                 </field>
+                <field id="default_price_valid_until_enabled" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Default Price Valid Until</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled, products without an active special price get a default priceValidUntil set to one year from today. Does not override the special price end date.</comment>
+                </field>
                 <group id="attributes" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <field id="description" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
