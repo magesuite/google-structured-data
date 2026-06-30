@@ -46,6 +46,7 @@ class BatchReviewData
 
     public function getRatingSummary(int $productId, int $storeId): ?array
     {
+        $this->ensureLoaded($productId, $storeId);
         $key = $this->getKey($productId, $storeId);
 
         return $this->ratingSummaries[$key] ?? ['rating_value' => 0, 'review_count' => 0];
@@ -53,9 +54,19 @@ class BatchReviewData
 
     public function getReviews(int $productId, int $storeId): ?array
     {
+        $this->ensureLoaded($productId, $storeId);
         $key = $this->getKey($productId, $storeId);
 
         return $this->reviews[$key] ?? [];
+    }
+
+    protected function ensureLoaded(int $productId, int $storeId): void
+    {
+        if (isset($this->loadedKeys[$this->getKey($productId, $storeId)])) {
+            return;
+        }
+
+        $this->load([$productId], $storeId);
     }
 
     public function reset(): void
@@ -91,16 +102,18 @@ class BatchReviewData
 
     protected function loadReviews(array $productIds, int $storeId): void
     {
+        $reviewIds = $this->getMostRecentReviewIds($productIds, $storeId);
+
+        if (empty($reviewIds)) {
+            return;
+        }
+
         /** @var \Magento\Review\Model\ResourceModel\Review\Collection $collection */
         $collection = $this->reviewCollectionFactory->create();
-        $collection
-            ->addStoreFilter($storeId)
-            ->addStatusFilter(\Magento\Review\Model\Review::STATUS_APPROVED)
-            ->setDateOrder();
+        $collection->setDateOrder();
 
         $collection->getSelect()
-            ->where('main_table.entity_id = ?', $this->getProductReviewEntityId())
-            ->where('main_table.entity_pk_value IN (?)', $productIds)
+            ->where('main_table.review_id IN (?)', $reviewIds)
             ->joinLeft(
                 ['rov' => $collection->getTable('rating_option_vote')],
                 'main_table.review_id = rov.review_id',
@@ -110,14 +123,39 @@ class BatchReviewData
 
         foreach ($collection as $review) {
             $productId = (int)$review->getData('entity_pk_value');
-            $key = $this->getKey($productId, $storeId);
-
-            if (count($this->reviews[$key] ?? []) >= self::MAX_REVIEWS_PER_PRODUCT) {
-                continue;
-            }
-
-            $this->reviews[$key][] = $review;
+            $this->reviews[$this->getKey($productId, $storeId)][] = $review;
         }
+    }
+
+    protected function getMostRecentReviewIds(array $productIds, int $storeId): array
+    {
+        $connection = $this->resourceConnection->getConnection();
+
+        $rankedSelect = $connection->select()
+            ->from(
+                ['review' => $this->resourceConnection->getTableName('review')],
+                [
+                    'review_id',
+                    'position' => new \Magento\Framework\DB\Sql\Expression(
+                        'ROW_NUMBER() OVER (PARTITION BY review.entity_pk_value ORDER BY review.created_at DESC, review.review_id DESC)'
+                    ),
+                ]
+            )
+            ->join(
+                ['review_store' => $this->resourceConnection->getTableName('review_store')],
+                'review.review_id = review_store.review_id',
+                []
+            )
+            ->where('review.entity_id = ?', $this->getProductReviewEntityId())
+            ->where('review.entity_pk_value IN (?)', $productIds)
+            ->where('review.status_id = ?', \Magento\Review\Model\Review::STATUS_APPROVED)
+            ->where('review_store.store_id = ?', $storeId);
+
+        $select = $connection->select()
+            ->from(['ranked' => $rankedSelect], ['review_id'])
+            ->where('ranked.position <= ?', self::MAX_REVIEWS_PER_PRODUCT);
+
+        return $connection->fetchCol($select);
     }
 
     protected function getProductReviewEntityId(): int
