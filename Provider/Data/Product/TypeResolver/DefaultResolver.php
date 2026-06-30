@@ -127,7 +127,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             ];
         }
 
-        $reviews =  $this->batchReviewData->getReviews($productId, $storeId);
+        $reviews = $this->batchReviewData->getReviews($productId, $storeId);
 
         $reviewData = [];
 
