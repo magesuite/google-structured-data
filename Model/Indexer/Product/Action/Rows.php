@@ -91,7 +91,7 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         $store = $this->storeManager->getStore($storeId);
         $generatedData = [];
 
-        $this->batchReviewData->load(array_keys($products->getItems()), $storeId);
+        $this->batchReviewData->load($products->getColumnValues('entity_id'), $storeId);
 
         foreach ($products as $product) {
             $productData = $this->productDataProvider->generateProductData($product, $store);

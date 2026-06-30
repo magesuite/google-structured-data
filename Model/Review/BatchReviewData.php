@@ -6,7 +6,9 @@ namespace MageSuite\GoogleStructuredData\Model\Review;
 
 class BatchReviewData
 {
-    protected const MAX_REVIEWS_PER_PRODUCT = 10;
+    protected const int MAX_REVIEWS_PER_PRODUCT = 10;
+
+    protected const int RATING_STARS = 5;
 
     protected ?int $productReviewEntityId = null;
 
@@ -81,7 +83,7 @@ class BatchReviewData
             $reviewsCount = (int)$row['reviews_count'];
 
             $this->ratingSummaries[$this->getKey($productId, $storeId)] = [
-                'rating_value' => $ratingSummary ? ($ratingSummary / (100 / GetProductRattingSummary::RATING_STARS)) : 0,
+                'rating_value' => $ratingSummary ? ($ratingSummary / (100 / self::RATING_STARS)) : 0,
                 'review_count' => $reviewsCount,
             ];
         }
@@ -136,6 +138,6 @@ class BatchReviewData
 
     protected function getKey(int $productId, int $storeId): string
     {
-        return $productId . '_' . $storeId;
+        return sprintf('%s_%s', $productId, $storeId);
     }
 }
