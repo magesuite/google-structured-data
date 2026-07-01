@@ -93,7 +93,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             'price' => number_format($productPrice, 2, '.', ''),
             'priceCurrency' => $currency,
             'availability' => $product->isAvailable() ? self::IN_STOCK : self::OUT_OF_STOCK,
-            'url' => $product->getProductUrl()
+            'url' => $product->getUrlInStore()
         ];
         $specialFromDate = $product->getSpecialFromDate();
         $specialToDate = $product->getSpecialToDate();
