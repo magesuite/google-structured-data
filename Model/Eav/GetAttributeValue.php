@@ -10,7 +10,8 @@ class GetAttributeValue
     protected array $attributeInputTypeCache = [];
 
     public function __construct(
-        protected \Magento\Eav\Model\Config $eavConfig
+        protected \Magento\Eav\Model\Config $eavConfig,
+        protected \MageSuite\GoogleStructuredData\Model\Eav\BatchAttributeOptionData $batchAttributeOptionData
     ) {}
 
     public function execute(
@@ -24,9 +25,13 @@ class GetAttributeValue
         }
 
         if (in_array($this->attributeInputTypeCache[$attributeCode], $this->attributeTextTypes)) {
-            $value = $product->getAttributeText($attributeCode);
+            $value = $this->batchAttributeOptionData->getOptionText(
+                $attributeCode,
+                (int)$product->getStoreId(),
+                $product->getData($attributeCode)
+            );
 
-            if ($value === false) {
+            if ($value === null) {
                 return null;
             }
 
