@@ -103,7 +103,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
                 ]
             ],
             'breadcrumbs' => [
-                "@context" => "http://schema.org",
+                "@context" => "https://schema.org",
                 '@type' => 'BreadcrumbList',
                 'itemListElement' => [
                     [
