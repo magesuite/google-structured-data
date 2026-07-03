@@ -19,7 +19,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         $this->setParentProduct($product);
         $associatedProducts = $product->getTypeInstance()->getAssociatedProducts($product);
         $this->inventoryData->addStockDataToProducts($associatedProducts, (int)$store->getId());
-        
+
         foreach ($associatedProducts as $associatedProduct) {
             $associatedProductData = $this->getProductStructuredData($associatedProduct, $store);
 

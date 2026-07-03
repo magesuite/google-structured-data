@@ -38,7 +38,7 @@ class AddListItemsDataToCategoryPage
 
         $productIds = $result->getColumnValues('entity_id');
         $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, (int)$store->getId());
-        
+
         $itemList = [
             "@context" => "https://schema.org/",
             "@type" => "ItemList",
