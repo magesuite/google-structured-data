@@ -84,7 +84,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
                     "sku" => "22616",
                     "price" => "99.99",
                     "priceCurrency" => "EUR",
-                    "availability" => "InStock",
+                    "availability" => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT .  "InStock",
                     "url" => "http://page.test/de_EUR/test-product.html"
                 ],
                 "aggregateRating" => [
@@ -103,7 +103,7 @@ class StructuredDataContainerTest extends \PHPUnit\Framework\TestCase
                 ]
             ],
             'breadcrumbs' => [
-                "@context" => "http://schema.org",
+                "@context" => "https://schema.org",
                 '@type' => 'BreadcrumbList',
                 'itemListElement' => [
                     [

@@ -14,7 +14,7 @@ class Breadcrumbs
     public function getBreadcrumbsData($breadcrumbs): array // phpcs:ignore
     {
         $breadcrumbData = [
-            "@context" => "http://schema.org",
+            "@context" => "https://schema.org",
             '@type' => 'BreadcrumbList',
         ];
 

@@ -55,13 +55,13 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         $structuredData = [
-            '@context' => 'https://schema.org/',
+            '@context' => self::CONTEXT,
             '@type' => 'Product',
             'name' => $this->escaper->escapeHtml($product->getName()),
             'image' => $this->getProductImages($product, $store),
             'sku' => $this->escaper->escapeHtml($product->getSku()),
             'url' => $product->getProductUrl(),
-            'itemCondition' => 'NewCondition'
+            'itemCondition' => sprintf('%s%s', self::CONTEXT, 'NewCondition')
         ];
 
         $attributeData = $this->compositeAttributeDataProvider->getAttributeData($product, (int)$store->getId());
@@ -93,7 +93,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             'sku' => $this->escaper->escapeHtml($product->getSku()),
             'price' => number_format($productPrice, 2, '.', ''),
             'priceCurrency' => $currency,
-            'availability' => $product->isAvailable() ? self::IN_STOCK : self::OUT_OF_STOCK,
+            'availability' => self::CONTEXT . ($product->isAvailable() ? self::IN_STOCK : self::OUT_OF_STOCK),
             'url' => $product->getUrlInStore()
         ];
         $specialFromDate = $product->getSpecialFromDate();

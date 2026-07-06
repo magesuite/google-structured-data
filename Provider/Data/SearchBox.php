@@ -16,10 +16,10 @@ class SearchBox
         $store = $this->storeManager->getStore();
         $baseUrl = $store->getBaseUrl();
 
-        $searchUrl = $this->urlBuilder->getUrl('catalogsearch/result/?q={search_term_string}');
+        $searchUrl = rtrim($this->urlBuilder->getUrl('catalogsearch/result/?q={search_term_string}'), '/');
 
         return [
-            "@context" => "http://schema.org",
+            "@context" => "https://schema.org",
             "@type" => "WebSite",
             "url" => $baseUrl,
             "potentialAction" => [

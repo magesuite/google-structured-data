@@ -49,14 +49,14 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'description' => 'Description with html tag',
             'sku' => 'simple',
             'url' => 'http://localhost/index.php/simple-product.html',
-            'itemCondition' => 'NewCondition'
+            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition'
         ];
         $expectedOfferData = [
             '@type' => 'Offer',
             'sku' => 'simple',
             'price' => '10.00',
             'priceCurrency' => 'USD',
-            'availability' => 'InStock',
+            'availability' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'InStock',
             'url' => 'http://localhost/index.php/simple-product.html'
         ];
 
@@ -85,7 +85,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'description' => 'Description with html tag',
             'sku' => 'simple_special_price',
             'url' => 'http://localhost/index.php/simple-product-with-special-price.html',
-            'itemCondition' => 'NewCondition'
+            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition'
         ];
         $expectedOfferData = [
             '@type' => 'Offer',
@@ -93,7 +93,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'price' => '5.00',
             'priceCurrency' => 'USD',
             'priceValidUntil' => date('Y-m-d', strtotime('+1 day')),
-            'availability' => 'InStock',
+            'availability' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'InStock',
             'url' => 'http://localhost/index.php/simple-product-with-special-price.html'
         ];
 
@@ -182,7 +182,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                     'name' => 'Configurable OptionOption 1',
                     'sku' => 'simple_10',
                     'url' => 'http://localhost/index.php/configurable-product.html',
-                    'itemCondition' => 'NewCondition',
+                    'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition',
                     'color' => 'Option 1',
                     'image' => [],
                     'offers' => [
@@ -190,7 +190,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'sku' => 'simple_10',
                         'price' => '10.00',
                         'priceCurrency' => 'USD',
-                        'availability' => 'InStock',
+                        'availability' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'InStock',
                         'url' => $simpleProducts[0]->getProductUrl()
                     ],
                     'description' => null
@@ -201,7 +201,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                     'name' => 'Configurable OptionOption 2',
                     'sku' => 'simple_20',
                     'url' => 'http://localhost/index.php/configurable-product.html',
-                    'itemCondition' => 'NewCondition',
+                    'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition',
                     'color' => 'Option 2',
                     'image' => [],
                     'offers' => [
@@ -209,7 +209,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'sku' => 'simple_20',
                         'price' => '20.00',
                         'priceCurrency' => 'USD',
-                        'availability' => 'InStock',
+                        'availability' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT .'InStock',
                         'url' => $simpleProducts[1]->getProductUrl()
                     ],
                     'description' => null
@@ -224,7 +224,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'image' => [],
             'sku' => 'configurable',
             'url' => 'http://localhost/index.php/configurable-product.html',
-            'itemCondition' => 'NewCondition'
+            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition'
         ];
         $expectedOffersCount = 2;
         $this->indexer->executeRow($product->getId());
@@ -250,7 +250,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'image' => [],
             'sku' => 'simple',
             'url' => 'http://localhost/index.php/grouped-product.html',
-            'itemCondition' => 'NewCondition',
+            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT. 'NewCondition',
         ];
         $expectedVirtualProductData = [
             '@context' => 'https://schema.org/',
@@ -259,7 +259,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'image' => [],
             'sku' => 'virtual-product',
             'url' => 'http://localhost/index.php/grouped-product.html',
-            'itemCondition' => 'NewCondition',
+            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition',
         ];
 
         $product = $this->productRepository->get('grouped-product');
