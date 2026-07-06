@@ -36,6 +36,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
         $this->inventoryData->addStockDataToProducts($simpleProducts, (int)$store->getId());
+        $this->batchProductUrlData->preloadForProducts($simpleProducts, (int)$store->getId());
         $productUrl = $product->getProductUrl();
 
         foreach ($simpleProducts as $simpleProduct) {
@@ -95,6 +96,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
     {
         $superAttributes = $this->getProductSuperAttributes($product);
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
+        $this->batchProductUrlData->preloadForProducts($simpleProducts, (int)$store->getId());
         $productUrl = $product->getProductUrl();
 
         $isUseParentProductUrl = $this->productConfiguration->isUseParentProductUrlForConfigurable();
@@ -130,7 +132,11 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
             foreach ($superAttributes as $attribute) {
                 $varyAttributeCode = $attribute->getVaryAttributeCode() ?? $attribute->getAttributeCode();
-                $variant[$varyAttributeCode] = $simpleProduct->getAttributeText($attribute->getAttributeCode());
+                $variant[$varyAttributeCode] = $this->batchAttributeOptionData->getOptionText(
+                    $attribute->getAttributeCode(),
+                    (int)$store->getId(),
+                    $simpleProduct->getData($attribute->getAttributeCode())
+                );
             }
 
             $result[] = $variant;

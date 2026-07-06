@@ -14,7 +14,8 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         protected \Magento\Framework\Serialize\SerializerInterface $serializer,
         protected \Magento\Framework\App\ResourceConnection $resourceConnection,
         protected \Magento\Framework\Indexer\DimensionProviderInterface $dimensionProvider,
-        protected \Magento\Store\Model\StoreManagerInterface $storeManager
+        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
+        protected \MageSuite\GoogleStructuredData\Model\Review\BatchReviewData $batchReviewData
     ) {
     }
 
@@ -90,6 +91,8 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         $store = $this->storeManager->getStore($storeId);
         $generatedData = [];
 
+        $this->batchReviewData->load($products->getColumnValues('entity_id'), $storeId);
+
         foreach ($products as $product) {
             $productData = $this->productDataProvider->generateProductData($product, $store);
 
@@ -104,6 +107,7 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
             ];
         }
 
+        $this->batchReviewData->reset();
         $products->clear();
 
         if (empty($generatedData)) {
