@@ -32,6 +32,9 @@
                     <label>Organization Name</label>
                     <comment>Custom website name, if empty default one will be used.</comment>
                 </field>
+                <field id="legal_name" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Legal Name</label>
+                </field>
                 <field id="logo" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Logo Url</label>
                     <comment>Custom website logo url, if empty default one will be used.</comment>
@@ -59,8 +62,9 @@
                     <field id="region" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Region</label>
                     </field>
-                    <field id="country" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <field id="country" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Country</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                     </field>
                 </group>
                 <group id="contact" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -82,6 +86,14 @@
                     </field>
                     <field id="customer_service_email" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Customer Service Email</label>
+                    </field>
+                    <field id="area_served" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Area Served</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    </field>
+                    <field id="available_language" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Available Language</label>
+                        <comment>Comma-separated.</comment>
                     </field>
                 </group>
                 <group id="return_policy" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">

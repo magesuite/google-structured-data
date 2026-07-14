@@ -36,14 +36,19 @@ class Organization
         $store = $this->storeManager->getStore();
         $logoUrl = $this->organizationConfiguration->getLogo() ?? $this->logo->getLogoSrc();
         $name = $this->organizationConfiguration->getName() ?? $store->getName();
+        $legalName = $this->organizationConfiguration->getLegalName();
 
         $organizationData = [
             "@context" => "https://schema.org",
             "@type" => "Organization",
             "name" => $name,
             "url" => $store->getBaseUrl(),
-            "logo" => $logoUrl,
+            "logo" => $logoUrl
         ];
+
+        if (!empty($legalName)) {
+            $organizationData['legalName'] = $legalName;
+        }
 
         $organizationData = $this->addDefaultContactData($organizationData);
         $organizationData = $this->addAddressData($organizationData);
@@ -106,6 +111,14 @@ class Organization
             }
             if (str_contains($key, '_telephone')) {
                 $contact[$this->contactFieldsMapping[$key]]['telephone'] = $value;
+            }
+
+            if (!empty($contactData['area_served'])) {
+                $contact[$this->contactFieldsMapping[$key]]['areaServed'] = explode(',', $contactData['area_served']);
+            }
+
+            if (!empty($contactData['available_language'])) {
+                $contact[$this->contactFieldsMapping[$key]]['availableLanguage'] = explode(',', $contactData['available_language']);
             }
         }
 

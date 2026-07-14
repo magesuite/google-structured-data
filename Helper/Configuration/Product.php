@@ -73,7 +73,11 @@ class Product
 
     public function getBusinessDays(int $storeId): array
     {
-        $days = $this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+        $days = (string)$this->scopeConfig->getValue(self::XML_CONFIG_PATH_DELIVERY_DATA_BUSINESS_DAYS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+
+        if (empty($days)) {
+            return [];
+        }
 
         return explode(',', $days);
     }
