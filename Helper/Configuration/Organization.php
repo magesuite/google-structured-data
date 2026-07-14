@@ -8,6 +8,7 @@ class Organization
 {
     public const XML_PATH_ORGANIZATION_IS_ENABLED = 'structured_data/organization/is_enabled';
     public const XML_PATH_ORGANIZATION_NAME = 'structured_data/organization/name';
+    public const XML_PATH_ORGANIZATION_LEGAL_NAME = 'structured_data/organization/legal_name';
     public const XML_PATH_ORGANIZATION_LOGO = 'structured_data/organization/logo';
     public const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
     public const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
@@ -34,6 +35,10 @@ class Organization
     public function getName(): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+    public function getLegalName(): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_LEGAL_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getLogo(): ?string
