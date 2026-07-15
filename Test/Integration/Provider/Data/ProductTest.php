@@ -16,6 +16,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected ?\MageSuite\GoogleStructuredData\Model\Indexer\Product $indexer;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider;
     protected ?\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData $deliveryDataModifier;
+    protected ?\Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone;
 
     protected function setUp(): void
     {
@@ -27,8 +28,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->reviewCollectionFactory = $this->objectManager->get(\Magento\Review\Model\ResourceModel\Review\CollectionFactory::class);
         $this->indexer = $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Indexer\Product::class);
         $this->deliveryDataModifier = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData::class);
-
         $this->productDataProvider = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product::class);
+        $this->timezone = $this->objectManager->get(\Magento\Framework\Stdlib\DateTime\TimezoneInterface::class);
     }
 
     public function tearDown(): void
@@ -120,9 +121,11 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     {
         $product = $this->productRepository->get('simple');
         $this->indexer->executeRow($product->getId());
-        $productData = $this->productDataProvider->getProductData($product, $this->storeManager->getStore());
+        $store = $this->storeManager->getStore();
+        $productData = $this->productDataProvider->getProductData($product, $store);
+        $expectedDate = $this->timezone->scopeDate($store)->modify('+1 year')->format('Y-m-d');
 
-        $this->assertEquals(date('Y-m-d', strtotime('+1 year')), $productData['offers']['priceValidUntil']);
+        $this->assertEquals($expectedDate, $productData['offers']['priceValidUntil']);
     }
 
     /**
