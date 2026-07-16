@@ -2,6 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <structured_data>
+            <general>
+                <id_use_root_domain>0</id_use_root_domain>
+            </general>
             <breadcrumbs>
                 <is_enabled>1</is_enabled>
                 <include_homepage>0</include_homepage>
@@ -13,9 +16,10 @@
                     <return_policy_category>MerchantReturnUnspecified</return_policy_category>
                 </return_policy>
             </organization>
-            <search_box>
+            <website>
                 <is_enabled>1</is_enabled>
-            </search_box>
+                <search_box_enabled>1</search_box_enabled>
+            </website>
             <category_page>
                 <include_products>1</include_products>
                 <include_list_item>0</include_list_item>

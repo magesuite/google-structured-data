@@ -11,6 +11,8 @@ class Organization
     public const XML_PATH_ORGANIZATION_LEGAL_NAME = 'structured_data/organization/legal_name';
     public const XML_PATH_ORGANIZATION_LOGO = 'structured_data/organization/logo';
     public const XML_PATH_ORGANIZATION_DESCRIPTION = 'structured_data/organization/description';
+    public const XML_PATH_ORGANIZATION_ALTERNATE_NAME = 'structured_data/organization/alternate_name';
+    public const XML_PATH_ORGANIZATION_FOUNDING_DATE = 'structured_data/organization/founding_date';
     public const XML_PATH_ORGANIZATION_ADDRESS = 'structured_data/organization/address';
     public const XML_PATH_ORGANIZATION_CONTACT = 'structured_data/organization/contact';
     public const XML_PATH_ORGANIZATION_TELEPHONE = 'structured_data/organization/telephone';
@@ -21,6 +23,7 @@ class Organization
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_DAYS = 'structured_data/organization/return_policy/return_days';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_METHOD = 'structured_data/organization/return_policy/return_method';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_FEES = 'structured_data/organization/return_policy/return_fees';
+    public const XML_PATH_ORGANIZATION_RETURN_POLICY_REFUND_TYPE = 'structured_data/organization/return_policy/refund_type';
     public const XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_POLICY_LINK = 'structured_data/organization/return_policy/return_policy_link';
 
     public function __construct(
@@ -29,7 +32,7 @@ class Organization
 
     public function isEnabled(): bool
     {
-        return (bool)$this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(self::XML_PATH_ORGANIZATION_IS_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getName(): ?string
@@ -49,6 +52,16 @@ class Organization
     public function getDescription(): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_DESCRIPTION, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getAlternateName(): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_ALTERNATE_NAME, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getFoundingDate(): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_FOUNDING_DATE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getAddressData(): array
@@ -84,6 +97,11 @@ class Organization
     public function getReturnFees(int $storeId): ?string
     {
         return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_RETURN_FEES, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getRefundType(int $storeId): ?string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ORGANIZATION_RETURN_POLICY_REFUND_TYPE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function getReturnPolicyLink(int $storeId): ?string

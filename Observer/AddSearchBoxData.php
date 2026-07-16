@@ -14,12 +14,12 @@ class AddSearchBoxData implements \Magento\Framework\Event\ObserverInterface
 
     public function execute(\Magento\Framework\Event\Observer $observer): void
     {
-        if (!$this->configuration->isSearchBoxEnabled()) {
+        if (!$this->configuration->isSearchBoxEnabled() || !$this->configuration->isWebsiteEnabled()) {
             return;
         }
 
-        $searchBoxData = $this->searchBoxDataProvider->getSearchBoxData();
+        $searchActionData = $this->searchBoxDataProvider->getSearchBoxData();
 
-        $this->structuredDataContainer->add($searchBoxData, 'search');
+        $this->structuredDataContainer->addKey('website', 'potentialAction', $searchActionData);
     }
 }

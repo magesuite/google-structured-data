@@ -6,9 +6,56 @@ namespace MageSuite\GoogleStructuredData\Model\Catalog;
 
 class BatchProductUrlData
 {
+    protected array $canonicalRequestPaths = [];
+
     public function __construct(
         protected \Magento\Framework\App\ResourceConnection $resourceConnection
     ) {}
+
+    public function preloadCanonical(array $productIds, int $storeId): void
+    {
+        $missing = [];
+
+        foreach ($productIds as $productId) {
+            $productId = (int)$productId;
+
+            if (!array_key_exists($this->getCacheKey($productId, $storeId), $this->canonicalRequestPaths)) {
+                $missing[] = $productId;
+            }
+        }
+
+        if (empty($missing)) {
+            return;
+        }
+
+        $requestPaths = $this->fetchRequestPaths($missing, $storeId);
+
+        foreach ($missing as $productId) {
+            $this->canonicalRequestPaths[$this->getCacheKey($productId, $storeId)] = $requestPaths[$productId] ?? null;
+        }
+    }
+
+    public function getCanonicalRequestPath(int $productId, int $storeId): ?string
+    {
+        $cacheKey = $this->getCacheKey($productId, $storeId);
+
+        if (!array_key_exists($cacheKey, $this->canonicalRequestPaths)) {
+            $requestPaths = $this->fetchRequestPaths([$productId], $storeId);
+            $this->canonicalRequestPaths[$cacheKey] = $requestPaths[$productId] ?? null;
+        }
+
+        return $this->canonicalRequestPaths[$cacheKey];
+    }
+
+    public function reset(): void
+    {
+        $this->canonicalRequestPaths = [];
+    }
+
+    protected function getCacheKey(int $productId, int $storeId): string
+    {
+        return $productId . '_' . $storeId;
+    }
 
     public function preloadForProducts(array $products, int $storeId): void
     {

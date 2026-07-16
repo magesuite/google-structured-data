@@ -16,6 +16,7 @@
     </event>
     <event name="layout_generate_blocks_after">
         <observer name="add_organization_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddOrganizationData"/>
+        <observer name="add_website_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddWebsiteData"/>
         <observer name="add_search_box_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddSearchBoxData"/>
         <observer name="add_faq_page_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddFaqPageData"/>
     </event>

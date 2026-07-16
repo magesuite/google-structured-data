@@ -30,6 +30,11 @@ class ProductStructuredDataIndexRepository
         }
     }
 
+    public function hasDataInIndex(int $productId, int $storeId): bool
+    {
+        return !empty($this->productsStructuredData[$storeId][$productId]);
+    }
+
     public function getDataFromIndex(int $productId, int $storeId): array
     {
         if (array_key_exists($storeId, $this->productsStructuredData) && array_key_exists($productId, $this->productsStructuredData[$storeId])) {

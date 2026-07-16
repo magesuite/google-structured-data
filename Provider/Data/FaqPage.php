@@ -19,7 +19,6 @@ class FaqPage
         }
 
         return [
-            '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
             'mainEntity' => $questions
         ];

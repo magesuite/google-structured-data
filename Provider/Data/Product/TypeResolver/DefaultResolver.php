@@ -55,8 +55,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         $structuredData = [
-            '@context' => self::CONTEXT,
             '@type' => 'Product',
+            '@id' => sprintf('%s#product', $this->getCanonicalProductUrl($product, $store)),
             'name' => $this->escaper->escapeHtml($product->getName()),
             'image' => $this->getProductImages($product, $store),
             'sku' => $this->escaper->escapeHtml($product->getSku()),
@@ -68,6 +68,23 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         $this->cachedProductData[$cacheKey] = array_merge($structuredData, $attributeData);
 
         return $this->cachedProductData[$cacheKey];
+    }
+
+    protected function getProductIds(array $products): array
+    {
+        return array_map(static fn($product) => (int)$product->getId(), $products);
+    }
+
+    protected function getCanonicalProductUrl(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): string
+    {
+        $baseUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, $store->isFrontUrlSecure());
+        $requestPath = $this->batchProductUrlData->getCanonicalRequestPath((int)$product->getId(), (int)$store->getId());
+
+        if (!empty($requestPath)) {
+            return $baseUrl . $requestPath;
+        }
+
+        return sprintf('%scatalog/product/view/id/%d/', $baseUrl, (int)$product->getId());
     }
 
     public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array

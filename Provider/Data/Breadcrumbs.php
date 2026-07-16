@@ -14,8 +14,8 @@ class Breadcrumbs
     public function getBreadcrumbsData($breadcrumbs): array // phpcs:ignore
     {
         $breadcrumbData = [
-            "@context" => "https://schema.org",
             '@type' => 'BreadcrumbList',
+            '@id' => $this->url->getCurrentUrl() . '#breadcrumb',
         ];
 
         if (!is_array($breadcrumbs)) {

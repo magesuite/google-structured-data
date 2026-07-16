@@ -14,6 +14,7 @@ class DataProvider
         protected \Magento\Framework\App\DeploymentConfig $deploymentConfig,
         protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList,
         protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData,
+        protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData,
         protected int $batchSize = 1000
     ) {}
 
@@ -52,6 +53,9 @@ class DataProvider
         $collection->addMediaGalleryData();
         $collection->addTierPriceData();
         $this->inventoryData->addStockDataToProducts($collection->getItems(), $storeId);
+
+        $this->batchProductUrlData->reset();
+        $this->batchProductUrlData->preloadCanonical($collection->getColumnValues('entity_id'), $storeId);
 
         return $collection;
     }

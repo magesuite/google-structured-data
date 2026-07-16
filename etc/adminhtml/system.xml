@@ -8,6 +8,14 @@
             <label>Google Structured Data</label>
             <tab>magesuite</tab>
             <resource>MageSuite_GoogleStructuredData::config_structured_data</resource>
+            <group id="general" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="id_use_root_domain" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Use Root Domain For @id</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Controls the @id base for the site-wide Organization and WebSite entities. No (default): store base URL (e.g. https://example.com/de/#organization). Yes: root domain (e.g. https://example.com/#organization). <b>Recommended: Yes for multi-language/multi-store setups</b> so the Organization and WebSite are treated as one entity across all store views; use No only when a single domain hosts several distinct brands/sites under different paths.]]></comment>
+                </field>
+            </group>
             <group id="breadcrumbs" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Breadcrumbs</label>
                 <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -30,37 +38,52 @@
                 </field>
                 <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Organization Name</label>
-                    <comment>Custom website name, if empty default one will be used.</comment>
+                    <comment>Public brand/company name for the Organization entity. Example: Example Store GmbH. If empty, the store name is used.</comment>
                 </field>
                 <field id="legal_name" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Legal Name</label>
                 </field>
                 <field id="logo" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Logo Url</label>
-                    <comment>Custom website logo url, if empty default one will be used.</comment>
+                    <comment>Absolute URL to the company logo (min 112x112px). Example: https://example.com/media/logo.svg. If empty, the theme logo is used.</comment>
                 </field>
                 <field id="description" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Description</label>
+                    <comment>Short company description (1-2 sentences). Example: Example Store is an online shop for garden furniture and accessories.</comment>
+                </field>
+                <field id="alternate_name" translate="label" type="textarea" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Alternate Name</label>
+                    <comment>Alternative names of the organization, one per line. Rendered as schema.org alternateName array.</comment>
+                </field>
+                <field id="founding_date" translate="label" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Founding Date</label>
+                    <comment>Year or date the organization was founded, e.g. 2006 or 2006-05-01. Rendered as schema.org foundingDate.</comment>
                 </field>
                 <field id="telephone" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Telephone</label>
+                    <comment>Phone in international format. Example: +49 30 1234567.</comment>
                 </field>
                 <field id="email" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Email</label>
+                    <comment>Contact email. Example: info@example.com.</comment>
                 </field>
                 <group id="address" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Address</label>
                     <field id="postal" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Postal Code</label>
+                        <comment>Example: 10115.</comment>
                     </field>
                     <field id="city" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>City</label>
+                        <comment>Example: Berlin.</comment>
                     </field>
                     <field id="street" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Street</label>
+                        <comment>Street and number. Example: Example Street 1.</comment>
                     </field>
                     <field id="region" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Region</label>
+                        <comment>State/region. Example: Berlin.</comment>
                     </field>
                     <field id="country" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Country</label>
@@ -71,21 +94,27 @@
                     <label>Contact</label>
                     <field id="sales_telephone" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Sales Telephone</label>
+                        <comment>Example: +49 30 1234567.</comment>
                     </field>
                     <field id="sales_email" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Sales Email</label>
+                        <comment>Example: sales@example.com.</comment>
                     </field>
                     <field id="technical_telephone" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Technical Support Telephone</label>
+                        <comment>Example: +49 30 1234568.</comment>
                     </field>
                     <field id="technical_email" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Technical Support Email</label>
+                        <comment>Example: support@example.com.</comment>
                     </field>
                     <field id="customer_service_telephone" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Customer Service Telephone</label>
+                        <comment>Example: +49 30 1234569.</comment>
                     </field>
                     <field id="customer_service_email" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Customer Service Email</label>
+                        <comment>Example: service@example.com.</comment>
                     </field>
                     <field id="area_served" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Area Served</label>
@@ -123,6 +152,11 @@
                         <label>Return Fees</label>
                         <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnFees</source_model>
                     </field>
+                    <field id="refund_type" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Refund Type</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\ReturnRefundType</source_model>
+                        <comment>Optional but recommended by Google. How a refund is issued. Example: Full Refund.</comment>
+                    </field>
                     <field id="return_policy_link" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Return Policy Link</label>
                         <comment>When defined it will replace other return policy data.</comment>
@@ -133,6 +167,10 @@
                     <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Is Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="additional_urls" translate="label" type="textarea" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Additional Profile URLs (sameAs)</label>
+                        <comment>Extra URLs identifying the company elsewhere, one per line. Merged into the schema.org sameAs array. Examples: a Trustedshops or Trustpilot review page, or a Wikipedia/Wikidata entry.</comment>
                     </field>
                     <group id="profiles" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Profiles</label>
@@ -167,12 +205,21 @@
                     </group>
                 </group>
             </group>
-            <group id="search_box" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Search Box</label>
+            <group id="website" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>WebSite</label>
                 <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Is Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Defines whether a section will be added to the page source code or not.</comment>
+                    <comment>Defines whether the WebSite entity is added to the structured data graph.</comment>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Name</label>
+                    <comment>WebSite name for structured data. If empty, the Magento website name is used, then the Organization name.</comment>
+                </field>
+                <field id="search_box_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Search Box / SearchAction (deprecated)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Deprecated: Google retired the Sitelinks Searchbox feature (2024), so this SearchAction markup no longer produces a rich result. When enabled it adds a SearchAction (potentialAction) to the WebSite entity. Requires WebSite enabled.</comment>
                 </field>
             </group>
 
@@ -181,17 +228,17 @@
                 <field id="include_products" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Include products</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Defines whether category page contains product data.</comment>
+                    <comment>Emits a standalone Product entity for every product on the category page (full product data, NOT wrapped in a list) - this duplicates the product detail pages (PDP). Recommended: No - use "Include ListItem data" instead. Independent of that setting; enabling both duplicates the product markup.</comment>
                 </field>
                 <field id="include_list_item" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Include ListItem data</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Defines whether category page contains ListItem data.</comment>
+                    <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\CategoryListItemMode</source_model>
+                    <comment>Emits a single ItemList entity for the products on the category page. Disabled: no ItemList. "Product URLs only" (recommended): lightweight items (position + name + link to each PDP), no data duplication and keeps the PDP as the source of truth. "Full product data": embeds the whole Product in each list item (heavy, duplicates the PDP). Independent of "Include products".</comment>
                 </field>
                 <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Rating</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Defines if rating should be included for products in structured data on category page. Will work only if Show Rating is enabled also for Product.</comment>
+                    <comment>Adds review/aggregateRating to products in the category structured data. Applies only when full product data is emitted (Include ListItem data = "Full product data", or Include products = Yes) - no effect in "Product URLs only". Also requires Show Rating enabled for Product. Recommended: No (rating belongs on the product detail page).</comment>
                 </field>
             </group>
             <group id="product_page" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -255,7 +302,7 @@
                     </field>
                     <field id="cutoff_time" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Cutoff Time</label>
-                        <comment>Defines the time after which they will no longer process orders received on that day</comment>
+                        <comment>Time after which orders received that day are no longer processed. Example: 14:00 (24h format).</comment>
                     </field>
                     <field id="handling_time_value" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Handling Time</label>
@@ -292,6 +339,7 @@
                     </field>
                     <field id="suggested_min_age" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Suggested Min Age</label>
+                        <comment>Default minimum age for the audience. Example: 3 (years).</comment>
                         <validate>validate-digits validate-greater-than-zero</validate>
                     </field>
                     <field id="suggested_min_age_attribute" translate="label" type="select" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">

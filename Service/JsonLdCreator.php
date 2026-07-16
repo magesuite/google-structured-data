@@ -14,14 +14,37 @@ class JsonLdCreator
     {
         $structuredData = $this->structuredDataContainer->getStructuredData();
 
-        $jsonLd = '';
-        foreach ($structuredData as $data) {
-            $jsonLd .= sprintf(
-                '<script type="application/ld+json">%s</script>',
-                json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)
-            );
+        if (empty($structuredData)) {
+            return '';
         }
 
-        return $jsonLd;
+        $document = [
+            '@context' => 'https://schema.org',
+            '@graph' => $this->buildGraph($structuredData)
+        ];
+
+        return sprintf(
+            '<script type="application/ld+json">%s</script>',
+            json_encode($document, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG)
+        );
+    }
+
+    protected function buildGraph(array $structuredData): array
+    {
+        $graph = [];
+
+        foreach ($structuredData as $node) {
+            if (is_array($node) && array_is_list($node)) {
+                foreach ($node as $entity) {
+                    $graph[] = $entity;
+                }
+
+                continue;
+            }
+
+            $graph[] = $node;
+        }
+
+        return $graph;
     }
 }
