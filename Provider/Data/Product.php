@@ -6,7 +6,7 @@ namespace MageSuite\GoogleStructuredData\Provider\Data;
 
 class Product
 {
-    public const CACHE_KEY = 'google_structured_data_product_%s_%s';
+    public const CACHE_KEY = 'google_structured_data_product_%s_%s_%s';
     public const CACHE_GROUP = 'google_structured_data_product';
 
     public function __construct(
@@ -72,7 +72,8 @@ class Product
         return sprintf(
             self::CACHE_KEY,
             $product->getId(),
-            $store->getId()
+            $store->getId(),
+            $store->getCurrentCurrencyCode()
         );
     }
 
@@ -93,6 +94,10 @@ class Product
 
     public function getListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, int $position): array
     {
+        if (!$this->categoryConfiguration->shouldEmbedFullProductData()) {
+            return $this->getUrlListItemData($product, $position);
+        }
+
         $productData = $this->getProductData($product, $store);
         $shouldShowRating = $this->categoryConfiguration->shouldShowRating();
         $removeRating = function (&$item) use ($shouldShowRating): void {
@@ -120,6 +125,16 @@ class Product
             "@type" => "ListItem",
             "position" => $position,
             "item" => $productData
+        ];
+    }
+
+    protected function getUrlListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, int $position): array
+    {
+        return [
+            "@type" => "ListItem",
+            "position" => $position,
+            "name" => $product->getName(),
+            "url" => $product->getProductUrl()
         ];
     }
 

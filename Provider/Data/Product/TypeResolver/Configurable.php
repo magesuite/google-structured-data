@@ -57,7 +57,6 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
         $variants = $this->getVariants($product, $store);
         $groupData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'ProductGroup',
             'name' => $this->escaper->escapeHtml($product->getName()),
             'description' => $this->getDescription($product, (int)$store->getId()),
@@ -97,52 +96,85 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $superAttributes = $this->getProductSuperAttributes($product);
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
         $this->batchProductUrlData->preloadForProducts($simpleProducts, (int)$store->getId());
-        $productUrl = $product->getProductUrl();
-
-        $isUseParentProductUrl = $this->productConfiguration->isUseParentProductUrlForConfigurable();
-        $isUseParentImages = $this->productConfiguration->isUseParentProductImagesForConfigurable();
-        $isUseParentName = $this->productConfiguration->isUseParentProductNameForConfigurable();
-        $isUseParentDescription = $this->productConfiguration->isUseParentProductDescriptionForConfigurable();
+        $this->batchProductUrlData->preloadCanonical($this->getProductIds($simpleProducts), (int)$store->getId());
 
         $result = [];
+
         foreach ($simpleProducts as $simpleProduct) {
-            $variant = $this->getBaseProductData($simpleProduct, $store);
-            $variant['offers'] = $this->getOfferData($simpleProduct, $store, $store->getCurrentCurrencyCode());
-            $variant['url'] = $productUrl;
-
-            if ($isUseParentProductUrl) {
-                $variant['offers']['url'] = $productUrl;
-            }
-
-            if (!$isUseParentProductUrl) {
-                $variant['offers']['url'] = $variant['offers']['url'] ?? sprintf('%s%s', $store->getBaseUrl(), $simpleProduct->getUrlKey());
-            }
-
-            if ($isUseParentImages || empty($variant['image'])) {
-                $variant['image'] = $this->getProductImages($product, $store);
-            }
-
-            if ($isUseParentName || empty($variant['name'])) {
-                $variant['name'] = $product->getName();
-            }
-
-            if ($isUseParentDescription || empty($variant['description'])) {
-                $variant['description'] = $this->getDescription($product, (int)$store->getId());
-            }
-
-            foreach ($superAttributes as $attribute) {
-                $varyAttributeCode = $attribute->getVaryAttributeCode() ?? $attribute->getAttributeCode();
-                $variant[$varyAttributeCode] = $this->batchAttributeOptionData->getOptionText(
-                    $attribute->getAttributeCode(),
-                    (int)$store->getId(),
-                    $simpleProduct->getData($attribute->getAttributeCode())
-                );
-            }
-
-            $result[] = $variant;
+            $result[] = $this->buildVariant([
+                'product' => $product,
+                'simpleProduct' => $simpleProduct,
+                'store' => $store,
+                'superAttributes' => $superAttributes
+            ]);
         }
 
         return $result;
+    }
+
+    protected function buildVariant(array $context): array
+    {
+        $simpleProduct = $context['simpleProduct'];
+        $store = $context['store'];
+
+        $variant = $this->getBaseProductData($simpleProduct, $store);
+        $variant['offers'] = $this->getOfferData($simpleProduct, $store, $store->getCurrentCurrencyCode());
+        $variant['url'] = $context['product']->getProductUrl();
+        $variant = $this->applyVariantOfferUrl($variant, $context);
+        $variant = $this->applyParentOverrides($variant, $context);
+
+        return $this->applyVariantAttributes($variant, $context);
+    }
+
+    protected function applyVariantOfferUrl(array $variant, array $context): array
+    {
+        if ($this->productConfiguration->isUseParentProductUrlForConfigurable()) {
+            $variant['offers']['url'] = $context['product']->getProductUrl();
+
+            return $variant;
+        }
+
+        $variant['offers']['url'] = $variant['offers']['url']
+            ?? sprintf('%s%s', $context['store']->getBaseUrl(), $context['simpleProduct']->getUrlKey());
+
+        return $variant;
+    }
+
+    protected function applyParentOverrides(array $variant, array $context): array
+    {
+        $product = $context['product'];
+        $store = $context['store'];
+
+        if ($this->productConfiguration->isUseParentProductImagesForConfigurable() || empty($variant['image'])) {
+            $variant['image'] = $this->getProductImages($product, $store);
+        }
+
+        if ($this->productConfiguration->isUseParentProductNameForConfigurable() || empty($variant['name'])) {
+            $variant['name'] = $product->getName();
+        }
+
+        if ($this->productConfiguration->isUseParentProductDescriptionForConfigurable() || empty($variant['description'])) {
+            $variant['description'] = $this->getDescription($product, (int)$store->getId());
+        }
+
+        return $variant;
+    }
+
+    protected function applyVariantAttributes(array $variant, array $context): array
+    {
+        $store = $context['store'];
+        $simpleProduct = $context['simpleProduct'];
+
+        foreach ($context['superAttributes'] as $attribute) {
+            $varyAttributeCode = $attribute->getVaryAttributeCode() ?? $attribute->getAttributeCode();
+            $variant[$varyAttributeCode] = $this->batchAttributeOptionData->getOptionText(
+                $attribute->getAttributeCode(),
+                (int)$store->getId(),
+                $simpleProduct->getData($attribute->getAttributeCode())
+            );
+        }
+
+        return $variant;
     }
 
     protected function getProductSuperAttributes(\Magento\Catalog\Api\Data\ProductInterface $product): array

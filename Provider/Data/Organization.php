@@ -39,17 +39,23 @@ class Organization
         $legalName = $this->organizationConfiguration->getLegalName();
 
         $organizationData = [
-            "@context" => "https://schema.org",
             "@type" => "Organization",
+            "@id" => $this->configuration->getEntityIdBase() . '#organization',
             "name" => $name,
             "url" => $store->getBaseUrl(),
-            "logo" => $logoUrl
+            "logo" => [
+                "@type" => "ImageObject",
+                "url" => $logoUrl
+            ],
         ];
 
         if (!empty($legalName)) {
             $organizationData['legalName'] = $legalName;
         }
 
+        $organizationData = $this->addDescription($organizationData);
+        $organizationData = $this->addAlternateName($organizationData);
+        $organizationData = $this->addFoundingDate($organizationData);
         $organizationData = $this->addDefaultContactData($organizationData);
         $organizationData = $this->addAddressData($organizationData);
         $organizationData = $this->addContactData($organizationData);
@@ -57,6 +63,69 @@ class Organization
         $organizationData = $this->addSameAs($organizationData);
 
         return $organizationData;
+    }
+
+    public function addDescription(array $organizationData): array
+    {
+        $description = $this->organizationConfiguration->getDescription();
+
+        if (!$description) {
+            return $organizationData;
+        }
+
+        $organizationData['description'] = $description;
+
+        return $organizationData;
+    }
+
+    public function addAlternateName(array $organizationData): array
+    {
+        $alternateName = $this->organizationConfiguration->getAlternateName();
+
+        if (!$alternateName) {
+            return $organizationData;
+        }
+
+        $names = $this->splitLinesToArray($alternateName);
+
+        if (empty($names)) {
+            return $organizationData;
+        }
+
+        $organizationData['alternateName'] = $names;
+
+        return $organizationData;
+    }
+
+    public function addFoundingDate(array $organizationData): array
+    {
+        $foundingDate = $this->organizationConfiguration->getFoundingDate();
+
+        if (!$foundingDate) {
+            return $organizationData;
+        }
+
+        $organizationData['foundingDate'] = $foundingDate;
+
+        return $organizationData;
+    }
+
+    protected function splitLinesToArray(string $value): array
+    {
+        $lines = preg_split('/\r\n|\r|\n/', $value);
+        $result = [];
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            $result[] = $line;
+        }
+
+        return $result;
     }
 
     public function addSameAs(array $organizationData): array
@@ -102,7 +171,7 @@ class Organization
             if (!isset($contact[$this->contactFieldsMapping[$key]])) {
                 $contact[$this->contactFieldsMapping[$key]] = [
                     '@type' => 'ContactPoint',
-                    'contactType' => 'sales'
+                    'contactType' => $this->contactFieldsMapping[$key]
                 ];
             }
 
@@ -143,6 +212,7 @@ class Organization
         $returnPolicyLink = $this->organizationConfiguration->getReturnPolicyLink($storeId);
         $returnMethod = $this->organizationConfiguration->getReturnMethod($storeId);
         $returnFees = $this->organizationConfiguration->getReturnFees($storeId);
+        $refundType = $this->organizationConfiguration->getRefundType($storeId);
 
         $returnPolicyData = ['@type' => 'MerchantReturnPolicy'];
 
@@ -163,6 +233,10 @@ class Organization
 
         if ($returnFees) {
             $returnPolicyData['returnFees'] = sprintf('https://schema.org/%s', $returnFees);
+        }
+
+        if ($refundType) {
+            $returnPolicyData['refundType'] = sprintf('https://schema.org/%s', $refundType);
         }
 
         $organizationData['hasMerchantReturnPolicy'] = $returnPolicyData;

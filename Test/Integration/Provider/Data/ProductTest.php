@@ -43,7 +43,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     public function testSimpleProductData(): void
     {
         $expectedData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Simple Product',
             'image' => [],
@@ -76,10 +75,36 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     /**
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      */
+    public function testCacheKeyIsCurrencySpecific(): void
+    {
+        $product = $this->productRepository->get('simple');
+        $store = $this->storeManager->getStore();
+
+        $cacheKey = $this->productDataProvider->getCacheKey($product, $store);
+
+        $this->assertStringEndsWith('_' . $store->getCurrentCurrencyCode(), $cacheKey);
+    }
+
+    /**
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
+     */
+    public function testProductIdIgnoresCategoryContextUrl(): void
+    {
+        $product = $this->productRepository->get('simple');
+        $product->setData('request_path', 'some-category/simple-product.html');
+
+        $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
+
+        $this->assertStringEndsWith('/simple-product.html#product', $productData['@id']);
+        $this->assertStringNotContainsString('some-category', $productData['@id']);
+    }
+
+    /**
+     * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
+     */
     public function testProductDataWithSpecialPrice(): void
     {
         $expectedData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Simple Product with Special Price',
             'image' => [],
@@ -171,7 +196,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
 
         $expectedProductGroupData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'ProductGroup',
             'name' => 'Configurable Product',
             'productGroupID' => 'configurable',
@@ -180,8 +204,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'description' => '',
             'hasVariant' => [
                 [
-                    '@context' => 'https://schema.org/',
                     '@type' => 'Product',
+                    '@id' => $simpleProducts[0]->getProductUrl() . '#product',
                     'name' => 'Configurable OptionOption 1',
                     'sku' => 'simple_10',
                     'url' => 'http://localhost/index.php/configurable-product.html',
@@ -199,8 +223,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                     'description' => null
                 ],
                 [
-                    '@context' => 'https://schema.org/',
                     '@type' => 'Product',
+                    '@id' => $simpleProducts[1]->getProductUrl() . '#product',
                     'name' => 'Configurable OptionOption 2',
                     'sku' => 'simple_20',
                     'url' => 'http://localhost/index.php/configurable-product.html',
@@ -212,7 +236,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
                         'sku' => 'simple_20',
                         'price' => '20.00',
                         'priceCurrency' => 'USD',
-                        'availability' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT .'InStock',
+                        'availability' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'InStock',
                         'url' => $simpleProducts[1]->getProductUrl()
                     ],
                     'description' => null
@@ -221,7 +245,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         ];
 
         $expectedData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Configurable Product',
             'image' => [],
@@ -247,16 +270,14 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     {
         $expectedProductCounts = 2;
         $expectedSimpleProductData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Simple Product',
             'image' => [],
             'sku' => 'simple',
             'url' => 'http://localhost/index.php/grouped-product.html',
-            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT. 'NewCondition',
+            'itemCondition' => \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface::CONTEXT . 'NewCondition',
         ];
         $expectedVirtualProductData = [
-            '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => 'Virtual Product',
             'image' => [],

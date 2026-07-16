@@ -8,18 +8,17 @@ class AddListItemsDataToCategoryPage
 {
     public function __construct(
         protected \Magento\Framework\Registry $registry,
+        protected \Magento\Framework\UrlInterface $url,
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList
+        protected \MageSuite\GoogleStructuredData\Model\Product\StructuredDataPreloader $preloader
     ) {}
 
     public function afterGetLoadedProductCollection(\Magento\Catalog\Block\Product\ListProduct $subject, $result): \Magento\Eav\Model\Entity\Collection\AbstractCollection
     {
-        if (!$this->categoryConfiguration->isCategoryPageIncludeListItem()) {
+        if (!$this->categoryConfiguration->isListItemEnabled()) {
             return $result;
         }
 
@@ -31,19 +30,11 @@ class AddListItemsDataToCategoryPage
 
         $store = $this->storeManager->getStore();
 
-        if (!$this->productConfiguration->isIndexingEnabled()) {
-            $result->addAttributeToSelect($this->attributeList->getList((int)$store->getId()));
-            $result->_loadAttributes(); // phpcs:ignore
+        if ($this->categoryConfiguration->shouldEmbedFullProductData()) {
+            $this->preloader->preload($result, (int)$store->getId());
         }
 
-        $productIds = $result->getColumnValues('entity_id');
-        $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, (int)$store->getId());
-
-        $itemList = [
-            "@context" => "https://schema.org/",
-            "@type" => "ItemList",
-            "itemListElement" => []
-        ];
+        $listElements = [];
         $position = 1;
 
         foreach ($result as $product) {
@@ -53,9 +44,18 @@ class AddListItemsDataToCategoryPage
                 $listItemData['item'] = reset($listItemData['item']);
             }
 
-            $itemList['itemListElement'][] = $listItemData;
+            $listElements[] = $listItemData;
             $position++;
         }
+
+        $itemList = [
+            "@type" => "ItemList",
+            "@id" => $this->url->getCurrentUrl() . '#itemlist',
+            "name" => $currentCategory->getName(),
+            "numberOfItems" => count($listElements),
+            "itemListOrder" => "https://schema.org/ItemListOrderAscending",
+            "itemListElement" => $listElements
+        ];
 
         $this->structuredDataContainer->add($itemList, 'item_list');
 

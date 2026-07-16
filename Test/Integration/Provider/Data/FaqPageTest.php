@@ -36,7 +36,7 @@ class FaqPageTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ];
-        $this->assertEquals('https://schema.org', $faqPageData['@context']);
+        $this->assertArrayNotHasKey('@context', $faqPageData);
         $this->assertEquals('FAQPage', $faqPageData['@type']);
         $this->assertEquals($expectedQuestions, $faqPageData['mainEntity']);
     }

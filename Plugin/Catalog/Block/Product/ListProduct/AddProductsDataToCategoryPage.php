@@ -10,12 +10,11 @@ class AddProductsDataToCategoryPage
         protected \Magento\Framework\Registry $registry,
         protected \Magento\Framework\DataObjectFactory $dataObjectFactory,
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
-        protected \MageSuite\GoogleStructuredData\Model\ProductStructuredDataIndexRepository $productStructuredDataIndexRepository,
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList
+        protected \MageSuite\GoogleStructuredData\Model\Product\StructuredDataPreloader $preloader
     ) {
     }
 
@@ -27,23 +26,16 @@ class AddProductsDataToCategoryPage
 
         $store = $this->storeManager->getStore();
         $storeId = (int)$store->getId();
-        $isIndexingEnabled = $this->productConfiguration->isIndexingEnabled();
 
-        if (!$isIndexingEnabled) {
-            $result->addAttributeToSelect($this->attributeList->getList($storeId));
-            $result->_loadAttributes(); // phpcs:ignore
-        }
-
-        $productIds = $result->getColumnValues('entity_id');
-        if (empty($productIds)) {
+        if (empty($result->getColumnValues('entity_id'))) {
             return $result;
         }
 
-        if (!$isIndexingEnabled) {
+        $this->preloader->preload($result, $storeId);
+
+        if (!$this->productConfiguration->isIndexingEnabled()) {
             $result->addMediaGalleryData();
         }
-
-        $this->productStructuredDataIndexRepository->loadDataFromIndex($productIds, $storeId);
 
         foreach ($result as $product) {
             $this->addProductStructuredData($product, $store);

@@ -20,6 +20,9 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoConfigFixture current_store structured_data/organization/logo testlogo.png
+     * @magentoConfigFixture current_store structured_data/organization/description Toys for Fun ist ein Onlineshop.
+     * @magentoConfigFixture current_store structured_data/organization/alternate_name Toys for Fun
+     * @magentoConfigFixture current_store structured_data/organization/founding_date 2006
      * @magentoConfigFixture current_store structured_data/organization/telephone 111222333
      * @magentoConfigFixture current_store structured_data/organization/email admin@example.com
      * @magentoConfigFixture current_store structured_data/organization/address/postal 00000
@@ -34,15 +37,22 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture current_store structured_data/organization/return_policy/return_days 7
      * @magentoConfigFixture current_store structured_data/organization/return_policy/return_method ReturnByMail
      * @magentoConfigFixture current_store structured_data/organization/return_policy/return_fees FreeReturn
+     * @magentoConfigFixture current_store structured_data/organization/return_policy/refund_type FullRefund
      */
     public function testItReturnOrganizationDataCorrectly(): void
     {
         $expectedData = [
-            '@context' => 'https://schema.org',
             '@type' => 'Organization',
+            '@id' => 'http://localhost/index.php/#organization',
             'name' => 'Default Store View',
             'url' => 'http://localhost/index.php/',
-            'logo' => 'testlogo.png',
+            'logo' => [
+                '@type' => 'ImageObject',
+                'url' => 'testlogo.png'
+            ],
+            'description' => 'Toys for Fun ist ein Onlineshop.',
+            'alternateName' => ['Toys for Fun'],
+            'foundingDate' => '2006',
             'telephone' => '111222333',
             'email' => 'admin@example.com',
             'address' => [
@@ -66,13 +76,31 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
                 'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
                 'merchantReturnDays' => 7,
                 'returnMethod' => 'https://schema.org/ReturnByMail',
-                'returnFees' => 'https://schema.org/FreeReturn'
+                'returnFees' => 'https://schema.org/FreeReturn',
+                'refundType' => 'https://schema.org/FullRefund'
             ]
         ];
 
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 
         $this->assertEquals($expectedData, $organizationData);
+    }
+
+    /**
+     * @magentoConfigFixture current_store structured_data/organization/contact/technical_telephone 111
+     * @magentoConfigFixture current_store structured_data/organization/contact/technical_email tech@example.com
+     * @magentoConfigFixture current_store structured_data/organization/contact/customer_service_telephone 222
+     * @magentoConfigFixture current_store structured_data/organization/contact/customer_service_email service@example.com
+     */
+    public function testContactPointUsesProperContactType(): void
+    {
+        $organizationData = $this->organizationDataProvider->getOrganizationData();
+
+        $contactTypes = array_column($organizationData['contactPoint'], 'contactType');
+
+        $this->assertContains('technical support', $contactTypes);
+        $this->assertContains('customer service', $contactTypes);
+        $this->assertNotContains('sales', $contactTypes);
     }
 
     /**
