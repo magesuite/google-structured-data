@@ -99,6 +99,22 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->assertStringNotContainsString('some-category', $productData['@id']);
     }
 
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
+    public function testProductIdIsOmittedWhenProductHasNoUrlRewrite(): void
+    {
+        $product = $this->productRepository->get('simple');
+
+        $this->objectManager->get(\Magento\UrlRewrite\Model\UrlPersistInterface::class)->deleteByData([
+            \Magento\UrlRewrite\Service\V1\Data\UrlRewrite::ENTITY_ID => $product->getId(),
+            \Magento\UrlRewrite\Service\V1\Data\UrlRewrite::ENTITY_TYPE => \Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator::ENTITY_TYPE
+        ]);
+        $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData::class)->reset();
+
+        $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
+
+        $this->assertArrayNotHasKey('@id', $productData);
+    }
+
     /**
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      */

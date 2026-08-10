@@ -54,15 +54,20 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             return $this->cachedProductData[$cacheKey];
         }
 
-        $structuredData = [
-            '@type' => 'Product',
-            '@id' => sprintf('%s#product', $this->getCanonicalProductUrl($product, $store)),
+        $structuredData = ['@type' => 'Product'];
+        $productNodeId = $this->getProductNodeId($product, $store);
+
+        if ($productNodeId !== null) {
+            $structuredData['@id'] = $productNodeId;
+        }
+
+        $structuredData = array_merge($structuredData, [
             'name' => $this->escaper->escapeHtml($product->getName()),
             'image' => $this->getProductImages($product, $store),
             'sku' => $this->escaper->escapeHtml($product->getSku()),
             'url' => $product->getProductUrl(),
             'itemCondition' => sprintf('%s%s', self::CONTEXT, 'NewCondition')
-        ];
+        ]);
 
         $attributeData = $this->compositeAttributeDataProvider->getAttributeData($product, (int)$store->getId());
         $this->cachedProductData[$cacheKey] = array_merge($structuredData, $attributeData);
@@ -75,16 +80,17 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return array_map(static fn($product) => (int)$product->getId(), $products);
     }
 
-    protected function getCanonicalProductUrl(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): string
+    protected function getProductNodeId(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): ?string
     {
-        $baseUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, $store->isFrontUrlSecure());
         $requestPath = $this->batchProductUrlData->getCanonicalRequestPath((int)$product->getId(), (int)$store->getId());
 
-        if (!empty($requestPath)) {
-            return $baseUrl . $requestPath;
+        if (empty($requestPath)) {
+            return null;
         }
 
-        return sprintf('%scatalog/product/view/id/%d/', $baseUrl, (int)$product->getId());
+        $baseUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, $store->isFrontUrlSecure());
+
+        return sprintf('%s%s#product', $baseUrl, $requestPath);
     }
 
     public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
