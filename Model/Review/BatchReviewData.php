@@ -108,7 +108,14 @@ class BatchReviewData
             return;
         }
 
-        /** @var \Magento\Review\Model\ResourceModel\Review\Collection $collection */
+        foreach ($this->getReviewCollection($reviewIds) as $review) {
+            $productId = (int)$review->getData('entity_pk_value');
+            $this->reviews[$this->getKey($productId, $storeId)][] = $review;
+        }
+    }
+
+    public function getReviewCollection(array $reviewIds): \Magento\Review\Model\ResourceModel\Review\Collection
+    {
         $collection = $this->reviewCollectionFactory->create();
         $collection->setDateOrder();
 
@@ -121,10 +128,7 @@ class BatchReviewData
             )
             ->group('main_table.review_id');
 
-        foreach ($collection as $review) {
-            $productId = (int)$review->getData('entity_pk_value');
-            $this->reviews[$this->getKey($productId, $storeId)][] = $review;
-        }
+        return $collection;
     }
 
     protected function getMostRecentReviewIds(array $productIds, int $storeId): array
