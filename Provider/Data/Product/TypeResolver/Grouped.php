@@ -36,10 +36,28 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
                 $associatedProductData['image'] = $this->getProductImages($this->getParentProduct(), $store);
             }
 
-            $productData[] = $associatedProductData;
+            $productData[] = $this->applyVariantNodeId($associatedProductData, $associatedProduct, $store);
         }
 
         return $productData;
+    }
+
+    protected function applyVariantNodeId(
+        array $associatedProductData,
+        \Magento\Catalog\Api\Data\ProductInterface $associatedProduct,
+        \Magento\Store\Api\Data\StoreInterface $store
+    ): array {
+        $parentNodeId = $this->getProductNodeId($this->getParentProduct(), $store);
+
+        if ($parentNodeId === null) {
+            unset($associatedProductData['@id']);
+
+            return $associatedProductData;
+        }
+
+        $associatedProductData['@id'] = sprintf('%s-%d', $parentNodeId, $associatedProduct->getId());
+
+        return $associatedProductData;
     }
 
     public function getOfferData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, string $currency): array
