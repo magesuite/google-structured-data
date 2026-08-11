@@ -318,6 +318,22 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    #[\Magento\TestFramework\Fixture\DataFixture('Magento/GroupedProduct/_files/product_grouped.php')]
+    public function testGroupedVariantIdsAreAnchoredToParentUrl(): void
+    {
+        $product = $this->productRepository->get('grouped-product');
+
+        $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
+        $nodeIds = array_column($productData, '@id');
+
+        $this->assertCount(count($productData), $nodeIds);
+        $this->assertSame($nodeIds, array_unique($nodeIds));
+
+        foreach ($nodeIds as $nodeId) {
+            $this->assertStringStartsWith('http://localhost/index.php/grouped-product.html#product-', $nodeId);
+        }
+    }
+
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
