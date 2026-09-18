@@ -16,7 +16,8 @@ class Product
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverPool $productTypeResolverPool,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifiersPool $modifiersPool,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
+        protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData
     ) {}
 
     public function getProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -95,7 +96,7 @@ class Product
     public function getListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, int $position): array
     {
         if (!$this->categoryConfiguration->shouldEmbedFullProductData()) {
-            return $this->getUrlListItemData($product, $position);
+            return $this->getUrlListItemData($product, $store, $position);
         }
 
         $productData = $this->getProductData($product, $store);
@@ -128,13 +129,13 @@ class Product
         ];
     }
 
-    protected function getUrlListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, int $position): array
+    protected function getUrlListItemData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store, int $position): array
     {
         return [
             "@type" => "ListItem",
             "position" => $position,
             "name" => $product->getName(),
-            "url" => $product->getProductUrl()
+            "url" => $this->batchProductUrlData->getProductUrl($product, $store)
         ];
     }
 

@@ -8,6 +8,7 @@ class Category
 {
     public const XML_PATH_CATEGORY_PAGE_INCLUDE_PRODUCTS = 'structured_data/category_page/include_products';
     public const XML_PATH_CATEGORY_PAGE_INCLUDE_LIST_ITEM = 'structured_data/category_page/include_list_item';
+    public const XML_PATH_CATEGORY_PAGE_IS_COLLECTION_PAGE_ENABLED = 'structured_data/category_page/is_collection_page_enabled';
     public const XML_PATH_CATEGORY_PAGE_SHOW_RATING = 'structured_data/category_page/show_rating';
 
     public function __construct(
@@ -32,6 +33,11 @@ class Category
     public function shouldEmbedFullProductData(): bool
     {
         return $this->getListItemMode() === \MageSuite\GoogleStructuredData\Model\Config\Source\CategoryListItemMode::MODE_FULL_PRODUCT_DATA;
+    }
+
+    public function isCollectionPageEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_PATH_CATEGORY_PAGE_IS_COLLECTION_PAGE_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function shouldShowRating(): bool

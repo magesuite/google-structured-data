@@ -30,7 +30,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
             }
 
             if ($this->productConfiguration->isUseParentProductUrlForGrouped()) {
-                $associatedProductData['url'] = $this->getParentProduct()->getProductUrl();
+                $associatedProductData['url'] = $this->batchProductUrlData->getProductUrl($this->getParentProduct(), $store);
             }
             if ($this->productConfiguration->isUseParentProductImagesForGrouped()) {
                 $associatedProductData['image'] = $this->getProductImages($this->getParentProduct(), $store);
@@ -65,7 +65,7 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         $offerData = parent::getOfferData($product, $store, $currency);
 
         if ($this->productConfiguration->isUseParentProductUrlForGrouped()) {
-            $offerData['url'] = $this->getParentProduct()->getProductUrl();
+            $offerData['url'] = $this->batchProductUrlData->getProductUrl($this->getParentProduct(), $store);
         }
 
         return $offerData;

@@ -9,6 +9,7 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
     public function __construct(
         protected \Magento\Framework\Stdlib\ArrayManager $arrayManager,
         protected \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        protected \Magento\Framework\Serialize\SerializerInterface $serializer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\BusinessDays $businessDays,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\CutoffTime $cutoffTime,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\HandlingTime $handlingTime,
@@ -103,21 +104,24 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         foreach ($availableCarriers as $carrier) {
             $shippingRateData = [
                 '@type' => 'MonetaryAmount',
-                'value' => $carrier['price'],
+                'value' => (float)$carrier['price'],
                 'currency' => $dataObject->getCurrencyCode(),
             ];
-
             $offerShippingDetails = [
                 '@type' => 'OfferShippingDetails',
                 'deliveryTime' => $deliveryTimeData,
                 'shippingRate' => $shippingRateData,
                 'shippingDestination' => $shippingDestination,
             ];
-
-            $data[] = $offerShippingDetails;
+            $data[$this->getShippingDetailsKey($offerShippingDetails)] = $offerShippingDetails;
         }
 
-        return $data;
+        return array_values($data);
+    }
+
+    public function getShippingDetailsKey(array $offerShippingDetails): string
+    {
+        return hash('md5', (string)$this->serializer->serialize($offerShippingDetails));
     }
 
     public function getAvailableCarriers(\Magento\Store\Api\Data\StoreInterface $store): array
