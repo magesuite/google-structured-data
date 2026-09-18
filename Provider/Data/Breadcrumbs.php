@@ -13,9 +13,13 @@ class Breadcrumbs
 
     public function getBreadcrumbsData($breadcrumbs): array // phpcs:ignore
     {
+        $currentUrl = $this->url->getUrl('*/*/*', [
+            '_current' => true,
+            '_use_rewrite' => true
+        ]);
         $breadcrumbData = [
             '@type' => 'BreadcrumbList',
-            '@id' => $this->url->getCurrentUrl() . '#breadcrumb',
+            '@id' => $currentUrl . '#breadcrumb',
         ];
 
         if (!is_array($breadcrumbs)) {
@@ -33,7 +37,7 @@ class Breadcrumbs
             }
 
             if (!$breadcrumb['link']) {
-                $breadcrumb['link'] = $this->url->escape($this->url->getCurrentUrl());
+                $breadcrumb['link'] = $this->url->escape($currentUrl);
             }
 
             $name = (string) $breadcrumb['label'];

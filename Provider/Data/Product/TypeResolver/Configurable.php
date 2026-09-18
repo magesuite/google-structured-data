@@ -37,7 +37,8 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
         $this->inventoryData->addStockDataToProducts($simpleProducts, (int)$store->getId());
         $this->batchProductUrlData->preloadForProducts($simpleProducts, (int)$store->getId());
-        $productUrl = $product->getProductUrl();
+        $this->batchProductUrlData->preloadCanonical($this->getProductIds($simpleProducts), (int)$store->getId());
+        $productUrl = $this->batchProductUrlData->getProductUrl($product, $store);
 
         foreach ($simpleProducts as $simpleProduct) {
             $offer = $this->getOfferData($simpleProduct, $store, $currency);
@@ -61,7 +62,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
             'name' => $this->escaper->escapeHtml($product->getName()),
             'description' => $this->getDescription($product, (int)$store->getId()),
             'productGroupID' => $product->getSku(),
-            'url' => $product->getProductUrl(),
+            'url' => $this->batchProductUrlData->getProductUrl($product, $store),
             'variesBy' => $this->getVariesBy($product)
         ];
 
@@ -119,7 +120,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
 
         $variant = $this->getBaseProductData($simpleProduct, $store);
         $variant['offers'] = $this->getOfferData($simpleProduct, $store, $store->getCurrentCurrencyCode());
-        $variant['url'] = $context['product']->getProductUrl();
+        $variant['url'] = $this->batchProductUrlData->getProductUrl($context['product'], $store);
         $variant = $this->applyVariantOfferUrl($variant, $context);
         $variant = $this->applyParentOverrides($variant, $context);
 
@@ -129,7 +130,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
     protected function applyVariantOfferUrl(array $variant, array $context): array
     {
         if ($this->productConfiguration->isUseParentProductUrlForConfigurable()) {
-            $variant['offers']['url'] = $context['product']->getProductUrl();
+            $variant['offers']['url'] = $this->batchProductUrlData->getProductUrl($context['product'], $context['store']);
 
             return $variant;
         }

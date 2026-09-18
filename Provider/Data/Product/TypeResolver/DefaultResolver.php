@@ -65,7 +65,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             'name' => $this->escaper->escapeHtml($product->getName()),
             'image' => $this->getProductImages($product, $store),
             'sku' => $this->escaper->escapeHtml($product->getSku()),
-            'url' => $product->getProductUrl(),
+            'url' => $this->batchProductUrlData->getProductUrl($product, $store),
             'itemCondition' => sprintf('%s%s', self::CONTEXT, 'NewCondition')
         ]);
 
@@ -88,9 +88,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             return null;
         }
 
-        $baseUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, $store->isFrontUrlSecure());
-
-        return sprintf('%s%s#product', $baseUrl, $requestPath);
+        return sprintf('%s%s#product', $this->batchProductUrlData->getStoreBaseUrl($store), $requestPath);
     }
 
     public function getOffers(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -117,7 +115,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             'price' => number_format($productPrice, 2, '.', ''),
             'priceCurrency' => $currency,
             'availability' => self::CONTEXT . ($product->isAvailable() ? self::IN_STOCK : self::OUT_OF_STOCK),
-            'url' => $product->getUrlInStore()
+            'url' => $this->batchProductUrlData->getProductUrl($product, $store)
         ];
         $specialFromDate = $product->getSpecialFromDate();
         $specialToDate = $product->getSpecialToDate();

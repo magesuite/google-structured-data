@@ -47,6 +47,24 @@ class BatchProductUrlData
         return $this->canonicalRequestPaths[$cacheKey];
     }
 
+    public function getProductUrl(
+        \Magento\Catalog\Api\Data\ProductInterface $product,
+        \Magento\Store\Api\Data\StoreInterface $store
+    ): string {
+        $requestPath = $this->getCanonicalRequestPath((int)$product->getId(), (int)$store->getId());
+
+        if (empty($requestPath)) {
+            return (string)$product->getProductUrl();
+        }
+
+        return $this->getStoreBaseUrl($store) . $requestPath;
+    }
+
+    public function getStoreBaseUrl(\Magento\Store\Api\Data\StoreInterface $store): string
+    {
+        return $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, $store->isFrontUrlSecure());
+    }
+
     public function reset(): void
     {
         $this->canonicalRequestPaths = [];

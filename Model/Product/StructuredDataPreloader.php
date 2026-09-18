@@ -32,6 +32,11 @@ class StructuredDataPreloader
         $this->batchProductUrlData->preloadCanonical($canonicalIds, $storeId);
     }
 
+    public function preloadCanonicalUrls(\Magento\Eav\Model\Entity\Collection\AbstractCollection $collection, int $storeId): void
+    {
+        $this->batchProductUrlData->preloadCanonical($collection->getColumnValues('entity_id'), $storeId);
+    }
+
     protected function getIndexMissIds(array $productIds, int $storeId): array
     {
         return array_values(array_filter(

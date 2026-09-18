@@ -12,6 +12,7 @@ class AddListItemsDataToCategoryPage
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
+        protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
         protected \MageSuite\GoogleStructuredData\Model\Product\StructuredDataPreloader $preloader
     ) {}
@@ -30,9 +31,7 @@ class AddListItemsDataToCategoryPage
 
         $store = $this->storeManager->getStore();
 
-        if ($this->categoryConfiguration->shouldEmbedFullProductData()) {
-            $this->preloader->preload($result, (int)$store->getId());
-        }
+        $this->preloadCollectionData($result, (int)$store->getId());
 
         $listElements = [];
         $position = 1;
@@ -48,17 +47,50 @@ class AddListItemsDataToCategoryPage
             $position++;
         }
 
+        $currentUrl = $this->url->getUrl('*/*/*', [
+            '_current' => true,
+            '_use_rewrite' => true
+        ]);
         $itemList = [
             "@type" => "ItemList",
-            "@id" => $this->url->getCurrentUrl() . '#itemlist',
+            "@id" => $currentUrl . '#itemlist',
             "name" => $currentCategory->getName(),
             "numberOfItems" => count($listElements),
             "itemListOrder" => "https://schema.org/ItemListOrderAscending",
             "itemListElement" => $listElements
         ];
 
+        if ($this->categoryConfiguration->isCollectionPageEnabled()) {
+            $idBase = $this->configuration->getEntityIdBase();
+            $collectionPage = [
+                "@type" => "CollectionPage",
+                "@id" => $currentUrl . '#collectionpage',
+                "name" => $currentCategory->getName(),
+                "isPartOf" => [
+                    "@id" => $idBase . '#website'
+                ],
+                "breadcrumb" => [
+                    "@id" => $currentUrl . '#breadcrumb'
+                ],
+                "mainEntity" => [
+                    "@id" => $currentUrl . '#itemlist'
+                ]
+            ];
+            $this->structuredDataContainer->add($collectionPage, 'collection_page');
+        }
+
         $this->structuredDataContainer->add($itemList, 'item_list');
 
         return $result;
+    }
+
+    protected function preloadCollectionData(\Magento\Eav\Model\Entity\Collection\AbstractCollection $productCollection, int $storeId): void
+    {
+        if ($this->categoryConfiguration->shouldEmbedFullProductData()) {
+            $this->preloader->preload($productCollection, $storeId);
+            return;
+        }
+
+        $this->preloader->preloadCanonicalUrls($productCollection, $storeId);
     }
 }

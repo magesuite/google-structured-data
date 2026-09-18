@@ -57,6 +57,53 @@ class AddListItemsDataToCategoryPageTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayNotHasKey('item', $listItem);
     }
 
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/category_page/include_list_item', '2', 'store', 'default')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/category_page/is_collection_page_enabled', '1', 'store', 'default')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/product_page/is_indexing_enabled', '0', 'store', 'default')]
+    public function testCollectionPageIsAddedAsSeparateNodeReferencingItemListWhenEnabled(): void
+    {
+        $structuredData = $this->buildStructuredDataForSku('simple');
+
+        $this->assertArrayHasKey('collection_page', $structuredData);
+
+        $collectionPage = $structuredData['collection_page'];
+        $itemList = $structuredData['item_list'];
+
+        $this->assertEquals('CollectionPage', $collectionPage['@type']);
+        $this->assertStringEndsWith('#collectionpage', $collectionPage['@id']);
+        $this->assertArrayHasKey('name', $collectionPage);
+        $this->assertArrayNotHasKey('itemListElement', $collectionPage);
+        $this->assertArrayNotHasKey('numberOfItems', $collectionPage);
+        $this->assertArrayNotHasKey('itemListOrder', $collectionPage);
+
+        $this->assertStringEndsWith('#website', $collectionPage['isPartOf']['@id']);
+        $this->assertStringEndsWith('#breadcrumb', $collectionPage['breadcrumb']['@id']);
+        $this->assertEquals($itemList['@id'], $collectionPage['mainEntity']['@id']);
+
+        $this->assertEquals('ItemList', $itemList['@type']);
+        $this->assertCount(1, $itemList['itemListElement']);
+
+        $listItem = reset($itemList['itemListElement']);
+        $this->assertEquals('ListItem', $listItem['@type']);
+        $this->assertEquals(1, $listItem['position']);
+        $this->assertEquals('Simple Product', $listItem['name']);
+        $this->assertNotEmpty($listItem['url']);
+        $this->assertArrayNotHasKey('item', $listItem);
+    }
+
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/category_page/include_list_item', '2', 'store', 'default')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/category_page/is_collection_page_enabled', '0', 'store', 'default')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/product_page/is_indexing_enabled', '0', 'store', 'default')]
+    public function testCollectionPageIsNotAddedWhenDisabled(): void
+    {
+        $structuredData = $this->buildStructuredDataForSku('simple');
+
+        $this->assertArrayNotHasKey('collection_page', $structuredData);
+        $this->assertEquals('ItemList', $structuredData['item_list']['@type']);
+    }
+
     /**
      * @magentoDataFixture MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php
      * @magentoConfigFixture current_store structured_data/category_page/include_list_item 1
@@ -73,6 +120,11 @@ class AddListItemsDataToCategoryPageTest extends \PHPUnit\Framework\TestCase
 
     protected function buildItemListForSku(string $sku): array
     {
+        return $this->buildStructuredDataForSku($sku)['item_list'];
+    }
+
+    protected function buildStructuredDataForSku(string $sku): array
+    {
         $category = $this->objectManager->create(\Magento\Catalog\Model\Category::class);
         $category->setId(2);
         $this->registry->register('current_category', $category);
@@ -84,8 +136,6 @@ class AddListItemsDataToCategoryPageTest extends \PHPUnit\Framework\TestCase
         $listProductBlock = $this->objectManager->create(\Magento\Catalog\Block\Product\ListProduct::class);
         $this->plugin->afterGetLoadedProductCollection($listProductBlock, $collection);
 
-        $structuredData = $this->structuredDataContainer->getStructuredData();
-
-        return $structuredData['item_list'];
+        return $this->structuredDataContainer->getStructuredData();
     }
 }

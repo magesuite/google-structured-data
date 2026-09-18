@@ -235,7 +235,12 @@
                     <source_model>MageSuite\GoogleStructuredData\Model\Config\Source\CategoryListItemMode</source_model>
                     <comment>Emits a single ItemList entity for the products on the category page. Disabled: no ItemList. "Product URLs only" (recommended): lightweight items (position + name + link to each PDP), no data duplication and keeps the PDP as the source of truth. "Full product data": embeds the whole Product in each list item (heavy, duplicates the PDP). Independent of "Include products".</comment>
                 </field>
-                <field id="show_rating" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="is_collection_page_enabled" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Is CollectionPage enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Wrap ItemList into CollectionPage type.</comment>
+                </field>
+                <field id="show_rating" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Rating</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Adds review/aggregateRating to products in the category structured data. Applies only when full product data is emitted (Include ListItem data = "Full product data", or Include products = Yes) - no effect in "Product URLs only". Also requires Show Rating enabled for Product. Recommended: No (rating belongs on the product detail page).</comment>

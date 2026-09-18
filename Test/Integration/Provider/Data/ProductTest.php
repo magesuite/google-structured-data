@@ -100,6 +100,28 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
+    public function testProductUrlsAreBuiltForTargetStoreOutsideStoreContext(): void
+    {
+        $product = $this->productRepository->get('simple');
+        $targetStore = $this->storeManager->getStore('default');
+        $originalStore = $this->storeManager->getStore();
+        $this->storeManager->setCurrentStore(\Magento\Store\Model\Store::ADMIN_CODE);
+
+        try {
+            $productData = $this->productDataProvider->generateProductData($product, $targetStore);
+        } finally {
+            $this->storeManager->setCurrentStore($originalStore);
+        }
+
+        $expectedUrl = 'http://localhost/index.php/simple-product.html';
+
+        $this->assertSame($expectedUrl, $productData['url']);
+        $this->assertSame($expectedUrl, $productData['offers']['url']);
+        $this->assertStringNotContainsString('___store', $productData['url']);
+        $this->assertStringNotContainsString('___store', $productData['offers']['url']);
+    }
+
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
     public function testProductIdIsOmittedWhenProductHasNoUrlRewrite(): void
     {
         $product = $this->productRepository->get('simple');
