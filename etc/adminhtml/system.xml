@@ -258,7 +258,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Defines if pregenerated structured data should be stored in index.</comment>
                 </field>
-                <field id="indexer_cron_schedule" translate="label" type="text" sortOrder="60" showInDefault="1">
+                <field id="indexer_cron_schedule" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Indexer Cron Schedule</label>
                     <comment>Please type full cron schedule expression, eg. '59 23 * * *'</comment>
                 </field>
