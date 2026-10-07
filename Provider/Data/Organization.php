@@ -146,7 +146,7 @@ class Organization
         $address = ['@type' => 'PostalAddress'];
         $addressData = $this->organizationConfiguration->getAddressData();
         foreach ($addressData as $key => $value) {
-            if (!isset($this->addressFieldsMapping[$key])) {
+            if (!isset($this->addressFieldsMapping[$key]) || empty($value)) {
                 continue;
             }
             $address[$this->addressFieldsMapping[$key]] = $value;
@@ -164,7 +164,7 @@ class Organization
         $contactData = $this->organizationConfiguration->getContactData();
 
         foreach ($contactData as $key => $value) {
-            if (!isset($this->contactFieldsMapping[$key])) {
+            if (!isset($this->contactFieldsMapping[$key]) || empty($value)) {
                 continue;
             }
 
