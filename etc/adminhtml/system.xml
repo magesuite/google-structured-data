@@ -293,6 +293,11 @@
                         <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
                         <comment>Defines which attribute will be used to describe product manufacturer.</comment>
                     </field>
+                    <field id="gtin13" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>GTIN13</label>
+                        <source_model>MageSuite\GoogleStructuredData\Model\Config\Attributes</source_model>
+                        <comment>Defines which attribute will be used to describe product GTIN13.</comment>
+                    </field>
                 </group>
                 <group id="delivery_data" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Delivery Data</label>
