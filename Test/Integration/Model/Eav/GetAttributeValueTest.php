@@ -42,6 +42,31 @@ class GetAttributeValueTest extends \PHPUnit\Framework\TestCase
 
     #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/test_custom_source_attr.php')]
     #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
+    public function testItKeepsCustomSourceLabelsSeparatePerStore(): void
+    {
+        $this->saveProductAttributeValue(
+            'simple',
+            'test_custom_source_attr',
+            (string)\MageSuite\GoogleStructuredData\Test\Integration\Stub\CustomSourceModel::OPTION_ID
+        );
+        $defaultStoreId = (int)$this->objectManager->get(\Magento\Store\Model\StoreManagerInterface::class)->getStore('default')->getId();
+        $adminStoreId = \Magento\Store\Model\Store::DEFAULT_STORE_ID;
+        $getAttributeValue = $this->objectManager->create(\MageSuite\GoogleStructuredData\Model\Eav\GetAttributeValue::class);
+
+        $this->assertSame(
+            [
+                \MageSuite\GoogleStructuredData\Test\Integration\Stub\CustomSourceModel::getOptionLabel($defaultStoreId),
+                \MageSuite\GoogleStructuredData\Test\Integration\Stub\CustomSourceModel::getOptionLabel($adminStoreId),
+            ],
+            [
+                $getAttributeValue->execute($this->productRepository->get('simple', false, $defaultStoreId, true), 'test_custom_source_attr'),
+                $getAttributeValue->execute($this->productRepository->get('simple', false, $adminStoreId, true), 'test_custom_source_attr'),
+            ]
+        );
+    }
+
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/test_custom_source_attr.php')]
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/products_simple.php')]
     public function testItReturnsNullForCustomSourceAttributeWithoutValue(): void
     {
         $product = $this->productRepository->get('simple', false, null, true);

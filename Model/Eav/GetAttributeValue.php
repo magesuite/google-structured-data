@@ -9,6 +9,7 @@ class GetAttributeValue
     protected array $attributeTextTypes = ['select', 'multiselect'];
     protected array $attributeInputTypeCache = [];
     protected array $attributeUsesOptionTableCache = [];
+    protected array $sourceOptionTextCache = [];
 
     public function __construct(
         protected \Magento\Eav\Model\Config $eavConfig,
@@ -88,6 +89,19 @@ class GetAttributeValue
     }
 
     protected function getSourceOptionText(\Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute, mixed $optionId): mixed
+    {
+        $attributeCode = $attribute->getAttributeCode();
+        $storeId = (int)$attribute->getStoreId();
+        $optionKey = (string)$optionId;
+
+        if (!array_key_exists($optionKey, $this->sourceOptionTextCache[$attributeCode][$storeId] ?? [])) {
+            $this->sourceOptionTextCache[$attributeCode][$storeId][$optionKey] = $this->loadSourceOptionText($attribute, $optionId);
+        }
+
+        return $this->sourceOptionTextCache[$attributeCode][$storeId][$optionKey];
+    }
+
+    protected function loadSourceOptionText(\Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute, mixed $optionId): mixed
     {
         $optionText = $attribute->getSource()->getOptionText($optionId);
 
