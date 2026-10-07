@@ -15,19 +15,15 @@ class GetAttributeValue
         protected \MageSuite\GoogleStructuredData\Model\Eav\BatchAttributeOptionData $batchAttributeOptionData
     ) {}
 
-    public function execute(
-        \Magento\Catalog\Api\Data\ProductInterface $product,
-        string $attributeCode
-    ): string|array|null {
+    public function execute(\Magento\Catalog\Api\Data\ProductInterface $product, string $attributeCode): string|array|null
+    {
         if (!$this->isTextAttribute($attributeCode)) {
             $value = $product->getData($attributeCode);
 
             return $value !== null ? (string) $value : null;
         }
 
-        $value = $this->usesOptionTable($attributeCode)
-            ? $this->getOptionTableText($product, $attributeCode)
-            : $this->getSourceModelText($product, $attributeCode);
+        $value = $this->usesOptionTable($attributeCode) ? $this->getOptionTableText($product, $attributeCode) : $this->getSourceModelText($product, $attributeCode);
 
         return $this->normalizeText($value);
     }
@@ -45,8 +41,7 @@ class GetAttributeValue
     {
         if (!isset($this->attributeUsesOptionTableCache[$attributeCode])) {
             $sourceModel = (string)$this->getAttribute($attributeCode)->getSourceModel();
-            $this->attributeUsesOptionTableCache[$attributeCode] = $sourceModel === ''
-                || is_a($sourceModel, \Magento\Eav\Model\Entity\Attribute\Source\Table::class, true);
+            $this->attributeUsesOptionTableCache[$attributeCode] = $sourceModel === '' || is_a($sourceModel, \Magento\Eav\Model\Entity\Attribute\Source\Table::class, true);
         }
 
         return $this->attributeUsesOptionTableCache[$attributeCode];
@@ -57,21 +52,13 @@ class GetAttributeValue
         return $this->eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
     }
 
-    protected function getOptionTableText(
-        \Magento\Catalog\Api\Data\ProductInterface $product,
-        string $attributeCode
-    ): string|array|null {
-        return $this->batchAttributeOptionData->getOptionText(
-            $attributeCode,
-            (int)$product->getStoreId(),
-            $product->getData($attributeCode)
-        );
+    protected function getOptionTableText(\Magento\Catalog\Api\Data\ProductInterface $product, string $attributeCode): string|array|null
+    {
+        return $this->batchAttributeOptionData->getOptionText($attributeCode, (int)$product->getStoreId(), $product->getData($attributeCode));
     }
 
-    protected function getSourceModelText(
-        \Magento\Catalog\Api\Data\ProductInterface $product,
-        string $attributeCode
-    ): mixed {
+    protected function getSourceModelText(\Magento\Catalog\Api\Data\ProductInterface $product, string $attributeCode): mixed
+    {
         $value = $product->getData($attributeCode);
 
         if ($this->isEmptyValue($value)) {
@@ -83,18 +70,14 @@ class GetAttributeValue
         $attribute->setStoreId((int)$product->getStoreId());
 
         try {
-            return $attribute->getFrontendInput() === 'multiselect'
-                ? $this->getSourceOptionTexts($attribute, $value)
-                : $this->getSourceOptionText($attribute, $value);
+            return $attribute->getFrontendInput() === 'multiselect' ? $this->getSourceOptionTexts($attribute, $value) : $this->getSourceOptionText($attribute, $value);
         } finally {
             $attribute->setStoreId($originalStoreId);
         }
     }
 
-    protected function getSourceOptionTexts(
-        \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute,
-        mixed $value
-    ): array {
+    protected function getSourceOptionTexts(\Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute, mixed $value): array
+    {
         $optionIds = is_array($value) ? $value : explode(',', (string)$value);
         $optionTexts = array_map(
             fn($optionId) => $this->getSourceOptionText($attribute, $optionId),
@@ -104,10 +87,8 @@ class GetAttributeValue
         return array_values(array_filter($optionTexts, fn($optionText) => !$this->isEmptyValue($optionText)));
     }
 
-    protected function getSourceOptionText(
-        \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute,
-        mixed $optionId
-    ): mixed {
+    protected function getSourceOptionText(\Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute, mixed $optionId): mixed
+    {
         $optionText = $attribute->getSource()->getOptionText($optionId);
 
         return $this->isOptionRecord($optionText) ? null : $optionText;
