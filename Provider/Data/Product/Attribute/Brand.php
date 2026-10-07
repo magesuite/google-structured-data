@@ -17,6 +17,8 @@ class Brand extends \MageSuite\GoogleStructuredData\Provider\Data\Product\Attrib
             return $value;
         }
 
-        return ['@type' => 'Brand', 'name' => $value];
+        $brandName = is_array($value) ? reset($value) : $value;
+
+        return ['@type' => 'Brand', 'name' => $brandName];
     }
 }
