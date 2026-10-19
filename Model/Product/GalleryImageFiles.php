@@ -6,7 +6,10 @@ namespace MageSuite\GoogleStructuredData\Model\Product;
 
 class GalleryImageFiles
 {
-    public function getFiles(\Magento\Catalog\Api\Data\ProductInterface $product): array
+    public const FILE = 'file';
+    public const FILE_SIZE = 'file_size';
+
+    public function getImages(\Magento\Catalog\Api\Data\ProductInterface $product): array
     {
         $mediaGallery = $product->getMediaGallery('images');
 
@@ -14,18 +17,21 @@ class GalleryImageFiles
             return [];
         }
 
-        $files = [];
+        $images = [];
 
         foreach ($mediaGallery as $image) {
-            $file = $image['file'] ?? '';
+            $file = $image[self::FILE] ?? '';
 
             if (!empty($image['disabled']) || $file === '') {
                 continue;
             }
 
-            $files[] = $file;
+            $images[] = [
+                self::FILE => $file,
+                self::FILE_SIZE => (int)($image[self::FILE_SIZE] ?? 0),
+            ];
         }
 
-        return $files;
+        return $images;
     }
 }

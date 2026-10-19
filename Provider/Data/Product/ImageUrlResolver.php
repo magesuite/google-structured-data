@@ -34,11 +34,14 @@ class ImageUrlResolver
 
     protected function resolveImages(array $images, int $storeId): array
     {
-        return array_map(fn(string $image): string => $this->isUrl($image) ? $image : $this->galleryImageUrls->getUrl($image, $storeId), $images);
+        return array_map(fn(string|array $image): string => is_array($image) ? $this->getImageUrl($image, $storeId) : $image, $images);
     }
 
-    protected function isUrl(string $image): bool
+    protected function getImageUrl(array $image, int $storeId): string
     {
-        return preg_match('#^https?://#i', $image) === 1;
+        $file = $image[\MageSuite\GoogleStructuredData\Model\Product\GalleryImageFiles::FILE];
+        $fileSize = (int)$image[\MageSuite\GoogleStructuredData\Model\Product\GalleryImageFiles::FILE_SIZE];
+
+        return $this->galleryImageUrls->getUrl($file, $fileSize, $storeId);
     }
 }

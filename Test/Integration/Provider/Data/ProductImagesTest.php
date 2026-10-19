@@ -10,6 +10,7 @@ namespace MageSuite\GoogleStructuredData\Test\Integration\Provider\Data;
 class ProductImagesTest extends \PHPUnit\Framework\TestCase
 {
     protected const IMAGE_FILE = '/m/a/magento_image.jpg';
+    protected const IMAGE_FILE_SIZE = 4321;
 
     protected ?\Magento\TestFramework\ObjectManager $objectManager;
     protected ?\Magento\Framework\App\CacheInterface $cache;
@@ -32,13 +33,23 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
     }
 
     #[\Magento\TestFramework\Fixture\DataFixture('Magento/Catalog/_files/product_with_image.php')]
-    public function testGeneratedDataKeepsImageFilesSoUrlsAreNotPersisted(): void
+    public function testGeneratedDataKeepsImageFilesWithSizesSoUrlsAreNotPersisted(): void
     {
-        $product = $this->productRepository->get('simple');
+        $this->setImageFileSize(self::IMAGE_FILE, self::IMAGE_FILE_SIZE);
+        $product = $this->productRepository->get('simple', false, null, true);
 
         $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
 
-        $this->assertSame([self::IMAGE_FILE], $productData['image']);
+        $this->assertSame([['file' => self::IMAGE_FILE, 'file_size' => self::IMAGE_FILE_SIZE]], $productData['image']);
+    }
+
+    public function testIndexedImageUrlUsesPersistedFileSizeInsteadOfDatabase(): void
+    {
+        $imageUrlResolver = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\ImageUrlResolver::class);
+
+        $productData = $imageUrlResolver->resolve([['@type' => 'Product', 'image' => [['file' => '/n/o/not_in_gallery.jpg', 'file_size' => self::IMAGE_FILE_SIZE]]]], 1);
+
+        $this->assertStringContainsString(sprintf('/image/%d/', self::IMAGE_FILE_SIZE), $productData[0]['image'][0]);
     }
 
     #[\Magento\TestFramework\Fixture\DataFixture('Magento/Catalog/_files/product_with_image.php')]
@@ -60,5 +71,12 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
         $productData = $imageUrlResolver->resolve([['@type' => 'Product', 'image' => [$imageUrl]]], 1);
 
         $this->assertSame([$imageUrl], $productData[0]['image']);
+    }
+
+    protected function setImageFileSize(string $file, int $fileSize): void
+    {
+        $resourceConnection = $this->objectManager->get(\Magento\Framework\App\ResourceConnection::class);
+        $tableName = $resourceConnection->getTableName('catalog_product_entity_media_gallery');
+        $resourceConnection->getConnection()->update($tableName, ['file_size' => $fileSize], ['value = ?' => $file]);
     }
 }

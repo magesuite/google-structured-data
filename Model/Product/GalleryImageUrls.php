@@ -12,11 +12,14 @@ class GalleryImageUrls
         protected \Magento\Framework\View\ConfigInterface $presentationConfig,
         protected \Magento\Catalog\Model\Product\Image\ParamsBuilder $imageParamsBuilder,
         protected \Magento\Catalog\Model\View\Asset\ImageFactory $viewAssetImageFactory,
+        protected \MageSuite\LazyResize\Api\FileSizeRepositoryInterface $fileSizeRepository,
         protected string $imageId = 'product_page_image_large'
     ) {}
 
-    public function getUrl(string $file, int $storeId): string
+    public function getUrl(string $file, int $fileSize, int $storeId): string
     {
+        $this->fileSizeRepository->addFileSize($file, $fileSize);
+
         return $this->viewAssetImageFactory->create(['miscParams' => $this->getImageParams($storeId), 'filePath' => $file])->getUrl();
     }
 

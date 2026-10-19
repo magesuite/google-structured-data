@@ -175,7 +175,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        return $this->galleryImageFiles->getFiles($product);
+        return $this->galleryImageFiles->getImages($product);
     }
 
     public function buildReviewData(\Magento\Review\Model\Review $review, \Magento\Store\Api\Data\StoreInterface $store): array
