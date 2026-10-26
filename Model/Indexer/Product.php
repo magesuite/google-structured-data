@@ -10,10 +10,11 @@ class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Fr
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $configuration,
         protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\Action\Full $fullAction,
         protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\Action\Rows $rowsAction,
+        protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\TableMaintainer $tableMaintainer,
         protected \Magento\Framework\Indexer\CacheContext $cacheContext
     ) {}
 
-    public function execute($ids): void
+    public function execute(mixed $ids): void
     {
         if (!$this->configuration->isIndexingEnabled()) {
             return;
@@ -30,12 +31,13 @@ class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Fr
         }
 
         $this->fullAction->execute();
-        $this->cacheContext->registerTags(
-            [
-                \Magento\Catalog\Model\Category::CACHE_TAG,
-                \Magento\Catalog\Model\Product::CACHE_TAG
-            ]
-        );
+        $changedProductIds = $this->tableMaintainer->getChangedProductIds();
+
+        if (empty($changedProductIds)) {
+            return;
+        }
+
+        $this->cacheContext->registerEntities(\Magento\Catalog\Model\Product::CACHE_TAG, $changedProductIds);
     }
 
     public function executeList(array $ids): void
@@ -43,7 +45,7 @@ class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Fr
         $this->execute($ids);
     }
 
-    public function executeRow($id): void
+    public function executeRow(mixed $id): void
     {
         $this->execute([$id]);
     }
