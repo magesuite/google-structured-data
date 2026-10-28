@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolver;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\Product\TypeResolverInterface
 {
     public const IN_STOCK = 'InStock';
@@ -23,7 +26,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedGenderResolver $suggestedGenderResolver,
         protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedMinAgeResolver $suggestedMinAgeResolver,
         protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData,
-        protected \MageSuite\GoogleStructuredData\Model\Eav\BatchAttributeOptionData $batchAttributeOptionData
+        protected \MageSuite\GoogleStructuredData\Model\Eav\BatchAttributeOptionData $batchAttributeOptionData,
+        protected \MageSuite\GoogleStructuredData\Model\Product\DescriptionFilter $descriptionFilter
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -169,10 +173,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         return $data;
     }
 
-    public function getProductImages(
-        \Magento\Catalog\Api\Data\ProductInterface $product,
-        \Magento\Store\Api\Data\StoreInterface $store
-    ): array {
+    public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
         $mediaGallery = $product->getMediaGallery('images');
         if (!is_array($mediaGallery) || empty($mediaGallery)) {
             return [];
@@ -226,13 +228,10 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         $attributeCode = $this->productConfiguration->getConfiguredAttribute('description', $storeId);
         $description = $product->getData($attributeCode) ?: $product->getData('description');
 
-        return $this->stripTagsFilter->filter((string)$description);
+        return $this->descriptionFilter->filter((string)$description, $storeId);
     }
 
-    public function getAudienceData(
-        \Magento\Catalog\Api\Data\ProductInterface $product,
-        \Magento\Store\Api\Data\StoreInterface $store
-    ): array
+    public function getAudienceData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         if (!$this->productConfiguration->isAudienceEnabled((int)$store->getId())) {
             return [];
@@ -253,5 +252,4 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             ]
         ];
     }
-
 }

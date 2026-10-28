@@ -32,6 +32,7 @@
                 <cache_lifetime>0</cache_lifetime>
                 <show_rating>1</show_rating>
                 <default_price_valid_until_enabled>0</default_price_valid_until_enabled>
+                <description_max_length>5000</description_max_length>
                 <attributes>
                     <description>description</description>
                 </attributes>
