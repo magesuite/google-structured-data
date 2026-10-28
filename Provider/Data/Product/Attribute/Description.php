@@ -7,13 +7,10 @@ namespace MageSuite\GoogleStructuredData\Provider\Data\Product\Attribute;
 class Description implements \MageSuite\GoogleStructuredData\Provider\Data\Product\AttributeInterface
 {
     public function __construct(
-        protected \Magento\Framework\Filter\StripTags $stripTags
+        protected \MageSuite\GoogleStructuredData\Model\Product\DescriptionFilter $descriptionFilter
     ) {}
 
-    public function getAttributeData(
-        \Magento\Catalog\Api\Data\ProductInterface $product,
-        ?string $attributeCode
-    ): string|array|null
+    public function getAttributeData(\Magento\Catalog\Api\Data\ProductInterface $product, ?string $attributeCode): string|array|null
     {
         $description = $product->getData($attributeCode) ?: $product->getData('description');
 
@@ -21,6 +18,6 @@ class Description implements \MageSuite\GoogleStructuredData\Provider\Data\Produ
             return null;
         }
 
-        return $this->stripTags->filter($description);
+        return $this->descriptionFilter->filter((string)$description, (int)$product->getStoreId());
     }
 }
