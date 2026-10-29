@@ -10,12 +10,9 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
         protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\DataProvider $dataProvider,
         protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\TableMaintainer $tableMaintainer,
         protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Indexer\Product\Action\Rows $rowsResourceModel,
-        protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        protected \Magento\Framework\Serialize\SerializerInterface $serializer,
         protected \Magento\Framework\App\ResourceConnection $resourceConnection,
         protected \Magento\Framework\Indexer\DimensionProviderInterface $dimensionProvider,
-        protected \Magento\Store\Model\StoreManagerInterface $storeManager,
-        protected \MageSuite\GoogleStructuredData\Model\Review\BatchReviewData $batchReviewData
+        protected \MageSuite\GoogleStructuredData\Model\Indexer\Product\IndexDataGenerator $indexDataGenerator
     ) {
     }
 
@@ -88,35 +85,13 @@ class Rows implements \Magento\Framework\Indexer\DimensionalIndexerInterface
     protected function buildIndex(array $dimensions, \Magento\Catalog\Model\ResourceModel\Product\Collection $products): void
     {
         $storeId = (int)$dimensions[\Magento\Store\Model\StoreDimensionProvider::DIMENSION_NAME]->getValue();
-        $store = $this->storeManager->getStore($storeId);
-        $generatedData = [];
-
-        $this->batchReviewData->load($products->getColumnValues('entity_id'), $storeId);
-
-        foreach ($products as $product) {
-            $productData = $this->productDataProvider->generateProductData($product, $store);
-
-            if (empty($productData)) {
-                continue;
-            }
-
-            $generatedData[] = [
-                'product_id' => (int)$product->getId(),
-                'store_id' => (int)$store->getId(),
-                'data' => $this->serializer->serialize($productData)
-            ];
-        }
-
-        $this->batchReviewData->reset();
+        $generatedData = $this->indexDataGenerator->generate($storeId, $products);
         $products->clear();
 
         if (empty($generatedData)) {
             return;
         }
 
-        $this->resourceConnection->getConnection()->insertMultiple(
-            $this->tableMaintainer->getMainTmpTable($dimensions),
-            $generatedData
-        );
+        $this->resourceConnection->getConnection()->insertMultiple($this->tableMaintainer->getMainTmpTable($dimensions), $generatedData);
     }
 }

@@ -23,11 +23,11 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Model\Review\BatchReviewData $batchReviewData,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData,
-        protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedGenderResolver $suggestedGenderResolver,
-        protected \MageSuite\GoogleStructuredData\Model\Audience\SuggestedMinAgeResolver $suggestedMinAgeResolver,
+        protected \MageSuite\GoogleStructuredData\Model\Audience\AudienceData $audienceData,
         protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData,
         protected \MageSuite\GoogleStructuredData\Model\Eav\BatchAttributeOptionData $batchAttributeOptionData,
-        protected \MageSuite\GoogleStructuredData\Model\Product\DescriptionFilter $descriptionFilter
+        protected \MageSuite\GoogleStructuredData\Model\Product\DescriptionFilter $descriptionFilter,
+        protected \MageSuite\GoogleStructuredData\Model\Product\GalleryImageFiles $galleryImageFiles
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -175,28 +175,7 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        $mediaGallery = $product->getMediaGallery('images');
-        if (!is_array($mediaGallery) || empty($mediaGallery)) {
-            return [];
-        }
-
-        $baseMediaUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog/product';
-        $images = [];
-
-        foreach ($mediaGallery as $image) {
-            if (!empty($image['disabled'])) {
-                continue;
-            }
-
-            $file = $image['file'] ?? '';
-            if ($file === '') {
-                continue;
-            }
-
-            $images[] = $baseMediaUrl . $file;
-        }
-
-        return $images;
+        return $this->galleryImageFiles->getImages($product);
     }
 
     public function buildReviewData(\Magento\Review\Model\Review $review, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -233,23 +212,6 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     public function getAudienceData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        if (!$this->productConfiguration->isAudienceEnabled((int)$store->getId())) {
-            return [];
-        }
-
-        $suggestedGender = $this->suggestedGenderResolver->resolve($product, (int)$store->getId());
-        $suggestedMinAge = $this->suggestedMinAgeResolver->resolve($product, (int)$store->getId());
-
-        if (empty($suggestedGender) && empty($suggestedMinAge)) {
-            return [];
-        }
-
-        return [
-            'audience' => [
-                '@type' => 'PeopleAudience',
-                'suggestedGender' => $suggestedGender,
-                'suggestedMinAge' => $suggestedMinAge
-            ]
-        ];
+        return $this->audienceData->getData($product, (int)$store->getId());
     }
 }

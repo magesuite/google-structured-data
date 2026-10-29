@@ -17,10 +17,16 @@ class Product
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\ModifiersPool $modifiersPool,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
-        protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData
+        protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\ImageUrlResolver $imageUrlResolver
     ) {}
 
     public function getProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        return $this->imageUrlResolver->resolve($this->getCachedProductData($product, $store), (int)$store->getId());
+    }
+
+    protected function getCachedProductData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
         $cacheKey = $this->getCacheKey($product, $store);
         $cacheLifetime = $this->productConfiguration->getCacheLifetime();
