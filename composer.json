@@ -2,9 +2,6 @@
   "name": "creativestyle/magesuite-google-structured-data",
   "description": "Google Structured Data",
   "type": "magento2-module",
-  "require": {
-    "creativestyle/magesuite-lazy-resize": "^4.0"
-  },
   "autoload": {
     "files": [
       "registration.php"

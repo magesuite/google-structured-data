@@ -35,6 +35,7 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
     #[\Magento\TestFramework\Fixture\DataFixture('Magento/Catalog/_files/product_with_image.php')]
     public function testGeneratedDataKeepsImageFilesWithSizesSoUrlsAreNotPersisted(): void
     {
+        $this->skipWithoutLazyResize();
         $this->setImageFileSize(self::IMAGE_FILE, self::IMAGE_FILE_SIZE);
         $product = $this->productRepository->get('simple', false, null, true);
 
@@ -45,6 +46,7 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
 
     public function testIndexedImageUrlUsesPersistedFileSizeInsteadOfDatabase(): void
     {
+        $this->skipWithoutLazyResize();
         $imageUrlResolver = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\ImageUrlResolver::class);
 
         $productData = $imageUrlResolver->resolve([['@type' => 'Product', 'image' => [['file' => '/n/o/not_in_gallery.jpg', 'file_size' => self::IMAGE_FILE_SIZE]]]], 1);
@@ -71,6 +73,22 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
         $productData = $imageUrlResolver->resolve([['@type' => 'Product', 'image' => [$imageUrl]]], 1);
 
         $this->assertSame([$imageUrl], $productData[0]['image']);
+    }
+
+    public function testDispatchesImageFileWithSizeBeforeBuildingUrl(): void
+    {
+        $eventManager = $this->createMock(\Magento\Framework\Event\ManagerInterface::class);
+        $eventManager->expects($this->once())->method('dispatch')->with(\MageSuite\GoogleStructuredData\Model\Product\GalleryImageUrls::IMAGE_URL_BEFORE_EVENT, ['file' => self::IMAGE_FILE, 'file_size' => self::IMAGE_FILE_SIZE]);
+        $galleryImageUrls = $this->objectManager->create(\MageSuite\GoogleStructuredData\Model\Product\GalleryImageUrls::class, ['eventManager' => $eventManager]);
+
+        $galleryImageUrls->getUrl(self::IMAGE_FILE, self::IMAGE_FILE_SIZE, 1);
+    }
+
+    protected function skipWithoutLazyResize(): void
+    {
+        if (!$this->objectManager->get(\Magento\Framework\Module\Manager::class)->isEnabled('MageSuite_LazyResize')) {
+            $this->markTestSkipped('The image file size and its URL format come from MageSuite_LazyResize.');
+        }
     }
 
     protected function setImageFileSize(string $file, int $fileSize): void

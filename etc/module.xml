@@ -3,7 +3,6 @@
     <module name="MageSuite_GoogleStructuredData" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Catalog"/>
-            <module name="MageSuite_LazyResize"/>
         </sequence>
     </module>
 </config>
