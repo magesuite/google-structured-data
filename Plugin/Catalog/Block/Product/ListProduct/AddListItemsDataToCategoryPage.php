@@ -84,7 +84,7 @@ class AddListItemsDataToCategoryPage
         return $result;
     }
 
-    protected function preloadCollectionData(\Magento\Eav\Model\Entity\Collection\AbstractCollection $productCollection, int $storeId): void
+    protected function preloadCollectionData(\Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection, int $storeId): void
     {
         if ($this->categoryConfiguration->shouldEmbedFullProductData()) {
             $this->preloader->preload($productCollection, $storeId);

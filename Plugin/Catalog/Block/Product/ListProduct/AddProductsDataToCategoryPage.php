@@ -13,7 +13,6 @@ class AddProductsDataToCategoryPage
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         protected \MageSuite\GoogleStructuredData\Model\Product\StructuredDataPreloader $preloader
     ) {
     }
@@ -32,10 +31,6 @@ class AddProductsDataToCategoryPage
         }
 
         $this->preloader->preload($result, $storeId);
-
-        if (!$this->productConfiguration->isIndexingEnabled()) {
-            $result->addMediaGalleryData();
-        }
 
         foreach ($result as $product) {
             $this->addProductStructuredData($product, $store);

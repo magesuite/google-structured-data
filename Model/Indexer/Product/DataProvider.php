@@ -15,6 +15,7 @@ class DataProvider
         protected \MageSuite\GoogleStructuredData\Model\Product\AttributeList $attributeList,
         protected \MageSuite\GoogleStructuredData\Model\ResourceModel\Product\InventoryData $inventoryData,
         protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData,
+        protected \MageSuite\GoogleStructuredData\Model\CatalogRule\BatchRuleEndDateData $batchRuleEndDateData,
         protected int $batchSize = 1000
     ) {}
 
@@ -56,6 +57,8 @@ class DataProvider
 
         $this->batchProductUrlData->reset();
         $this->batchProductUrlData->preloadCanonical($collection->getColumnValues('entity_id'), $storeId);
+        $this->batchRuleEndDateData->reset();
+        $this->batchRuleEndDateData->load($collection->getColumnValues('entity_id'), $storeId);
 
         return $collection;
     }

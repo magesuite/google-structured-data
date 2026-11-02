@@ -96,6 +96,34 @@ class AddProductsDataToCategoryPageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(5.0, $productData['audience']['suggestedMinAge']);
     }
 
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/structured_data_attributes.php')]
+    #[\Magento\TestFramework\Fixture\DataFixture('Magento/Catalog/_files/product_image.php')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/category_page/include_products', '1', 'store', 'default')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/product_page/is_indexing_enabled', '1', 'store', 'default')]
+    public function testIndexMissHasPropertiesAndImages(): void
+    {
+        $product = $this->productRepository->get('simple', true, 0, true);
+        $product->setData('media_gallery', ['images' => [['file' => '/m/a/magento_image.jpg', 'position' => 1, 'label' => 'Image', 'disabled' => 0, 'media_type' => 'image']]]);
+        $product->save();
+
+        $category = $this->objectManager->create(\Magento\Catalog\Model\Category::class);
+        $category->setId(2);
+        $this->registry->register('current_category', $category);
+
+        $collection = $this->collectionFactory->create();
+        $collection->addAttributeToFilter('sku', 'simple');
+
+        $listProductBlock = $this->objectManager->create(\Magento\Catalog\Block\Product\ListProduct::class);
+        $this->plugin->afterGetLoadedProductCollection($listProductBlock, $collection);
+
+        $structuredData = $this->structuredDataContainer->getStructuredData();
+        $productData = reset($structuredData);
+        $additionalProperties = array_column($productData['additionalProperty'] ?? [], 'value', 'name');
+
+        $this->assertSame('Text value', $additionalProperties['Flagged Text'] ?? null);
+        $this->assertStringContainsString('/m/a/magento_image', $productData['image'][0] ?? '');
+    }
+
     protected function getOptionIdByLabel(string $attributeCode, string $label): string
     {
         $attribute = $this->eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);

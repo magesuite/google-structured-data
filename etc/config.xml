@@ -33,6 +33,7 @@
                 <show_rating>1</show_rating>
                 <default_price_valid_until_enabled>0</default_price_valid_until_enabled>
                 <description_max_length>5000</description_max_length>
+                <refresh_offer_availability>0</refresh_offer_availability>
                 <attributes>
                     <description>description</description>
                 </attributes>
@@ -49,6 +50,7 @@
                     <use_parent_product_url>1</use_parent_product_url>
                     <use_parent_product_images>1</use_parent_product_images>
                     <use_parent_product_reviews>1</use_parent_product_reviews>
+                    <display_product_group_element>0</display_product_group_element>
                 </grouped>
                 <configurable>
                     <use_parent_product_url>0</use_parent_product_url>

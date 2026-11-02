@@ -113,12 +113,22 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
         $this->assertNotContains('sales', $contactTypes);
     }
 
+    #[\Magento\TestFramework\Fixture\Config('structured_data/organization/address/city', 'City', 'store', 'default')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/organization/address/country', '', 'store', 'default')]
+    public function testItSkipsEmptyAddressFields(): void
+    {
+        $organizationData = $this->organizationDataProvider->getOrganizationData();
+
+        $this->assertSame('City', $organizationData['address']['addressLocality']);
+        $this->assertArrayNotHasKey('addressCountry', $organizationData['address']);
+    }
+
     /**
      * @magentoConfigFixture current_store structured_data/organization/social/is_enabled 1
      * @magentoConfigFixture current_store structured_data/organization/social/profiles/facebook https://facebook.com/example
      * @magentoConfigFixture current_store structured_data/organization/social/profiles/instagram https://instagram.com/example
      */
-    public function testItIncludesSameAsWhenSocialProfilesConfigured(): void
+    public function testItIncludesSameAsForSocialProfiles(): void
     {
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 
@@ -131,7 +141,7 @@ class OrganizationTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture current_store structured_data/organization/social/is_enabled 0
      * @magentoConfigFixture current_store structured_data/organization/social/profiles/facebook https://facebook.com/example
      */
-    public function testItExcludesSameAsWhenSocialProfilesDisabled(): void
+    public function testItExcludesSameAsWhenSocialDisabled(): void
     {
         $organizationData = $this->organizationDataProvider->getOrganizationData();
 

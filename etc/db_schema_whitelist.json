@@ -13,7 +13,9 @@
     "catalog_eav_attribute": {
         "column": {
             "varies_by": true,
-            "vary_attribute_code": true
+            "vary_attribute_code": true,
+            "use_in_structured_data": true,
+            "structured_data_description": true
         }
     },
     "product_structured_data_index_replica": {

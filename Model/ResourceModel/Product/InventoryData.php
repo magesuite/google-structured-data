@@ -7,6 +7,7 @@ namespace MageSuite\GoogleStructuredData\Model\ResourceModel\Product;
 class InventoryData
 {
     protected array $stockIdByWebsite = [];
+    protected array $salableStatuses = [];
 
     public function __construct(
         protected \Magento\InventorySalesApi\Api\StockResolverInterface $stockResolver,
@@ -26,10 +27,7 @@ class InventoryData
             return;
         }
 
-        $websiteId = $this->getWebsiteId($storeId);
-        $stockId = $this->getStockId($websiteId);
-        $tableName = $this->stockIndexTableNameResolver->execute($stockId);
-        $stockData = $this->fetchStockData($tableName, $skus);
+        $stockData = $this->fetchStockData($this->getStockIndexTableName($storeId), $skus);
 
         foreach ($products as &$product) {
             if (!isset($stockData[$product['sku']])) {
@@ -38,6 +36,35 @@ class InventoryData
 
             $product->setData('is_salable', $stockData[$product['sku']][\Magento\InventoryIndexer\Indexer\IndexStructure::IS_SALABLE]);
         }
+    }
+
+    public function getSalableStatusesBySku(array $skus, int $storeId): array
+    {
+        if (empty($skus)) {
+            return [];
+        }
+
+        $this->preloadSalableStatuses($skus, $storeId);
+
+        return array_filter(array_intersect_key($this->salableStatuses[$storeId], array_flip($skus)), static fn (?bool $isSalable): bool => $isSalable !== null);
+    }
+
+    public function preloadSalableStatuses(array $skus, int $storeId): void
+    {
+        $notLoadedSkus = array_values(array_diff($skus, array_keys($this->salableStatuses[$storeId] ?? [])));
+
+        if (empty($notLoadedSkus)) {
+            return;
+        }
+
+        $stockData = $this->fetchStockData($this->getStockIndexTableName($storeId), $notLoadedSkus);
+        $salableStatuses = array_map(static fn (array $stockItem): bool => (bool)$stockItem[\Magento\InventoryIndexer\Indexer\IndexStructure::IS_SALABLE], $stockData);
+        $this->salableStatuses[$storeId] = array_replace($this->salableStatuses[$storeId] ?? [], array_fill_keys($notLoadedSkus, null), $salableStatuses);
+    }
+
+    protected function getStockIndexTableName(int $storeId): string
+    {
+        return $this->stockIndexTableNameResolver->execute($this->getStockId($this->getWebsiteId($storeId)));
     }
 
     protected function fetchStockData(string $tableName, array $skus): array

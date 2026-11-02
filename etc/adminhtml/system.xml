@@ -276,12 +276,17 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>When enabled, products without an active special price get a default priceValidUntil set to one year from today. Does not override the special price end date.</comment>
                 </field>
-                <field id="description_max_length" translate="label" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="refresh_offer_availability" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Refresh Offer Availability</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled, the availability of every offer is read from the stock index by SKU when the page is rendered, so stock changes show before the structured data index is rebuilt. Replaces availability values set by customizations.</comment>
+                </field>
+                <field id="description_max_length" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Description Max Length</label>
                     <validate>validate-digits</validate>
                     <comment>Maximum number of characters of the product description, counted after HTML tags are stripped. Set 0 to disable the limit.</comment>
                 </field>
-                <group id="attributes" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="attributes" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <field id="description" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Description</label>
@@ -304,7 +309,7 @@
                         <comment>Defines which attribute will be used to describe product GTIN13.</comment>
                     </field>
                 </group>
-                <group id="delivery_data" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="delivery_data" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Delivery Data</label>
                     <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enabled</label>
@@ -336,7 +341,7 @@
                         <comment>Defines the unit of handling time (d - days, h - hours, min - minutes, s - seconds)</comment>
                     </field>
                 </group>
-                <group id="audience" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="audience" translate="label" type="text" sortOrder="75" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Audience</label>
                     <field id="is_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Enabled</label>
@@ -363,7 +368,7 @@
                         <comment>If set, reads minimum age from this product attribute. Expected value is a float (e.g. 3, 2.5). Falls back to Suggested Min Age if attribute value is empty.</comment>
                     </field>
                 </group>
-                <group id="grouped" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="grouped" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Grouped Products</label>
                     <field id="use_parent_product_url" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Use Parent Product URL</label>
@@ -377,8 +382,13 @@
                         <label>Use Parent Product Reviews</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
+                    <field id="display_product_group_element" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Display Product Group Element</label>
+                        <comment>Adds a ProductGroup node that links the associated products as variants and carries the rating of the parent product with the latest reviews of the parent and associated products. Set Use Parent Product Reviews to No so that the associated products keep their own reviews.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
                 </group>
-                <group id="configurable" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="configurable" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Configurable Products</label>
                     <field id="use_parent_product_url" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Use Parent Product URL</label>

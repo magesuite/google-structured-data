@@ -27,7 +27,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         protected \MageSuite\GoogleStructuredData\Model\Catalog\BatchProductUrlData $batchProductUrlData,
         protected \MageSuite\GoogleStructuredData\Model\Eav\BatchAttributeOptionData $batchAttributeOptionData,
         protected \MageSuite\GoogleStructuredData\Model\Product\DescriptionFilter $descriptionFilter,
-        protected \MageSuite\GoogleStructuredData\Model\Product\GalleryImageFiles $galleryImageFiles
+        protected \MageSuite\GoogleStructuredData\Model\Product\GalleryImageFiles $galleryImageFiles,
+        protected \MageSuite\GoogleStructuredData\Model\CatalogRule\BatchRuleEndDateData $batchRuleEndDateData
     ) {}
 
     public function isApplicable(string $productTypeId): bool
@@ -121,21 +122,36 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             'availability' => self::CONTEXT . ($product->isAvailable() ? self::IN_STOCK : self::OUT_OF_STOCK),
             'url' => $this->batchProductUrlData->getProductUrl($product, $store)
         ];
-        $specialFromDate = $product->getSpecialFromDate();
-        $specialToDate = $product->getSpecialToDate();
-        $inRange = $this->timezone->isScopeDateInInterval($store, $specialFromDate, $specialToDate);
+        $priceValidUntil = $this->getPriceValidUntil($product, $store);
 
-        if ($product->getSpecialPrice() && $specialToDate && $inRange) {
-            $data['priceValidUntil'] = date('Y-m-d', strtotime($specialToDate));
-        }
-
-        if (!isset($data['priceValidUntil']) && $this->productConfiguration->isDefaultPriceValidUntilEnabled((int)$store->getId())) {
-            $data['priceValidUntil'] = $this->timezone->scopeDate($store)->modify('+1 year')->format('Y-m-d');
+        if ($priceValidUntil !== null) {
+            $data['priceValidUntil'] = $priceValidUntil;
         }
 
         $this->cachedOfferData[$cacheKey] = $data;
 
         return $this->cachedOfferData[$cacheKey];
+    }
+
+    protected function getPriceValidUntil(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): ?string
+    {
+        $specialToDate = $product->getSpecialToDate();
+
+        if ($product->getSpecialPrice() && $specialToDate && $this->timezone->isScopeDateInInterval($store, $product->getSpecialFromDate(), $specialToDate)) {
+            return date('Y-m-d', strtotime($specialToDate));
+        }
+
+        $catalogRuleEndDate = $this->batchRuleEndDateData->getEndDate((int)$product->getId(), (int)$store->getId());
+
+        if ($catalogRuleEndDate !== null) {
+            return $catalogRuleEndDate;
+        }
+
+        if (!$this->productConfiguration->isDefaultPriceValidUntilEnabled((int)$store->getId())) {
+            return null;
+        }
+
+        return $this->timezone->scopeDate($store)->modify('+1 year')->format('Y-m-d');
     }
 
     public function getReviewsData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
@@ -144,21 +160,8 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
             return [];
         }
 
-        $productId = (int)$product->getId();
-        $storeId = (int)$store->getId();
-        $data = [];
-
-        $ratingSummary = $this->batchReviewData->getRatingSummary($productId, $storeId);
-
-        if ($ratingSummary['rating_value'] && $ratingSummary['review_count']) {
-            $data['aggregateRating'] = [
-                '@type' => 'AggregateRating',
-                'ratingValue' => $ratingSummary['rating_value'],
-                'reviewCount' => $ratingSummary['review_count']
-            ];
-        }
-
-        $reviews = $this->batchReviewData->getReviews($productId, $storeId);
+        $data = $this->getAggregateRatingData($product, $store);
+        $reviews = $this->batchReviewData->getReviews((int)$product->getId(), (int)$store->getId());
 
         $reviewData = [];
 
@@ -171,6 +174,23 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
         }
 
         return $data;
+    }
+
+    protected function getAggregateRatingData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        $ratingSummary = $this->batchReviewData->getRatingSummary((int)$product->getId(), (int)$store->getId());
+
+        if (!$ratingSummary['rating_value'] || !$ratingSummary['review_count']) {
+            return [];
+        }
+
+        return [
+            'aggregateRating' => [
+                '@type' => 'AggregateRating',
+                'ratingValue' => $ratingSummary['rating_value'],
+                'reviewCount' => $ratingSummary['review_count']
+            ]
+        ];
     }
 
     public function getProductImages(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
