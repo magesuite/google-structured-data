@@ -38,6 +38,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $this->inventoryData->addStockDataToProducts($simpleProducts, (int)$store->getId());
         $this->batchProductUrlData->preloadForProducts($simpleProducts, (int)$store->getId());
         $this->batchProductUrlData->preloadCanonical($this->getProductIds($simpleProducts), (int)$store->getId());
+        $this->batchRuleEndDateData->load($this->getProductIds($simpleProducts), (int)$store->getId());
         $productUrl = $this->batchProductUrlData->getProductUrl($product, $store);
 
         foreach ($simpleProducts as $simpleProduct) {
@@ -98,6 +99,7 @@ class Configurable extends DefaultResolver implements \MageSuite\GoogleStructure
         $simpleProducts = $product->getTypeInstance()->getUsedProducts($product);
         $this->batchProductUrlData->preloadForProducts($simpleProducts, (int)$store->getId());
         $this->batchProductUrlData->preloadCanonical($this->getProductIds($simpleProducts), (int)$store->getId());
+        $this->batchRuleEndDateData->load($this->getProductIds($simpleProducts), (int)$store->getId());
 
         $result = [];
 

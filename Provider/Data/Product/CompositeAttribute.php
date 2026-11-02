@@ -18,6 +18,7 @@ class CompositeAttribute
         protected \Magento\Framework\Escaper $escaper,
         protected \Magento\Eav\Model\Config $eavConfig,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
+        protected \MageSuite\GoogleStructuredData\Provider\Data\Product\AdditionalPropertyPool $additionalPropertyPool,
         array $attributeDataProviders = []
     ) {
         $this->attributeDataProviders = array_filter(
@@ -68,7 +69,28 @@ class CompositeAttribute
             $this->addEscapedAttributeValue($attributeData, $attributeKey, $attributeValue);
         }
 
-        return $attributeData;
+        return array_merge($attributeData, $this->getAdditionalPropertyData($product, $storeId ?? (int)$product->getStoreId()));
+    }
+
+    public function getAdditionalPropertyAttributeCodes(): array
+    {
+        return array_values(array_filter($this->additionalPropertyPool->getAttributeCodes(), fn (string $attributeCode): bool => $this->isProductAttribute($attributeCode)));
+    }
+
+    protected function isProductAttribute(string $attributeCode): bool
+    {
+        return (bool)$this->eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeCode)->getId();
+    }
+
+    protected function getAdditionalPropertyData(\Magento\Catalog\Api\Data\ProductInterface $product, int $storeId): array
+    {
+        $additionalProperties = $this->additionalPropertyPool->getAdditionalProperties($product, $storeId);
+
+        if (empty($additionalProperties)) {
+            return [];
+        }
+
+        return ['additionalProperty' => $additionalProperties];
     }
 
     protected function addEscapedAttributeValue(array &$attributeData, string $attributeKey, mixed $attributeValue): void

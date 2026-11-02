@@ -30,7 +30,7 @@ class BatchReviewData
             return;
         }
 
-        $productIds = array_values(array_unique(array_map('intval', $productIds)));
+        $productIds = $this->getNotLoadedProductIds($productIds, $storeId);
 
         if (empty($productIds)) {
             return;
@@ -58,6 +58,13 @@ class BatchReviewData
         $key = $this->getKey($productId, $storeId);
 
         return $this->reviews[$key] ?? [];
+    }
+
+    protected function getNotLoadedProductIds(array $productIds, int $storeId): array
+    {
+        $productIds = array_unique(array_map('intval', $productIds));
+
+        return array_values(array_filter($productIds, fn (int $productId): bool => !isset($this->loadedKeys[$this->getKey($productId, $storeId)])));
     }
 
     protected function ensureLoaded(int $productId, int $storeId): void

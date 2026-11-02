@@ -23,10 +23,9 @@ class AttributeList
 
         $hardcoded = array_values($this->attributeList);
         $configured = array_values($this->compositeAttributeProvider->getEavAttributeCodes($storeId));
+        $additionalProperty = $this->compositeAttributeProvider->getAdditionalPropertyAttributeCodes();
 
-        $this->attributes[$cacheKey] = array_values(array_unique(array_filter(
-            array_merge($hardcoded, $configured)
-        )));
+        $this->attributes[$cacheKey] = array_values(array_unique(array_filter(array_merge($hardcoded, $configured, $additionalProperty))));
 
         return $this->attributes[$cacheKey];
     }

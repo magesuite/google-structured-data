@@ -24,6 +24,10 @@
                     <item name="modifier" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\DeliveryData</item>
                     <item name="sort_order" xsi:type="number">10</item>
                 </item>
+                <item name="refresh_offer_availability" xsi:type="array">
+                    <item name="modifier" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\Modifier\RefreshOfferAvailability</item>
+                    <item name="sort_order" xsi:type="number">1000</item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -63,6 +67,14 @@
                     <item name="type" xsi:type="string">preload_only</item>
                     <item name="config_path" xsi:type="string">structured_data/product_page/audience/suggested_min_age_attribute</item>
                 </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="MageSuite\GoogleStructuredData\Provider\Data\Product\AdditionalPropertyPool">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="flagged_attributes" xsi:type="object">MageSuite\GoogleStructuredData\Provider\Data\Product\AdditionalProperty\FlaggedAttributes</item>
             </argument>
         </arguments>
     </type>
@@ -109,6 +121,10 @@
 
     <type name="Magento\GroupedProduct\Model\Product\Type\Grouped">
         <plugin name="google_structured_data_add_attributes_to_associated_products" type="MageSuite\GoogleStructuredData\Plugin\GroupedProduct\Model\Product\Type\Grouped\AddAttributesToAssociatedProducts" sortOrder="10"/>
+    </type>
+
+    <type name="Magento\ConfigurableProduct\Model\Product\Type\Configurable">
+        <plugin name="add_attributes_to_used_products" type="MageSuite\GoogleStructuredData\Plugin\ConfigurableProduct\Model\Product\Type\Configurable\AddAttributesToUsedProducts" sortOrder="10"/>
     </type>
 
     <type name="Magento\Framework\View\Element\Template">

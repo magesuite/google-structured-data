@@ -19,7 +19,8 @@ class AddAttributesToAssociatedProducts
         $storeId = (int)($result->getStoreId() ?: $this->storeManager->getStore()->getId());
         $attributesToSelect = array_merge(
             $this->attributesToSelect,
-            array_filter($this->compositeAttributeDataProvider->getEavAttributeCodes($storeId))
+            array_filter($this->compositeAttributeDataProvider->getEavAttributeCodes($storeId)),
+            $this->compositeAttributeDataProvider->getAdditionalPropertyAttributeCodes()
         );
 
         $result->addAttributeToSelect($attributesToSelect);

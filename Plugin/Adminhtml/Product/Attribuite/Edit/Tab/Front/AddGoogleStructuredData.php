@@ -7,6 +7,7 @@ namespace MageSuite\GoogleStructuredData\Plugin\Adminhtml\Product\Attribuite\Edi
 class AddGoogleStructuredData
 {
     public function __construct(
+        protected \Magento\Config\Model\Config\Source\Yesno $yesNoSource,
         protected \MageSuite\GoogleStructuredData\Model\Config\Source\VariesByOptions $variesByOptions
     ) {}
 
@@ -18,6 +19,8 @@ class AddGoogleStructuredData
         $fieldset = $this->createGoogleStructuredDataFieldset($form, $subject);
         $this->addVariesByField($fieldset);
         $this->addVaryAttributeCodeField($fieldset);
+        $this->addUseInStructuredDataField($fieldset);
+        $this->addStructuredDataDescriptionField($fieldset);
         return $result;
     }
 
@@ -53,11 +56,7 @@ class AddGoogleStructuredData
             'note' => $description,
         ];
 
-        $fieldset->addField(
-            'varies_by',
-            'select',
-            $config
-        );
+        $fieldset->addField('varies_by', 'select', $config);
     }
 
     protected function addVaryAttributeCodeField(\Magento\Framework\Data\Form\Element\Fieldset $fieldset): void
@@ -73,10 +72,36 @@ class AddGoogleStructuredData
             'note' => $description,
         ];
 
-        $fieldset->addField(
-            'vary_attribute_code',
-            'text',
-            $config
+        $fieldset->addField('vary_attribute_code', 'text', $config);
+    }
+
+    protected function addUseInStructuredDataField(\Magento\Framework\Data\Form\Element\Fieldset $fieldset): void
+    {
+        $config = [
+            'name' => 'use_in_structured_data',
+            'label' => __('Use in Structured Data'),
+            'values' => $this->yesNoSource->toOptionArray(),
+            'note' => __('Adds the attribute label and value to the product structured data as an additional property.'),
+        ];
+
+        $fieldset->addField('use_in_structured_data', 'select', $config);
+    }
+
+    protected function addStructuredDataDescriptionField(\Magento\Framework\Data\Form\Element\Fieldset $fieldset): void
+    {
+        $description = __(
+            'Optional context for search engines and AI assistants, added as the description of the additional property. '
+            . 'Plain text applies to all store views. To set it per store view, use JSON with store view codes, for example %1. '
+            . 'A store view without an entry uses the default store view of its website.',
+            '{"de": "...", "fr": "..."}'
         );
+
+        $config = [
+            'name' => 'structured_data_description',
+            'label' => __('Structured Data Description'),
+            'note' => $description,
+        ];
+
+        $fieldset->addField('structured_data_description', 'textarea', $config);
     }
 }

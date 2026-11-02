@@ -11,6 +11,7 @@ class Product
     public const XML_CONFIG_PATH_CACHE_LIFETIME = 'structured_data/product_page/cache_lifetime';
     public const XML_CONFIG_PATH_SHOW_RATING = 'structured_data/product_page/show_rating';
     public const XML_CONFIG_PATH_DEFAULT_PRICE_VALID_UNTIL_ENABLED = 'structured_data/product_page/default_price_valid_until_enabled';
+    public const XML_CONFIG_PATH_REFRESH_OFFER_AVAILABILITY = 'structured_data/product_page/refresh_offer_availability';
     public const XML_CONFIG_PATH_ATTRIBUTES = 'structured_data/product_page/attributes';
     public const XML_CONFIG_PATH_DESCRIPTION_MAX_LENGTH = 'structured_data/product_page/description_max_length';
 
@@ -31,6 +32,7 @@ class Product
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/grouped/use_parent_product_url';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_IMAGES = 'structured_data/product_page/grouped/use_parent_product_images';
     public const XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS = 'structured_data/product_page/grouped/use_parent_product_reviews';
+    public const XML_CONFIG_PATH_GROUPED_DISPLAY_PRODUCT_GROUP_ELEMENT = 'structured_data/product_page/grouped/display_product_group_element';
 
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_URL = 'structured_data/product_page/configurable/use_parent_product_url';
     public const XML_CONFIG_PATH_CONFIGURABLE_USE_PARENT_PRODUCT_IMAGE = 'structured_data/product_page/configurable/use_parent_product_images';
@@ -65,6 +67,11 @@ class Product
     public function isDefaultPriceValidUntilEnabled(int $storeId): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_DEFAULT_PRICE_VALID_UNTIL_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function isOfferAvailabilityRefreshEnabled(int $storeId): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_REFRESH_OFFER_AVAILABILITY, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function isDeliveryDataEnabled(int $storeId): bool
@@ -163,6 +170,11 @@ class Product
     public function isUseParentProductReviewsForGrouped(): bool
     {
         return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_GROUPED_USE_PARENT_PRODUCT_REVIEWS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    public function isProductGroupElementDisplayedForGrouped(int $storeId): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_CONFIG_PATH_GROUPED_DISPLAY_PRODUCT_GROUP_ELEMENT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function isUseParentProductUrlForConfigurable(): bool
