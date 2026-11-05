@@ -35,21 +35,26 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
     #[\Magento\TestFramework\Fixture\DataFixture('Magento/Catalog/_files/product_with_image.php')]
     public function testGeneratedDataKeepsImageFilesWithSizesSoUrlsAreNotPersisted(): void
     {
-        $this->setImageFileSize(self::IMAGE_FILE, self::IMAGE_FILE_SIZE);
         $product = $this->productRepository->get('simple', false, null, true);
+        $product->setData('media_gallery', ['images' => [
+            ['file' => self::IMAGE_FILE, 'file_size' => self::IMAGE_FILE_SIZE],
+            ['file' => '/d/i/disabled_image.jpg', 'file_size' => self::IMAGE_FILE_SIZE, 'disabled' => 1],
+        ]]);
 
         $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
 
         $this->assertSame([['file' => self::IMAGE_FILE, 'file_size' => self::IMAGE_FILE_SIZE]], $productData['image']);
     }
 
-    public function testIndexedImageUrlUsesPersistedFileSizeInsteadOfDatabase(): void
+    public function testIndexedImageUrlIsBuiltWithPersistedFileSize(): void
     {
-        $imageUrlResolver = $this->objectManager->get(\MageSuite\GoogleStructuredData\Provider\Data\Product\ImageUrlResolver::class);
+        $galleryImageUrls = $this->createMock(\MageSuite\GoogleStructuredData\Model\Product\GalleryImageUrls::class);
+        $galleryImageUrls->expects($this->once())->method('getUrl')->with('/n/o/not_in_gallery.jpg', self::IMAGE_FILE_SIZE, 1)->willReturn('http://localhost/image.jpg');
+        $imageUrlResolver = $this->objectManager->create(\MageSuite\GoogleStructuredData\Provider\Data\Product\ImageUrlResolver::class, ['galleryImageUrls' => $galleryImageUrls]);
 
         $productData = $imageUrlResolver->resolve([['@type' => 'Product', 'image' => [['file' => '/n/o/not_in_gallery.jpg', 'file_size' => self::IMAGE_FILE_SIZE]]]], 1);
 
-        $this->assertStringContainsString(sprintf('/image/%d/', self::IMAGE_FILE_SIZE), $productData[0]['image'][0]);
+        $this->assertSame(['http://localhost/image.jpg'], $productData[0]['image']);
     }
 
     #[\Magento\TestFramework\Fixture\DataFixture('Magento/Catalog/_files/product_with_image.php')]
@@ -73,10 +78,12 @@ class ProductImagesTest extends \PHPUnit\Framework\TestCase
         $this->assertSame([$imageUrl], $productData[0]['image']);
     }
 
-    protected function setImageFileSize(string $file, int $fileSize): void
+    public function testDispatchesImageFileWithSizeBeforeBuildingUrl(): void
     {
-        $resourceConnection = $this->objectManager->get(\Magento\Framework\App\ResourceConnection::class);
-        $tableName = $resourceConnection->getTableName('catalog_product_entity_media_gallery');
-        $resourceConnection->getConnection()->update($tableName, ['file_size' => $fileSize], ['value = ?' => $file]);
+        $eventManager = $this->createMock(\Magento\Framework\Event\ManagerInterface::class);
+        $eventManager->expects($this->once())->method('dispatch')->with(\MageSuite\GoogleStructuredData\Model\Product\GalleryImageUrls::IMAGE_URL_BEFORE_EVENT, ['file' => self::IMAGE_FILE, 'file_size' => self::IMAGE_FILE_SIZE]);
+        $galleryImageUrls = $this->objectManager->create(\MageSuite\GoogleStructuredData\Model\Product\GalleryImageUrls::class, ['eventManager' => $eventManager]);
+
+        $galleryImageUrls->getUrl(self::IMAGE_FILE, self::IMAGE_FILE_SIZE, 1);
     }
 }
