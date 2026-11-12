@@ -16,6 +16,19 @@ class IndexDataGenerator
     public function generate(int $storeId, \Magento\Catalog\Model\ResourceModel\Product\Collection $products): array
     {
         $store = $this->storeManager->getStore($storeId);
+        $originalStore = $this->storeManager->getStore();
+        $this->storeManager->setCurrentStore($store);
+
+        try {
+            return $this->generateForStore($store, $products);
+        } finally {
+            $this->storeManager->setCurrentStore($originalStore);
+        }
+    }
+
+    protected function generateForStore(\Magento\Store\Api\Data\StoreInterface $store, \Magento\Catalog\Model\ResourceModel\Product\Collection $products): array
+    {
+        $storeId = (int)$store->getId();
         $generatedData = [];
 
         $this->batchReviewData->load($products->getColumnValues('entity_id'), $storeId);
