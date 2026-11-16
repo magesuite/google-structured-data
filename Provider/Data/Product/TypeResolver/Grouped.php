@@ -108,7 +108,12 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
             return [];
         }
 
-        $reviewsData = $this->getAggregateRatingData($this->getParentProduct(), $store);
+        $reviewsData = $this->getProductGroupAggregateRatingData($associatedProducts, $store);
+
+        if (empty($reviewsData)) {
+            return [];
+        }
+
         $reviews = $this->getProductGroupReviews($associatedProducts, (int)$store->getId());
 
         if (empty($reviews)) {
@@ -118,6 +123,39 @@ class Grouped extends DefaultResolver implements \MageSuite\GoogleStructuredData
         $reviewsData['review'] = array_map(fn (\Magento\Review\Model\Review $review): array => $this->buildReviewData($review, $store), $reviews);
 
         return $reviewsData;
+    }
+
+    protected function getProductGroupAggregateRatingData(array $associatedProducts, \Magento\Store\Api\Data\StoreInterface $store): array
+    {
+        $aggregateRatingData = $this->getAggregateRatingData($this->getParentProduct(), $store);
+
+        if (!empty($aggregateRatingData)) {
+            return $aggregateRatingData;
+        }
+
+        return $this->buildAggregateRatingData($this->getVariantsRatingSummary($associatedProducts, (int)$store->getId()));
+    }
+
+    protected function getVariantsRatingSummary(array $associatedProducts, int $storeId): array
+    {
+        $reviewCount = 0;
+        $ratingSum = 0;
+
+        foreach ($associatedProducts as $associatedProduct) {
+            $ratingSummary = $this->batchReviewData->getRatingSummary((int)$associatedProduct->getId(), $storeId);
+
+            if (!$ratingSummary['rating_value']) {
+                continue;
+            }
+
+            $reviewCount += $ratingSummary['review_count'];
+            $ratingSum += $ratingSummary['rating_value'] * $ratingSummary['review_count'];
+        }
+
+        return [
+            'rating_value' => $reviewCount ? round($ratingSum / $reviewCount, 2) : 0,
+            'review_count' => $reviewCount
+        ];
     }
 
     protected function getProductGroupReviews(array $associatedProducts, int $storeId): array
