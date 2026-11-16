@@ -427,6 +427,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     #[\Magento\TestFramework\Fixture\Config('structured_data/product_page/grouped/use_parent_product_reviews', '0', 'store', 'default')]
     public function testGroupedAsProductGroupWithAllReviews(): void
     {
+        $this->saveRatingSummary('simple', 80, 1);
+        $this->saveRatingSummary('virtual-product', 100, 3);
         $product = $this->productRepository->get('grouped-product');
         $this->objectManager->get(\MageSuite\GoogleStructuredData\Model\Review\BatchReviewData::class)->load(
             array_merge([(int)$product->getId()], $product->getTypeInstance()->getAssociatedProductIds($product)),
@@ -441,9 +443,36 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('http://localhost/index.php/grouped-product.html#product', $productGroupData['@id']);
         $this->assertSame('grouped-product', $productGroupData['productGroupID']);
         $this->assertSame(array_map(static fn (array $variantData): array => ['@id' => $variantData['@id']], $productData), $productGroupData['hasVariant']);
+        $this->assertEquals(['@type' => 'AggregateRating', 'ratingValue' => 4.75, 'reviewCount' => 4], $productGroupData['aggregateRating']);
         $this->assertSame(['Simple product review', 'Virtual product review', 'Grouped product review'], array_column($productGroupData['review'], 'name'));
         $this->assertSame(array_fill(0, count($productData), ['@id' => $productGroupData['@id']]), array_column($productData, 'isVariantOf'));
         $this->assertSame(['Simple product review'], array_column($simpleProductData['review'], 'name'));
+    }
+
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/grouped_product_reviews.php')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/product_page/grouped/display_product_group_element', '1', 'store', 'default')]
+    public function testProductGroupPrefersParentRating(): void
+    {
+        $this->saveRatingSummary('grouped-product', 60, 3);
+        $this->saveRatingSummary('simple', 100, 1);
+        $product = $this->productRepository->get('grouped-product');
+
+        $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
+
+        $this->assertEquals(['@type' => 'AggregateRating', 'ratingValue' => 3, 'reviewCount' => 3], $productData[0]['aggregateRating']);
+    }
+
+    #[\Magento\TestFramework\Fixture\DataFixture('MageSuite_GoogleStructuredData::Test/Integration/_files/grouped_product_reviews.php')]
+    #[\Magento\TestFramework\Fixture\Config('structured_data/product_page/grouped/display_product_group_element', '1', 'store', 'default')]
+    public function testProductGroupNeedsRatingForReviews(): void
+    {
+        $product = $this->productRepository->get('grouped-product');
+
+        $productData = $this->productDataProvider->generateProductData($product, $this->storeManager->getStore());
+
+        $this->assertSame('ProductGroup', $productData[0]['@type']);
+        $this->assertArrayNotHasKey('aggregateRating', $productData[0]);
+        $this->assertArrayNotHasKey('review', $productData[0]);
     }
 
     #[\Magento\TestFramework\Fixture\DataFixture('Magento/GroupedProduct/_files/product_grouped.php')]
@@ -550,5 +579,17 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'to_date' => $toDate
         ]);
         $this->objectManager->get(\Magento\CatalogRule\Api\CatalogRuleRepositoryInterface::class)->save($catalogRule);
+    }
+
+    protected function saveRatingSummary(string $sku, int $ratingSummary, int $reviewsCount): void
+    {
+        $resourceConnection = $this->objectManager->get(\Magento\Framework\App\ResourceConnection::class);
+        $resourceConnection->getConnection()->insert($resourceConnection->getTableName('review_entity_summary'), [
+            'entity_pk_value' => $this->productRepository->get($sku)->getId(),
+            'entity_type' => $this->objectManager->create(\Magento\Review\Model\Review::class)->getEntityIdByCode(\Magento\Review\Model\Review::ENTITY_PRODUCT_CODE),
+            'reviews_count' => $reviewsCount,
+            'rating_summary' => $ratingSummary,
+            'store_id' => $this->storeManager->getStore()->getId()
+        ]);
     }
 }

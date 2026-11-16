@@ -178,8 +178,11 @@ class DefaultResolver implements \MageSuite\GoogleStructuredData\Provider\Data\P
 
     protected function getAggregateRatingData(\Magento\Catalog\Api\Data\ProductInterface $product, \Magento\Store\Api\Data\StoreInterface $store): array
     {
-        $ratingSummary = $this->batchReviewData->getRatingSummary((int)$product->getId(), (int)$store->getId());
+        return $this->buildAggregateRatingData($this->batchReviewData->getRatingSummary((int)$product->getId(), (int)$store->getId()));
+    }
 
+    protected function buildAggregateRatingData(array $ratingSummary): array
+    {
         if (!$ratingSummary['rating_value'] || !$ratingSummary['review_count']) {
             return [];
         }
