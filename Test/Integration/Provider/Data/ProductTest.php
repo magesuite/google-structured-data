@@ -584,12 +584,19 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     protected function saveRatingSummary(string $sku, int $ratingSummary, int $reviewsCount): void
     {
         $resourceConnection = $this->objectManager->get(\Magento\Framework\App\ResourceConnection::class);
-        $resourceConnection->getConnection()->insert($resourceConnection->getTableName('review_entity_summary'), [
-            'entity_pk_value' => $this->productRepository->get($sku)->getId(),
-            'entity_type' => $this->objectManager->create(\Magento\Review\Model\Review::class)->getEntityIdByCode(\Magento\Review\Model\Review::ENTITY_PRODUCT_CODE),
+        $connection = $resourceConnection->getConnection();
+        $tableName = $resourceConnection->getTableName('review_entity_summary');
+        $productId = (int)$this->productRepository->get($sku)->getId();
+        $entityType = (int)$this->objectManager->create(\Magento\Review\Model\Review::class)->getEntityIdByCode(\Magento\Review\Model\Review::ENTITY_PRODUCT_CODE);
+        $storeId = (int)$this->storeManager->getStore()->getId();
+
+        $connection->delete($tableName, ['entity_pk_value = ?' => $productId, 'entity_type = ?' => $entityType, 'store_id = ?' => $storeId]);
+        $connection->insert($tableName, [
+            'entity_pk_value' => $productId,
+            'entity_type' => $entityType,
             'reviews_count' => $reviewsCount,
             'rating_summary' => $ratingSummary,
-            'store_id' => $this->storeManager->getStore()->getId()
+            'store_id' => $storeId
         ]);
     }
 }
