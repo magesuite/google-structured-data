@@ -8,11 +8,11 @@ class TableMaintainer extends \Magento\Indexer\Model\ResourceModel\AbstractResou
 {
     public const MAIN_INDEX_TABLE = 'product_structured_data_index';
 
-    protected $tmpTableSuffix = '_temp';
-    protected $additionalTableSuffix = '_replica';
+    protected string $tmpTableSuffix = '_temp';
+    protected string $additionalTableSuffix = '_replica';
     protected array $mainTmpTable = [];
 
-    protected function _construct()
+    protected function _construct(): void
     {
         $this->_init(self::MAIN_INDEX_TABLE, 'entity_id');
     }
@@ -27,6 +27,26 @@ class TableMaintainer extends \Magento\Indexer\Model\ResourceModel\AbstractResou
         if ($this->getConnection()->isTableExists($tableName)) {
             $this->getConnection()->truncateTable($tableName);
         }
+    }
+
+    public function getChangedProductIds(): array
+    {
+        $connection = $this->getConnection();
+        $currentTable = $this->getMainTable();
+        $previousTable = $this->getMainReplicaTable();
+        $addedOrChangedSelect = $this->getMissingOrDifferentRowsSelect($currentTable, $previousTable);
+        $removedSelect = $this->getMissingOrDifferentRowsSelect($previousTable, $currentTable);
+        $select = $connection->select()->union([$addedOrChangedSelect, $removedSelect]);
+
+        return array_map('intval', $connection->fetchCol($select));
+    }
+
+    protected function getMissingOrDifferentRowsSelect(string $sourceTable, string $comparedTable): \Magento\Framework\DB\Select
+    {
+        return $this->getConnection()->select()
+            ->from(['source' => $sourceTable], ['product_id'])
+            ->joinLeft(['compared' => $comparedTable], 'compared.product_id = source.product_id AND compared.store_id = source.store_id', [])
+            ->where('compared.product_id IS NULL OR NOT (BINARY compared.data <=> BINARY source.data)');
     }
 
     public function cleanTable(string $tableName): void
