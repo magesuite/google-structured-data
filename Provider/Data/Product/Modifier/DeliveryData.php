@@ -16,6 +16,7 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product\DeliveryData\TransitTime $transitTime,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Product $productConfiguration,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
+        protected \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         protected bool $isEnabled = true
     ) {}
 
@@ -104,7 +105,11 @@ class DeliveryData implements \MageSuite\GoogleStructuredData\Provider\Data\Prod
         foreach ($availableCarriers as $carrier) {
             $shippingRateData = [
                 '@type' => 'MonetaryAmount',
-                'value' => (float)$carrier['price'],
+                'value' => (float)$this->priceCurrency->convertAndRound(
+                    (float)$carrier['price'],
+                    $store,
+                    $dataObject->getCurrencyCode()
+                ),
                 'currency' => $dataObject->getCurrencyCode(),
             ];
             $offerShippingDetails = [
