@@ -12,7 +12,6 @@ class AddListItemsDataToCategoryPage
         protected \Magento\Store\Model\StoreManagerInterface $storeManager,
         protected \MageSuite\GoogleStructuredData\Provider\StructuredDataContainer $structuredDataContainer,
         protected \MageSuite\GoogleStructuredData\Provider\Data\Product $productDataProvider,
-        protected \MageSuite\GoogleStructuredData\Helper\Configuration $configuration,
         protected \MageSuite\GoogleStructuredData\Helper\Configuration\Category $categoryConfiguration,
         protected \MageSuite\GoogleStructuredData\Model\Product\StructuredDataPreloader $preloader
     ) {}
@@ -59,25 +58,6 @@ class AddListItemsDataToCategoryPage
             "itemListOrder" => "https://schema.org/ItemListOrderAscending",
             "itemListElement" => $listElements
         ];
-
-        if ($this->categoryConfiguration->isCollectionPageEnabled()) {
-            $idBase = $this->configuration->getEntityIdBase();
-            $collectionPage = [
-                "@type" => "CollectionPage",
-                "@id" => $currentUrl . '#collectionpage',
-                "name" => $currentCategory->getName(),
-                "isPartOf" => [
-                    "@id" => $idBase . '#website'
-                ],
-                "breadcrumb" => [
-                    "@id" => $currentUrl . '#breadcrumb'
-                ],
-                "mainEntity" => [
-                    "@id" => $currentUrl . '#itemlist'
-                ]
-            ];
-            $this->structuredDataContainer->add($collectionPage, 'collection_page');
-        }
 
         $this->structuredDataContainer->add($itemList, 'item_list');
 

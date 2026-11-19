@@ -9,6 +9,7 @@
         <observer name="add_accordion_component_to_faq_page" instance="MageSuite\GoogleStructuredData\Observer\Cms\AddAccordionComponentToFaqPage"/>
     </event>
     <event name="controller_front_send_response_before">
+        <observer name="add_collection_page_structured_data" instance="MageSuite\GoogleStructuredData\Observer\AddCollectionPageData"/>
         <observer name="add_structured_data_to_rendered_page" instance="MageSuite\GoogleStructuredData\Observer\AddStructuredDataToRenderedPage"/>
     </event>
     <event name="controller_action_postdispatch_catalog_product_view">

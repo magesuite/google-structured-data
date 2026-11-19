@@ -238,7 +238,7 @@
                 <field id="is_collection_page_enabled" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Is CollectionPage enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Wrap ItemList into CollectionPage type.</comment>
+                    <comment>Emits a page-level CollectionPage entity on category pages. It references the ItemList, BreadcrumbList, WebSite and Organization entities when those are enabled.</comment>
                 </field>
                 <field id="show_rating" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Rating</label>
